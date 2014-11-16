@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
@@ -55,7 +56,8 @@ public class ContentActivity extends Activity {
                 "android");
         TextView title = (TextView) findViewById(titleId);
         setTitle("Candeo");
-        getActionBar().setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
+        getActionBar().setIcon(android.R.color.transparent);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         title.setTypeface(freeBooter, Typeface.BOLD);
         title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
         String id = getIntent().getStringExtra("contentId");

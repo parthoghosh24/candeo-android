@@ -56,27 +56,30 @@ public class JSONParser {
             Inputstream is parsed to fetch string and convert in jsonObject to return
          */
         StringBuilder result=new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+        if(inputStream!=null)
+        {
+            try {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
 
-            String line="";
-            while ((line=reader.readLine())!= null)
+                String line="";
+                while ((line=reader.readLine())!= null)
+                {
+                    result.append(line+"\n");
+                }
+                inputStream.close();
+                reader.close();
+                json = new JSONObject(result.toString());
+
+            }catch (UnsupportedEncodingException ue)
             {
-                result.append(line+"\n");
+                ue.printStackTrace();
+            }catch (IOException ie)
+            {
+                ie.printStackTrace();
+            }catch (JSONException je)
+            {
+                je.printStackTrace();
             }
-            inputStream.close();
-            reader.close();
-            json = new JSONObject(result.toString());
-
-        }catch (UnsupportedEncodingException ue)
-        {
-            ue.printStackTrace();
-        }catch (IOException ie)
-        {
-            ie.printStackTrace();
-        }catch (JSONException je)
-        {
-            je.printStackTrace();
         }
 
         System.out.println("Incoming JSON: "+result.toString());

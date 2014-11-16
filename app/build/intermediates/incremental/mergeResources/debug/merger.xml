@@ -40,9 +40,9 @@
                 <color name="material_blue_500" >#5677fc
                 </color>
 
-                <string name="library_FloatingActionButton_licenseId" >mit
-                </string>
                 <string name="library_FloatingActionButton_libraryVersion" >1.0.0
+                </string>
+                <string name="library_FloatingActionButton_licenseId" >mit
                 </string>
 
                 <dimen name="fab_shadow_size" >8dp
@@ -383,6 +383,11 @@ true
             <file
                 name="fragment_user"
                 path="/home/dholu/projects/Candeo/app/src/main/res/layout/fragment_user.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="fragment_no_connectivity"
+                path="/home/dholu/projects/Candeo/app/src/main/res/layout/fragment_no_connectivity.xml"
                 qualifiers=""
                 type="layout" />
         </source>

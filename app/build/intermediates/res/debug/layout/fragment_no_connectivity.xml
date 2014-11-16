@@ -2,13 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.candeo.app.user.UserFragment">
+    tools:context="com.candeo.app.NoConnectivityFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/retry"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="User" />
+        android:text="Check For Connectivity"
+        android:gravity="center"/>
 
 </FrameLayout>
-<!-- From: file:/home/dholu/projects/Candeo/app/src/main/res/layout/fragment_user.xml -->
+<!-- From: file:/home/dholu/projects/Candeo/app/src/main/res/layout/fragment_no_connectivity.xml -->

@@ -1,36 +1,20 @@
 package com.candeo.app.home;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Intent;
+import android.app.FragmentTransaction;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
-
-import com.candeo.app.ContentActivity;
 import com.candeo.app.R;
-import com.candeo.app.util.JSONParser;
+import com.candeo.app.adapters.TabPagerAdapter;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 
 public class HomeActivity extends FragmentActivity{
@@ -38,7 +22,7 @@ public class HomeActivity extends FragmentActivity{
 
     ActionBar actionBar;
     ViewPager homePager;
-    TabPagerAdapter
+    TabPagerAdapter tabPagerAdapter;
     Typeface freeBooter;
 
 
@@ -47,19 +31,74 @@ public class HomeActivity extends FragmentActivity{
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        freeBooter= loadFontFreeBooter();
-        actionBar= getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager());
+        homePager = (ViewPager)findViewById(R.id.home_pager);
+        homePager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
+            @Override
+            public void onPageSelected(int position) {
+                actionBar=getActionBar();
+                actionBar.setSelectedNavigationItem(position);
+            }
+        });
+        homePager.setAdapter(tabPagerAdapter);
+        freeBooter= loadFont("freebooter.ttf");
         int titleId = getResources().getIdentifier("action_bar_title", "id",
                 "android");
         TextView title = (TextView) findViewById(titleId);
         setTitle("Candeo");
-
-        System.out.println("Action Bar is : "+actionBar);
-        actionBar.setIcon(new ColorDrawable(getResources().getColor(R.color.material_blue_500)));
+        actionBar= getActionBar();
+        actionBar.setIcon(android.R.color.transparent);
         title.setTypeface(freeBooter, Typeface.BOLD);
         title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
+        ActionBar.TabListener tabListener = new ActionBar.TabListener(){
+            @Override
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+                homePager.setCurrentItem(tab.getPosition());
+                TextView view=(TextView)tab.getCustomView();
+                view.setTextColor(getResources().getColor(android.R.color.holo_orange_dark));
+            }
+
+            @Override
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+                TextView view=(TextView)tab.getCustomView();
+                view.setTextColor(getResources().getColor(android.R.color.white));
+            }
+
+            @Override
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+            }
+        };
+        Typeface fa= loadFont("fa.ttf");
+        final TextView feedView = new TextView(this);
+        feedView.setTypeface(fa);
+        feedView.setText("\uf09e");
+        feedView.setTextColor(getResources().getColor(android.R.color.white));
+        feedView.setTextSize(25);
+        feedView.setPadding(0, 10, 0, 0);
+
+        final TextView homeView = new TextView(this);
+        homeView.setTypeface(fa);
+        homeView.setText("\uf015");
+        homeView.setTextColor(getResources().getColor(android.R.color.white));
+        homeView.setTextSize(25);
+        homeView.setPadding(0, 10, 0, 0);
+
+        final TextView userView = new TextView(this);
+        userView.setTypeface(fa);
+        userView.setText("\uf007");
+        userView.setTextColor(getResources().getColor(android.R.color.white));
+        userView.setTextSize(25);
+        userView.setPadding(0, 10, 0, 0);
+
+
+        actionBar.addTab(actionBar.newTab().setCustomView(feedView).setTabListener(tabListener));
+        actionBar.addTab(actionBar.newTab().setCustomView(homeView).setTabListener(tabListener));
+        actionBar.addTab(actionBar.newTab().setCustomView(userView).setTabListener(tabListener));
+
+        homePager.setCurrentItem(1);
     }
 
     @Override
@@ -81,10 +120,9 @@ public class HomeActivity extends FragmentActivity{
         return super.onOptionsItemSelected(item);
     }
 
-    private Typeface loadFontFreeBooter()
+    private Typeface loadFont(String name)
     {
-        Typeface fontAwesome = Typeface.createFromAsset(getAssets(),"freebooter.ttf");
-        return  fontAwesome;
+        return  Typeface.createFromAsset(getAssets(),name);
     }
 
 
