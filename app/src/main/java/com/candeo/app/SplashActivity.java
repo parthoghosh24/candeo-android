@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -14,13 +13,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.VideoView;
+
+import com.candeo.app.home.HomeActivity;
 
 
-public class SplashActivity extends ActionBarActivity {
+public class SplashActivity extends Activity {
 
 
     TextView textView;
@@ -34,7 +33,7 @@ public class SplashActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splash);
         textView=(TextView)findViewById(R.id.test);
         tutorialPager=(ViewPager)findViewById(R.id.tutorial);
@@ -49,7 +48,7 @@ public class SplashActivity extends ActionBarActivity {
 
         button = (Button)findViewById(R.id.candeo_button);
         button.setText("Start Inspiring");
-        button.setBackgroundColor(Color.BLUE);
+        button.setBackgroundColor(getResources().getColor(R.color.material_blue_500));
         button.setTextColor(Color.WHITE);
         button.setOnClickListener(new View.OnClickListener() {
             @Override

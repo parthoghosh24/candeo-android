@@ -5,8 +5,8 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="10"
-        android:targetSdkVersion="20" />
+        android:minSdkVersion="14"
+        android:targetSdkVersion="21" />
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -25,9 +25,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.candeo.app.HomeActivity"
+            android:name="com.candeo.app.home.HomeActivity"
             android:label="@string/title_activity_home" >
         </activity>
+        <activity
+            android:name="com.candeo.app.ContentActivity"
+            android:label="@string/title_activity_content" >
+        </activity>
+        <activity
+            android:name="android.support.v7.widget.TestActivity"
+            android:label="RecyclerViewTestActivity" />
     </application>
 
 </manifest>
