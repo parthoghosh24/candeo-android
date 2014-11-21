@@ -8,6 +8,8 @@ import android.support.v4.app.FragmentActivity;
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,10 +19,11 @@ import com.candeo.app.adapters.TabPagerAdapter;
 
 
 
-public class HomeActivity extends FragmentActivity{
+public class HomeActivity extends ActionBarActivity{
 
 
-    ActionBar actionBar;
+    Toolbar toolbar;
+//    android.support.v7.app.ActionBar actionBar;
     ViewPager homePager;
     TabPagerAdapter tabPagerAdapter;
     Typeface freeBooter;
@@ -33,11 +36,13 @@ public class HomeActivity extends FragmentActivity{
         setContentView(R.layout.activity_home);
         tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager());
         homePager = (ViewPager)findViewById(R.id.home_pager);
+        toolbar = (Toolbar)findViewById(R.id.candeo_toolbar);
+        setSupportActionBar(toolbar);
         homePager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
             @Override
             public void onPageSelected(int position) {
-                actionBar=getActionBar();
-                actionBar.setSelectedNavigationItem(position);
+//                actionBar=getSupportActionBar();
+//                actionBar.setSelectedNavigationItem(position);
             }
         });
         homePager.setAdapter(tabPagerAdapter);
@@ -46,11 +51,11 @@ public class HomeActivity extends FragmentActivity{
                 "android");
         TextView title = (TextView) findViewById(titleId);
         setTitle("Candeo");
-        actionBar= getActionBar();
-        actionBar.setIcon(android.R.color.transparent);
-        title.setTypeface(freeBooter, Typeface.BOLD);
-        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+//        actionBar= getActionBar();
+//        actionBar.setIcon(android.R.color.transparent);
+//        title.setTypeface(freeBooter, Typeface.BOLD);
+//        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+//        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         ActionBar.TabListener tabListener = new ActionBar.TabListener(){
             @Override
@@ -94,9 +99,9 @@ public class HomeActivity extends FragmentActivity{
         userView.setPadding(0, 10, 0, 0);
 
 
-        actionBar.addTab(actionBar.newTab().setCustomView(feedView).setTabListener(tabListener));
-        actionBar.addTab(actionBar.newTab().setCustomView(homeView).setTabListener(tabListener));
-        actionBar.addTab(actionBar.newTab().setCustomView(userView).setTabListener(tabListener));
+//        actionBar.addTab(actionBar.newTab().setCustomView(feedView).setTabListener(tabListener));
+//        actionBar.addTab(actionBar.newTab().setCustomView(homeView).setTabListener(tabListener));
+//        actionBar.addTab(actionBar.newTab().setCustomView(userView).setTabListener(tabListener));
 
         homePager.setCurrentItem(1);
     }

@@ -6,13 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +18,12 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.candeo.app.ContentActivity;
+import com.candeo.app.content.ContentActivity;
 import com.candeo.app.R;
+import com.candeo.app.content.PostActivity;
 import com.candeo.app.util.JSONParser;
-import com.melnykov.fab.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,12 +35,12 @@ import java.util.HashMap;
 public class HomeFragment extends Fragment {
 
     ListView feedView;
+    Button button;
     SwipeRefreshLayout refreshView;
     FeedAdapter feedAdapter;
     ArrayList<HashMap<String, String>> feeds;
-    private String domain="http://192.168.0.104:3000";
+    private String domain="http://192.168.43.239:3000";
     private String feedsURL = domain+"/api/v1/contents";
-    FloatingActionButton fab;
     View homeView=null;
 
     @Override
@@ -60,10 +57,7 @@ public class HomeFragment extends Fragment {
         {
             homeView= inflater.inflate(R.layout.fragment_home, container, false);
             feedView = (ListView)homeView.findViewById(R.id.feed_list);
-            fab=(FloatingActionButton)homeView.findViewById(R.id.fab);
-            fab.setColorNormal(getResources().getColor(R.color.material_blue_500));
-            fab.setColorPressed(getResources().getColor(R.color.material_blue_500));
-            fab.attachToListView(feedView);
+            button = (Button)homeView.findViewById(R.id.candeo_init_post);
             refreshView = (SwipeRefreshLayout)homeView.findViewById(R.id.home_list_refresh);
             refreshView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
@@ -73,6 +67,13 @@ public class HomeFragment extends Fragment {
                             refreshView.setRefreshing(false);
                         }
                     }, 5000);
+                }
+            });
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent postIntent = new Intent(getActivity(),PostActivity.class);
+                    startActivity(postIntent);
                 }
             });
             refreshView.setColorSchemeColors(R.color.material_blue_600, R.color.material_blue_500);

@@ -2,9 +2,9 @@
 <merger version="2" >
 
     <dataSet config="main" >
-        <source path="/home/dholu/projects/Candeo/app/src/androidTest/res" />
-        <source path="/home/dholu/projects/Candeo/app/build/generated/res/rs/test/debug" />
-        <source path="/home/dholu/projects/Candeo/app/build/generated/res/generated/test/debug" />
+        <source path="/home/partho/projects/tools/gmate/projects/candeo-android/app/src/androidTest/res" />
+        <source path="/home/partho/projects/tools/gmate/projects/candeo-android/app/build/generated/res/rs/test/debug" />
+        <source path="/home/partho/projects/tools/gmate/projects/candeo-android/app/build/generated/res/generated/test/debug" />
     </dataSet>
 
 </merger>
