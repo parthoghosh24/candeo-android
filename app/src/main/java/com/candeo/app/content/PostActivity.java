@@ -5,7 +5,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -60,7 +62,7 @@ public class PostActivity extends Activity {
 
         int screenWidth = getResources().getDisplayMetrics().widthPixels;
         int screenHeight =getResources().getDisplayMetrics().heightPixels;
-        getWindow().setLayout((6*screenWidth)/7,(3*screenHeight)/5);
+        getWindow().setLayout((6*screenWidth)/7,(4*screenHeight)/5);
 
         audioPreview = (Button)findViewById(R.id.candeo_audio_preview);
         audioPreview.setTypeface(CandeoUtil.loadFont(getAssets(), "fa.ttf"));
@@ -120,9 +122,8 @@ public class PostActivity extends Activity {
                         if(choices[which].equals("Click Something"))
                         {
                             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            File f = new File(android.os.Environment
-                                    .getExternalStorageDirectory(), "temp.jpg");
-                            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+                           // File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
+                            //intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
                             intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, 90);
                             startActivityForResult(intent, REQUEST_IMAGE_CAMERA);
                         }
@@ -229,21 +230,72 @@ public class PostActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK)
         {
-            if(requestCode == REQUEST_IMAGE_CAMERA || requestCode == PICK_IMAGE_FILE)
+            if(requestCode == REQUEST_IMAGE_CAMERA)
             {
                 Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                System.out.println("Bitmap is " + bitmap);
                 imagePreview.setImageBitmap(bitmap);
                 imagePreview.setVisibility(View.VISIBLE);
                 videoPreview.setVisibility(View.GONE);
                 videoPreviewPlay.setVisibility(View.GONE);
                 audioPreview.setVisibility(View.GONE);
             }
-            else if(requestCode == REQUEST_VIDEO_CAMERA|| requestCode == PICK_VIDEO_FILE)
+            else if(requestCode == PICK_IMAGE_FILE)
             {
+                   Uri uri = data.getData();
+                   Cursor cursor = getContentResolver().query(uri, new String[]{MediaStore.Images.ImageColumns.DATA},null,null,null);
+                   cursor.moveToFirst();
+                   String filePath = cursor.getString(0);
+                   cursor.close();
+                   imagePreview.setImageBitmap(BitmapFactory.decodeFile(filePath));
+                   imagePreview.setVisibility(View.VISIBLE);
+                   videoPreview.setVisibility(View.GONE);
+                   videoPreviewPlay.setVisibility(View.GONE);
+                   audioPreview.setVisibility(View.GONE);
 
             }
-            else if(requestCode == REQUEST_AUDIO_RECORD|| requestCode == PICK_AUDIO_FILE)
+            else if(requestCode == REQUEST_VIDEO_CAMERA|| requestCode == PICK_VIDEO_FILE)
             {
+                Uri uri = data.getData();
+                videoPreview.setVideoURI(uri);
+                imagePreview.setVisibility(View.GONE);
+                videoPreview.setVisibility(View.VISIBLE);
+                videoPreviewPlay.setVisibility(View.VISIBLE);
+                audioPreview.setVisibility(View.GONE);
+                videoPreviewPlay.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(!isPlaying)
+                        {
+                            isPlaying=true;
+                            videoPreview.start();
+                            videoPreviewPlay.setText("\uf04c");
+                        }
+                        else
+                        {
+                            isPlaying=false;
+                            videoPreview.stopPlayback();
+                            videoPreviewPlay.setText("\uf04b");
+
+                        }
+                        if(videoPreview!=null)
+                        {
+                            videoPreview.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                @Override
+                                public void onCompletion(MediaPlayer mp) {
+                                    isPlaying=false;
+                                    videoPreview.stopPlayback();
+                                    videoPreviewPlay.setText("\uf04b");
+                                }
+                            });
+                        }
+                    }
+                });
+
+            }
+            else if(requestCode == REQUEST_AUDIO_RECORD)
+            {
+
                 final String path = data.getStringExtra("path");
                 System.out.println("Path is "+ path);
                 player = new MediaPlayer();
@@ -293,6 +345,57 @@ public class PostActivity extends Activity {
                     }
                 });
 
+            }
+            else if(requestCode == PICK_AUDIO_FILE)
+            {
+                final Uri uri = data.getData();
+                System.out.println("Path is "+ uri.getPath());
+                player = new MediaPlayer();
+                imagePreview.setVisibility(View.GONE);
+                videoPreview.setVisibility(View.GONE);
+                videoPreviewPlay.setVisibility(View.GONE);
+                audioPreview.setVisibility(View.VISIBLE);
+                audioPreview.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(!isPlaying)
+                        {
+                            isPlaying=true;
+                            player=new MediaPlayer();
+                            try {
+                                player.setDataSource(PostActivity.this, uri);
+                                player.prepare();
+                                player.start();
+                                audioPreview.setText("\uf04c");
+                            }catch (IOException ioe)
+                            {
+                                ioe.printStackTrace();
+                            }
+
+                        }
+                        else
+                        {
+                            isPlaying=false;
+                            player.release();
+                            player=null;
+                            audioPreview.setText("\uf04b");
+
+                        }
+                        if(player!=null)
+                        {
+                            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                @Override
+                                public void onCompletion(MediaPlayer mp) {
+                                    isPlaying=false;
+                                    player.release();
+                                    player=null;
+                                    audioPreview.setText("\uf04b");
+                                }
+                            });
+                        }
+
+                    }
+                });
             }
 
         }
