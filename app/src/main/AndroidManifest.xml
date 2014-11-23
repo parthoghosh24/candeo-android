@@ -5,6 +5,12 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <uses-feature android:name="android.hardware.camera" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -21,8 +27,7 @@
         </activity>
         <activity
             android:name="com.candeo.app.home.HomeActivity"
-            android:label="@string/title_activity_home" >
-        </activity>
+            android:label="@string/title_activity_home" />
         <activity
             android:name="com.candeo.app.content.ContentActivity"
             android:label="@string/title_activity_content"
@@ -32,9 +37,19 @@
                 android:value=".home.HomeActivity" />
         </activity>
         <activity
+            android:name="com.candeo.app.content.RespondActivity"
+            android:label="@string/title_activity_respond" >
+        </activity>
+        <activity
             android:name="com.candeo.app.content.PostActivity"
-            android:theme="@style/Theme.AppCompat.Light.Dialog"
-            android:label="@string/title_activity_post" >
+            android:label="@string/title_activity_post"
+            android:theme="@style/Theme.AppCompat.Light.Dialog" >
+        </activity>
+        <activity
+            android:name="com.candeo.app.content.RecordActivity"
+            android:label="@string/title_activity_record"
+            android:theme="@style/Theme.AppCompat.Dialog" >
+
         </activity>
     </application>
 

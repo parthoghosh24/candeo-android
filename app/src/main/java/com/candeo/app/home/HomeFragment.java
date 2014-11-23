@@ -4,22 +4,24 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
+import com.candeo.app.adapters.FeedAdapter;
 import com.candeo.app.content.ContentActivity;
 import com.candeo.app.R;
 import com.candeo.app.content.PostActivity;
@@ -35,18 +37,21 @@ import java.util.HashMap;
 public class HomeFragment extends Fragment {
 
     ListView feedView;
-    Button button;
+    ViewPager parentHomePager;
+    Button inspire;
+    Button feed;
+    Button user;
     SwipeRefreshLayout refreshView;
     FeedAdapter feedAdapter;
     ArrayList<HashMap<String, String>> feeds;
-    private String domain="http://192.168.43.239:3000";
+    private String domain="http://192.168.0.104:3000";
     private String feedsURL = domain+"/api/v1/contents";
     View homeView=null;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
 
         if(!isNetworkAvailable())
         {
@@ -56,8 +61,14 @@ public class HomeFragment extends Fragment {
         else
         {
             homeView= inflater.inflate(R.layout.fragment_home, container, false);
+            parentHomePager=(ViewPager)getActivity().findViewById(R.id.home_pager);
             feedView = (ListView)homeView.findViewById(R.id.feed_list);
-            button = (Button)homeView.findViewById(R.id.candeo_init_post);
+            feeds = new ArrayList<HashMap<String, String>>();
+            feedAdapter= new FeedAdapter(getActivity(),feeds);
+            feedView.setAdapter(feedAdapter);
+            inspire = (Button)homeView.findViewById(R.id.candeo_init_post);
+            feed=(Button)homeView.findViewById(R.id.candeo_feed);
+            user=(Button)homeView.findViewById(R.id.candeo_user);
             refreshView = (SwipeRefreshLayout)homeView.findViewById(R.id.home_list_refresh);
             refreshView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
@@ -69,15 +80,33 @@ public class HomeFragment extends Fragment {
                     }, 5000);
                 }
             });
-            button.setOnClickListener(new View.OnClickListener() {
+            inspire.setTypeface(loadFont("fa.ttf"));
+            inspire.setText("\uf0d0");
+            inspire.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent postIntent = new Intent(getActivity(),PostActivity.class);
                     startActivity(postIntent);
                 }
             });
-            refreshView.setColorSchemeColors(R.color.material_blue_600, R.color.material_blue_500);
-            feeds = new ArrayList<HashMap<String, String>>();
+            feed.setTypeface(loadFont("fa.ttf"));
+            feed.setText("\uf09e");
+            feed.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    parentHomePager.setCurrentItem(0);
+                }
+            });
+            user.setTypeface(loadFont("fa.ttf"));
+            user.setText("\uf007");
+            user.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    parentHomePager.setCurrentItem(2);
+                }
+            });
+            refreshView.setColorSchemeColors(R.color.material_blue_grey_800, R.color.material_blue_grey_900);
+
             new LoadFeeds().execute(feedsURL);
             feedView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -89,9 +118,37 @@ public class HomeFragment extends Fragment {
                     startActivity(contentIntent);
                 }
             });
+            feedView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+                }
+
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+                    boolean enable =false;
+                    if(feedView != null && feedView.getChildCount() > 0){
+                        // check if the first item of the list is visible
+                        boolean firstItemVisible = feedView.getFirstVisiblePosition() == 0;
+                        // check if the top of the first item is visible
+                        boolean topOfFirstItemVisible = feedView.getChildAt(0).getTop() == 0;
+                        // enabling or disabling the refresh layout
+                        enable = firstItemVisible && topOfFirstItemVisible;
+                    }
+                    refreshView.setEnabled(enable);
+
+                }
+            });
 
         }
         return homeView;
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     private boolean isNetworkAvailable()
@@ -135,10 +192,11 @@ public class HomeFragment extends Fragment {
                         feedMap.put("username", content.optString("username"));
                         feedMap.put("timestamp", content.optString("time"));
                         feeds.add(feedMap);
-                        feedAdapter= new FeedAdapter(getActivity());
-                        feedView.setAdapter(feedAdapter);
+
+
                     }
                     System.out.println("Feeds Size in post exec: "+feeds.size());
+                    feedAdapter.notifyDataSetChanged();
                 }catch (JSONException je)
                 {
                     je.printStackTrace();
@@ -148,64 +206,11 @@ public class HomeFragment extends Fragment {
         }
     }
 
-
-
-
-    class FeedAdapter extends BaseAdapter
+    private Typeface loadFont(String fontFile)
     {
-
-        Activity activity;
-
-        FeedAdapter(Activity activity)
-        {
-            this.activity=activity;
-        }
-
-        @Override
-        public int getCount() {
-            System.out.println("Feeds Size: "+feeds.size());
-            return feeds.size();
-        }
-
-        class ViewHolder
-        {
-            TextView description;
-            TextView username;
-            TextView time;
-        }
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
-            HashMap<String, String> feed = feeds.get(position);
-            if(convertView == null)
-            {
-                convertView= LayoutInflater.from(activity).inflate(R.layout.feed_item, parent, false);
-                holder = new ViewHolder();
-                holder.description = (TextView)convertView.findViewById(R.id.content_description);
-                holder.username = (TextView)convertView.findViewById(R.id.username);
-                holder.time = (TextView)convertView.findViewById(R.id.timestamp);
-                convertView.setTag(holder);
-            }
-            else
-            {
-                holder = (ViewHolder)convertView.getTag();
-            }
-            holder.description.setText(feed.get("desc"));
-            holder.username.setText(feed.get("username"));
-            holder.time.setText(feed.get("timestamp"));
-            return convertView;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public HashMap<String, String> getItem(int position) {
-            return feeds.get(position);
-        }
+        return Typeface.createFromAsset(getActivity().getAssets(),fontFile);
     }
+
 
 
 

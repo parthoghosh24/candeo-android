@@ -6,7 +6,13 @@
     android:gravity="center">
 
     <TextView
-        android:id="@+id/tutorial_text"
+        android:id="@+id/candeo_tutorial_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/candeo_tutorial_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"/>

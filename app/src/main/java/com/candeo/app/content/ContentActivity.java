@@ -9,9 +9,11 @@ import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -22,19 +24,20 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.candeo.app.R;
+import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.JSONParser;
 
 import org.json.JSONObject;
 
 
-public class ContentActivity extends ActionBarActivity {
+public class ContentActivity extends ActionBarActivity implements MediaController.MediaPlayerControl{
 
     TextView description = null;
+    Toolbar toolbar;
     TextView username = null;
     Button getInspired=null;
     private String domain="http://192.168.0.104:3000";
     private String contentURL = domain+"/api/v1/contents";
-    Typeface freeBooter;
     MediaController mediaController;
     MediaPlayer mediaPlayer;
     VideoView  videoView;
@@ -43,16 +46,10 @@ public class ContentActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
+        toolbar = (Toolbar)findViewById(R.id.candeo_content_toolbar);
+        setSupportActionBar(toolbar);
         contentViewer=(LinearLayout)findViewById(R.id.candeo_content_viewer);
-        freeBooter= loadFontFreeBooter();
-        int titleId = getResources().getIdentifier("action_bar_title", "id",
-                "android");
-        TextView title = (TextView) findViewById(titleId);
         setTitle("Candeo");
-        getActionBar().setIcon(android.R.color.transparent);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        title.setTypeface(freeBooter, Typeface.BOLD);
-        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
         String id = getIntent().getStringExtra("contentId");
         System.out.println("ID is :"+id);
         if(id!=null)
@@ -62,6 +59,8 @@ public class ContentActivity extends ActionBarActivity {
         }
 
         getInspired = (Button)findViewById(R.id.get_inspired);
+        getInspired.setTypeface(CandeoUtil.loadFont(getAssets(),"response.ttf"));
+        getInspired.setText("\ue800");
         getInspired.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,6 +95,73 @@ public class ContentActivity extends ActionBarActivity {
 
     }
 
+    @Override
+    public void start() {
+        mediaPlayer.start();
+    }
+
+    @Override
+    public void pause() {
+        if(mediaPlayer.isPlaying())
+        {
+            mediaPlayer.pause();
+        }
+    }
+
+    @Override
+    public boolean canPause() {
+        return true;
+    }
+
+    @Override
+    public int getDuration() {
+        return 0;
+    }
+
+    @Override
+    public boolean canSeekBackward() {
+        return true;
+    }
+
+    @Override
+    public boolean canSeekForward() {
+        return true;
+    }
+
+    @Override
+    public int getCurrentPosition() {
+        return mediaPlayer.getCurrentPosition();
+    }
+
+    @Override
+    public void seekTo(int pos) {
+        mediaPlayer.seekTo(pos);
+    }
+
+    @Override
+    public int getBufferPercentage() {
+        return (mediaPlayer.getCurrentPosition()*100)/mediaPlayer.getDuration();
+    }
+
+    @Override
+    public int getAudioSessionId() {
+        return 0;
+    }
+
+    @Override
+    public boolean isPlaying() {
+        return mediaPlayer.isPlaying();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if((Integer)contentViewer.getTag() == 1 || (Integer)contentViewer.getTag() == 2)
+        {
+            mediaController.show(0);
+        }
+        return false;
+    }
+
     private class LoadContent extends AsyncTask<String, String, JSONObject> {
 
         private ProgressDialog pDialog;
@@ -119,27 +185,30 @@ public class ContentActivity extends ActionBarActivity {
                 pDialog.dismiss();
                 int type = jsonObject.optInt("media_type");
                 System.out.println("AND THE CONTENT IS: "+jsonObject.toString());
+                contentViewer.setTag(type);
                 if(type>0)
                 {
                     mediaController = new MediaController(ContentActivity.this);
                     String mediaUrl=domain+jsonObject.optString("media");
                     switch (type)
                     {
-                        case 1:
+                        case 1: //audio
                             try
                             {
                                 mediaPlayer= new MediaPlayer();
+                                mediaController = new MediaController(ContentActivity.this);
+                                mediaController.setMediaPlayer(ContentActivity.this);
+                                mediaController.setAnchorView(contentViewer);
                                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                                 mediaPlayer.setDataSource(mediaUrl);
                                 mediaPlayer.prepareAsync();
                                 mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                                     @Override
                                     public void onPrepared(MediaPlayer mp) {
-                                        mp = mediaPlayer;
-                                        mp.start();
+                                        mediaController.show(0);
+                                        mediaPlayer.start();
                                     }
                                 });
-                                mediaController.setAnchorView(contentViewer);
 
                             }
                             catch(Exception e)
@@ -148,15 +217,17 @@ public class ContentActivity extends ActionBarActivity {
                             }
 
                             break;
-                        case 2:
+                        case 2: //video
+
                             videoView = new VideoView(ContentActivity.this);
                             System.out.println("MEDIA URL is : "+mediaUrl);
                             videoView.setVideoPath(mediaUrl);
                             videoView.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                             contentViewer.addView(videoView);
                             mediaController.setMediaPlayer(videoView);
-                            mediaController.setAnchorView(videoView);
+                            mediaController.setAnchorView(contentViewer);
                             videoView.setMediaController(mediaController);
+                            videoView.seekTo(100);
                             videoView.start();
                             break;
                         case 3:
@@ -167,16 +238,10 @@ public class ContentActivity extends ActionBarActivity {
                 description = (TextView)findViewById(R.id.description);
                 username = (TextView)findViewById(R.id.username);
                 description.setText(jsonObject.optString("desc"));
-                username.setText(jsonObject.optString("username"));
+                System.out.println("User is "+jsonObject.optString("user"));
+                username.setText(jsonObject.optString("user"));
 
         }
-    }
-
-
-    private Typeface loadFontFreeBooter()
-    {
-        Typeface fontAwesome = Typeface.createFromAsset(getAssets(),"freebooter.ttf");
-        return  fontAwesome;
     }
 
 

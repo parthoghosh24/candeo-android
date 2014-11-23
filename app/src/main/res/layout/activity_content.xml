@@ -3,17 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.candeo.app.content.ContentActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/candeo_content_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <LinearLayout
         android:id="@+id/candeo_content_viewer"
         android:layout_width="fill_parent"
-        android:layout_height="300dp">
+        android:layout_height="300dp"
+        android:orientation="vertical">
 
     </LinearLayout>
     <TextView
@@ -30,6 +31,7 @@
         android:id="@+id/get_inspired"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+
         android:text="Get Inspired"/>
 
 </LinearLayout>
