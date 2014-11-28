@@ -1,0 +1,59 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:minWidth="200dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context="com.candeo.app.content.RecordActivity">
+
+    <TextView
+        android:id="@+id/candeo_record_timer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"/>
+    <Button
+        android:id="@+id/candeo_play_record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        />
+
+    <Button
+        android:id="@+id/candeo_stop_record"
+        android:text="STOP"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+    <LinearLayout
+        android:id="@+id/candeo_record_controls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/candeo_record_ok"
+            android:text="OK"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_weight="0.5"
+            />
+        <Button
+            android:id="@+id/candeo_record"
+            android:text="Record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            />
+        <Button
+            android:id="@+id/candeo_record_cancel"
+            android:text="CANCEL"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            />
+
+     </LinearLayout>
+
+</LinearLayout>
+<!-- From: file:/home/dholu/projects/Candeo/app/src/main/res/layout/activity_record.xml -->
