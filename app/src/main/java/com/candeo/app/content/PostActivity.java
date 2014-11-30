@@ -1,29 +1,29 @@
 package com.candeo.app.content;
 
-import android.app.Activity;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
+
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import android.widget.VideoView;
 
 import com.candeo.app.R;
@@ -32,7 +32,7 @@ import com.candeo.app.util.CandeoUtil;
 import java.io.File;
 import java.io.IOException;
 
-public class PostActivity extends Activity {
+public class PostActivity extends ActionBarActivity {
 
     Button audio;
     Button image;
@@ -40,11 +40,14 @@ public class PostActivity extends Activity {
     Button postIt;
     Switch selector;
     TextView copyrightText;
+    EditText showcaseTitleText;
     Button audioPreview;
     ImageView imagePreview;
     VideoView videoPreview;
     Button videoPreviewPlay;
+    Toolbar toolbar;
     boolean isPlaying=false;
+    int stopPosition=0;
     MediaPlayer player;
     private static final int REQUEST_IMAGE_CAMERA=100;
     private static final int PICK_VIDEO_FILE=200;
@@ -55,14 +58,14 @@ public class PostActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
         setFinishOnTouchOutside(false);
-
-        int screenWidth = getResources().getDisplayMetrics().widthPixels;
-        int screenHeight =getResources().getDisplayMetrics().heightPixels;
-        getWindow().setLayout((6*screenWidth)/7,(4*screenHeight)/5);
+        toolbar = (Toolbar)findViewById(R.id.candeo_toolbar);
+        setSupportActionBar(toolbar);
+        setTitle("Candeo");
+        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
 
         audioPreview = (Button)findViewById(R.id.candeo_audio_preview);
         audioPreview.setTypeface(CandeoUtil.loadFont(getAssets(), "fa.ttf"));
@@ -79,6 +82,14 @@ public class PostActivity extends Activity {
         audio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(player!=null)
+                {
+                    player.stop();
+                    player.release();
+                    player=null;
+                    audioPreview.setVisibility(View.GONE);
+                    audioPreview.setText("\uf04b");
+                }
                 final CharSequence[] choices ={"Record Something", "Fetch From Device", "Cancel"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(PostActivity.this);
                 builder.setItems(choices,new DialogInterface.OnClickListener() {
@@ -206,6 +217,7 @@ public class PostActivity extends Activity {
         });
 
         copyrightText=(TextView)findViewById(R.id.candeo_copyright_text);
+        showcaseTitleText=(EditText)findViewById(R.id.candeo_post_title);
         selector=(Switch)findViewById(R.id.candeo_selector);
         selector.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -215,10 +227,12 @@ public class PostActivity extends Activity {
                     copyrightText.setTypeface(CandeoUtil.loadFont(getAssets(), "fa.ttf"));
                     copyrightText.setText("\uf1f9 Anonymous");
                     copyrightText.setVisibility(View.VISIBLE);
+                    showcaseTitleText.setVisibility(View.VISIBLE);
                 }
                 else
                 {
                     copyrightText.setVisibility(View.GONE);
+                    showcaseTitleText.setVisibility(View.GONE);
                 }
             }
         });
@@ -258,147 +272,115 @@ public class PostActivity extends Activity {
             {
                 Uri uri = data.getData();
                 videoPreview.setVideoURI(uri);
+                videoPreview.start();
+                videoPreview.seekTo(100);
                 imagePreview.setVisibility(View.GONE);
                 videoPreview.setVisibility(View.VISIBLE);
-                videoPreviewPlay.setVisibility(View.VISIBLE);
+                videoPreviewPlay.setVisibility(View.GONE);
                 audioPreview.setVisibility(View.GONE);
-                videoPreviewPlay.setOnClickListener(new View.OnClickListener() {
+                videoPreview.setOnTouchListener(new View.OnTouchListener() {
                     @Override
-                    public void onClick(View v) {
-                        if(!isPlaying)
-                        {
-                            isPlaying=true;
-                            videoPreview.start();
-                            videoPreviewPlay.setText("\uf04c");
-                        }
-                        else
-                        {
-                            isPlaying=false;
-                            videoPreview.stopPlayback();
-                            videoPreviewPlay.setText("\uf04b");
+                    public boolean onTouch(View v, MotionEvent event) {
+                            if(!videoPreview.isPlaying())
+                            {
+                                videoPreview.seekTo(stopPosition);
+                                videoPreview.start();
+                            }
+                            else
+                            {
+                                stopPosition=videoPreview.getCurrentPosition();
+                                videoPreview.pause();
+                            }
 
-                        }
                         if(videoPreview!=null)
                         {
                             videoPreview.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                                 @Override
                                 public void onCompletion(MediaPlayer mp) {
-                                    isPlaying=false;
                                     videoPreview.stopPlayback();
-                                    videoPreviewPlay.setText("\uf04b");
                                 }
                             });
                         }
+                        return true;
                     }
                 });
-
             }
             else if(requestCode == REQUEST_AUDIO_RECORD)
             {
 
                 final String path = data.getStringExtra("path");
                 System.out.println("Path is "+ path);
-                player = new MediaPlayer();
-                imagePreview.setVisibility(View.GONE);
-                videoPreview.setVisibility(View.GONE);
-                videoPreviewPlay.setVisibility(View.GONE);
-                audioPreview.setVisibility(View.VISIBLE);
-                audioPreview.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(!isPlaying)
-                        {
-                            isPlaying=true;
-                            player=new MediaPlayer();
-                            try {
-                                player.setDataSource(path);
-                                player.prepare();
-                                player.start();
-                                audioPreview.setText("\uf04c");
-                            }catch (IOException ioe)
-                            {
-                                ioe.printStackTrace();
-                            }
-
-                        }
-                        else
-                        {
-                            isPlaying=false;
-                            player.release();
-                            player=null;
-                            audioPreview.setText("\uf04b");
-
-                        }
-                        if(player!=null)
-                        {
-                            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                                @Override
-                                public void onCompletion(MediaPlayer mp) {
-                                    isPlaying=false;
-                                    player.release();
-                                    player=null;
-                                    audioPreview.setText("\uf04b");
-                                }
-                            });
-                        }
-
-                    }
-                });
-
+                playAudio(path);
             }
             else if(requestCode == PICK_AUDIO_FILE)
             {
                 final Uri uri = data.getData();
                 System.out.println("Path is "+ uri.getPath());
-                player = new MediaPlayer();
-                imagePreview.setVisibility(View.GONE);
-                videoPreview.setVisibility(View.GONE);
-                videoPreviewPlay.setVisibility(View.GONE);
-                audioPreview.setVisibility(View.VISIBLE);
-                audioPreview.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(!isPlaying)
-                        {
-                            isPlaying=true;
-                            player=new MediaPlayer();
-                            try {
-                                player.setDataSource(PostActivity.this, uri);
-                                player.prepare();
-                                player.start();
-                                audioPreview.setText("\uf04c");
-                            }catch (IOException ioe)
-                            {
-                                ioe.printStackTrace();
-                            }
-
-                        }
-                        else
-                        {
-                            isPlaying=false;
-                            player.release();
-                            player=null;
-                            audioPreview.setText("\uf04b");
-
-                        }
-                        if(player!=null)
-                        {
-                            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                                @Override
-                                public void onCompletion(MediaPlayer mp) {
-                                    isPlaying=false;
-                                    player.release();
-                                    player=null;
-                                    audioPreview.setText("\uf04b");
-                                }
-                            });
-                        }
-
-                    }
-                });
+                playAudio(uri);
             }
 
         }
+    }
+
+    private void playAudio(Object uri)
+    {
+
+
+        if(player!=null)
+        {
+            player.stop();
+            player.release();
+            player=null;
+        }
+        player = new MediaPlayer();
+        try {
+            if(uri instanceof  Uri)
+            {
+                player.setDataSource(PostActivity.this, (Uri)uri);
+            }
+            else
+            {
+                player.setDataSource((String)uri);
+            }
+
+            player.prepare();
+            player.start();
+            player.setLooping(true);
+            isPlaying=true;
+            audioPreview.setText("\uf04c");
+        }
+        catch (IOException ioe)
+        {
+            ioe.printStackTrace();
+        }
+        imagePreview.setVisibility(View.GONE);
+        videoPreview.setVisibility(View.GONE);
+        videoPreviewPlay.setVisibility(View.GONE);
+        audioPreview.setVisibility(View.VISIBLE);
+        audioPreview.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                System.out.println("PLAYER is : "+player);
+                if(!isPlaying)
+                {
+                    isPlaying=true;
+                    player.seekTo(stopPosition);
+                    player.start();
+                    audioPreview.setText("\uf04c");
+                }
+                else
+                {
+                    isPlaying=false;
+                    stopPosition=player.getCurrentPosition();
+                    player.pause();
+                    audioPreview.setText("\uf04b");
+
+                }
+            }
+        });
+
     }
 
 }

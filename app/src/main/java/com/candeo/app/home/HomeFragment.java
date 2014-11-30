@@ -22,10 +22,16 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.candeo.app.adapters.FeedAdapter;
+import com.candeo.app.adapters.ShowcaseAdapter;
+import com.candeo.app.adapters.TutorialPagerAdapter;
 import com.candeo.app.content.ContentActivity;
 import com.candeo.app.R;
 import com.candeo.app.content.PostActivity;
+import com.candeo.app.transformers.ShowcaseTransformer;
+import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.JSONParser;
+import com.candeo.app.util.NetworkUtil;
+import com.etsy.android.grid.StaggeredGridView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,8 +42,10 @@ import java.util.HashMap;
 
 public class HomeFragment extends Fragment {
 
-    ListView feedView;
+//    ListView feedView;
+    StaggeredGridView feedView;
     ViewPager parentHomePager;
+    ViewPager showcasePager;
     Button inspire;
     Button feed;
     Button user;
@@ -53,7 +61,7 @@ public class HomeFragment extends Fragment {
                              final Bundle savedInstanceState) {
 
 
-        if(!isNetworkAvailable())
+        if(!NetworkUtil.isNetworkAvailable(getActivity()))
         {
 
             homeView= inflater.inflate(R.layout.fragment_no_connectivity, container, false);
@@ -62,7 +70,10 @@ public class HomeFragment extends Fragment {
         {
             homeView= inflater.inflate(R.layout.fragment_home, container, false);
             parentHomePager=(ViewPager)getActivity().findViewById(R.id.home_pager);
-            feedView = (ListView)homeView.findViewById(R.id.feed_list);
+            showcasePager = (ViewPager)homeView.findViewById(R.id.candeo_showcase_pager);
+            showcasePager.setAdapter(new ShowcaseAdapter(getActivity()));
+            showcasePager.setPageTransformer(true, new ShowcaseTransformer());
+            feedView = (StaggeredGridView)homeView.findViewById(R.id.feed_list);
             feeds = new ArrayList<HashMap<String, String>>();
             feedAdapter= new FeedAdapter(getActivity(),feeds);
             feedView.setAdapter(feedAdapter);
@@ -80,7 +91,7 @@ public class HomeFragment extends Fragment {
                     }, 5000);
                 }
             });
-            inspire.setTypeface(loadFont("fa.ttf"));
+            inspire.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fa.ttf"));
             inspire.setText("\uf0d0");
             inspire.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -89,7 +100,7 @@ public class HomeFragment extends Fragment {
                     startActivity(postIntent);
                 }
             });
-            feed.setTypeface(loadFont("fa.ttf"));
+            feed.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fa.ttf"));
             feed.setText("\uf09e");
             feed.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -97,7 +108,7 @@ public class HomeFragment extends Fragment {
                     parentHomePager.setCurrentItem(0);
                 }
             });
-            user.setTypeface(loadFont("fa.ttf"));
+            user.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fa.ttf"));
             user.setText("\uf007");
             user.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -151,13 +162,6 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    private boolean isNetworkAvailable()
-    {
-        ConnectivityManager connectivityManager = (ConnectivityManager)getActivity().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        return activeNetwork!=null && activeNetwork.isConnectedOrConnecting();
-    }
-
     private class LoadFeeds extends AsyncTask<String, String, JSONObject> {
 
         private ProgressDialog pDialog;
@@ -204,11 +208,6 @@ public class HomeFragment extends Fragment {
             }
 
         }
-    }
-
-    private Typeface loadFont(String fontFile)
-    {
-        return Typeface.createFromAsset(getActivity().getAssets(),fontFile);
     }
 
 

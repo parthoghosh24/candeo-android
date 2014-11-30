@@ -6,19 +6,16 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.VideoView;
-
 import com.candeo.app.adapters.TutorialPagerAdapter;
 import com.candeo.app.home.HomeActivity;
 import com.candeo.app.util.CandeoUtil;
@@ -88,35 +85,6 @@ public class SplashActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * @partho
-     *
-     * Loading Font Awesome
-     */
-    private Typeface loadFontAwesome()
-    {
-        Typeface fontAwesome = Typeface.createFromAsset(getAssets(),"fa.ttf");
-        return  fontAwesome;
-    }
-
-    private Typeface loadFontFreeBooter()
-    {
-        Typeface fontAwesome = Typeface.createFromAsset(getAssets(),"freebooter.ttf");
-        return  fontAwesome;
-    }
-
-    private Typeface loadFontPTmono()
-    {
-        Typeface fontAwesome = Typeface.createFromAsset(getAssets(),"pt_mono.ttf");
-        return  fontAwesome;
-    }
-
-    private Typeface loadFontPTsans()
-    {
-        Typeface fontAwesome = Typeface.createFromAsset(getAssets(),"pt_sans.ttf");
-        return  fontAwesome;
     }
 
 
