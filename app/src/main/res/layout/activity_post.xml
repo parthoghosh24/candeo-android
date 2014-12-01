@@ -1,5 +1,5 @@
 
-    <LinearLayout
+    <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -14,8 +14,9 @@
 
         <ScrollView
             android:id="@+id/candeo_post_scroller"
+            android:layout_below="@id/candeo_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -142,15 +143,7 @@
                     android:padding="5dp"/>
 
 
-                <Button
-                        android:id="@+id/candeo_post_it"
-                        android:layout_below="@id/candeo_copyright_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:gravity="center"
-                        android:background="?android:attr/selectableItemBackground"
-                        />
+
 
 
 
@@ -158,8 +151,17 @@
 
 
         </ScrollView>
+        <Button
+            android:id="@+id/candeo_post_it"
+            android:layout_below="@id/candeo_post_scroller"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:background="?android:attr/selectableItemBackground"
+            />
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
 
