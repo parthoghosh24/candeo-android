@@ -18,6 +18,7 @@
         android:textSize="20sp"
         android:text="Not Signed In. Sign In to get inspired and follow creators around the world to get their feed." />
     <Button
+        android:id="@+id/candeo_feed_sign_in"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Sign In"

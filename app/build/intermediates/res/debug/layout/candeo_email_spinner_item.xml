@@ -1,0 +1,8 @@
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/candeo_email_spinner_item_text"
+    style="?android:attr/spinnerItemStyle"
+    android:singleLine="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ellipsize="marquee"
+    /><!-- From: file:/home/dholu/projects/Candeo/app/src/main/res/layout/candeo_email_spinner_item.xml -->

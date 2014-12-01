@@ -19,6 +19,7 @@
         android:textSize="20sp"
         android:text="Not Signed In. Sign In to showcase, inspire and appreciate. Be a Candeo star." />
     <Button
+        android:id="@+id/candeo_user_sign_in"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Sign In"

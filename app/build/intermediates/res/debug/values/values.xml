@@ -187,6 +187,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_content">ContentActivity</string>
     <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_post">PostActivity</string>
     <string name="title_activity_record">RecordActivity</string>
     <string name="title_activity_respond">RespondActivity</string>

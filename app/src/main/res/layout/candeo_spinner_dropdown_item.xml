@@ -1,0 +1,8 @@
+<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/candeo_spinner_dropdown_item_list"
+    style="?android:attr/spinnerDropDownItemStyle"
+    android:textColor="@android:color/secondary_text_light"
+    android:singleLine="true"
+    android:layout_width="match_parent"
+    android:layout_height="20dp"
+    android:ellipsize="marquee"/>
