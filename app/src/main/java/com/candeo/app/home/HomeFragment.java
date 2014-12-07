@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.candeo.app.CandeoApplication;
 import com.candeo.app.adapters.FeedAdapter;
 import com.candeo.app.adapters.ShowcaseAdapter;
 import com.candeo.app.adapters.TutorialPagerAdapter;
@@ -52,8 +53,7 @@ public class HomeFragment extends Fragment {
     SwipeRefreshLayout refreshView;
     FeedAdapter feedAdapter;
     ArrayList<HashMap<String, String>> feeds;
-    private String domain="http://192.168.0.104:3000";
-    private String feedsURL = domain+"/api/v1/contents";
+    private String feedsURL = CandeoApplication.baseUrl+"/api/v1/contents";
     View homeView=null;
 
     @Override

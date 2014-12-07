@@ -144,22 +144,25 @@
 
 
 
+                <Button
+                    android:id="@+id/candeo_post_it"
+                    android:layout_below="@id/candeo_copyright_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center"
+                    android:text="INSPIRE"
+                    android:background="?android:attr/selectableItemBackground"
+                    />
 
 
 
             </RelativeLayout>
 
 
+
         </ScrollView>
-        <Button
-            android:id="@+id/candeo_post_it"
-            android:layout_below="@id/candeo_post_scroller"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:gravity="center"
-            android:background="?android:attr/selectableItemBackground"
-            />
+
 
     </RelativeLayout>
 

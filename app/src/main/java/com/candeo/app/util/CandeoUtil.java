@@ -3,9 +3,17 @@ package com.candeo.app.util;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
+import android.net.Uri;
+import android.webkit.MimeTypeMap;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -31,4 +39,33 @@ public class CandeoUtil {
        }
        return emails;
    }
+
+    public static byte[] fileToByteArray(File file)
+    {
+        FileInputStream inputStream =null;
+
+        byte[] bytes= new byte[(int)file.length()];
+
+        try
+        {
+            inputStream = new FileInputStream(file);
+            inputStream.read(bytes);
+            inputStream.close();
+        }
+        catch (FileNotFoundException fe)
+        {
+            fe.printStackTrace();
+        }
+        catch (IOException ie)
+        {
+            ie.printStackTrace();
+        }
+        return bytes;
+    }
+
+    public static String getMimeType(Uri uri, Context context)
+    {
+        ContentResolver contentResolver = context.getContentResolver();
+        return contentResolver.getType(uri);
+    }
 }

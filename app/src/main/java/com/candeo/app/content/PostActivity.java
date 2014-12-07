@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
@@ -26,9 +27,12 @@ import android.widget.TextView;
 
 import android.widget.VideoView;
 
+import com.candeo.app.CandeoApplication;
 import com.candeo.app.R;
+import com.candeo.app.network.CandeoHttpClient;
 import com.candeo.app.util.CandeoUtil;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -41,11 +45,15 @@ public class PostActivity extends ActionBarActivity {
     Switch selector;
     TextView copyrightText;
     EditText showcaseTitleText;
+    EditText description;
     Button audioPreview;
     ImageView imagePreview;
     VideoView videoPreview;
     Button videoPreviewPlay;
     Toolbar toolbar;
+    String mimeType;
+    String fileName;
+    byte[] dataArray;
     boolean isPlaying=false;
     int stopPosition=0;
     MediaPlayer player;
@@ -75,6 +83,7 @@ public class PostActivity extends ActionBarActivity {
         videoPreviewPlay=(Button)findViewById(R.id.candeo_video_preview_play);
         videoPreviewPlay.setTypeface(CandeoUtil.loadFont(getAssets(), "fa.ttf"));
         videoPreviewPlay.setText("\uf04b");
+        description=(EditText)findViewById(R.id.candeo_content_create);
 
         audio=(Button)findViewById(R.id.candeo_audio);
         audio.setTypeface(CandeoUtil.loadFont(getAssets(), "fa.ttf"));
@@ -212,7 +221,8 @@ public class PostActivity extends ActionBarActivity {
         postIt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                new PostContentTask().execute();
+                //finish();
             }
         });
 
@@ -237,6 +247,45 @@ public class PostActivity extends ActionBarActivity {
             }
         });
 
+    }
+
+    private class PostContentTask extends AsyncTask<String, Void, String>
+    {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try
+            {
+                String url =CandeoApplication.baseUrl+"/api/v1/contents/create ";
+                System.out.println("URL Is "+url);
+                CandeoHttpClient client = new CandeoHttpClient(url);
+                client.connectForMultipart();
+                client.addFormPart("type", "1");
+                client.addFormPart("description",description.getText().toString());
+                client.addFormPart("user_id","1");
+                client.addFormPart("tag","inspire");
+                System.out.println("FILE is " + fileName);
+                client.addFormPart("media_type","1");
+                client.addFilePart("media",fileName,dataArray, mimeType);
+                client.finishMultipart();
+                System.out.println("Response is "+client.getResponse());
+            }
+            catch (IOException ie)
+            {
+
+                ie.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+        }
     }
 
     @Override
@@ -310,11 +359,24 @@ public class PostActivity extends ActionBarActivity {
 
                 final String path = data.getStringExtra("path");
                 System.out.println("Path is "+ path);
+                File file = new File(path);
+                mimeType=CandeoUtil.getMimeType(Uri.fromFile(file),PostActivity.this);
+                fileName = file.getName();
+                dataArray = CandeoUtil.fileToByteArray(file);
+                System.out.println("FILE IS "+fileName);
                 playAudio(path);
             }
             else if(requestCode == PICK_AUDIO_FILE)
             {
                 final Uri uri = data.getData();
+                Cursor cursor = getContentResolver().query(uri, new String[]{MediaStore.Audio.Media.DATA},null,null,null);
+                cursor.moveToFirst();
+                String filePath = cursor.getString(0);
+                cursor.close();
+                File file = new File(filePath);
+                mimeType=CandeoUtil.getMimeType(uri, PostActivity.this);
+                fileName = file.getName();
+                dataArray = CandeoUtil.fileToByteArray(file);
                 System.out.println("Path is "+ uri.getPath());
                 playAudio(uri);
             }

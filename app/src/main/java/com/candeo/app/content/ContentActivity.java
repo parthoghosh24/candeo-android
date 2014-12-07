@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.candeo.app.CandeoApplication;
 import com.candeo.app.R;
 import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.JSONParser;
@@ -36,8 +37,7 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
     Toolbar toolbar;
     TextView username = null;
     Button getInspired=null;
-    private String domain="http://192.168.0.104:3000";
-    private String contentURL = domain+"/api/v1/contents";
+    private String contentURL = CandeoApplication.baseUrl+"/api/v1/contents";
     MediaController mediaController;
     MediaPlayer mediaPlayer;
     VideoView  videoView;
@@ -189,7 +189,7 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
                 if(type>0)
                 {
                     mediaController = new MediaController(ContentActivity.this);
-                    String mediaUrl=domain+jsonObject.optString("media");
+                    String mediaUrl=CandeoApplication.baseUrl+jsonObject.optString("media");
                     switch (type)
                     {
                         case 1: //audio
