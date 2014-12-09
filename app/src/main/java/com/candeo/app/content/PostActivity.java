@@ -186,7 +186,7 @@ public class PostActivity extends ActionBarActivity {
                             Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 
                             File f = new File(android.os.Environment
-                                    .getExternalStorageDirectory(), "temp.mp4");
+                                    .getExternalStorageDirectory(), "candeo/videos/temp.mp4");
                             intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 180);
                             intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, 90);
                             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));

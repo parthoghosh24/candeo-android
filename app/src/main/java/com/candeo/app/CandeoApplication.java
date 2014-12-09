@@ -4,11 +4,14 @@ import android.app.Application;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.candeo.app.db.CandeoDatabase;
 import com.candeo.app.db.CandeoDbHelper;
+
+import java.io.File;
 
 /**
  * Created by Partho on 7/12/14.
@@ -29,6 +32,15 @@ public class CandeoApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        File candeoDirectory = new File(Environment.getExternalStorageDirectory()+"/candeo");
+        candeoDirectory.mkdirs();
+        File candeoAudioDirectory = new File(Environment.getExternalStorageDirectory()+"/candeo/audios");
+        candeoAudioDirectory.mkdirs();
+        File candeoVideoDirectory = new File(Environment.getExternalStorageDirectory()+"/candeo/videos");
+        candeoVideoDirectory.mkdirs();
+        File candeoImageDirectory = new File(Environment.getExternalStorageDirectory()+"/candeo/images");
+        candeoImageDirectory.mkdirs();
+
         appRequestQueue = Volley.newRequestQueue(getApplicationContext());
         if (sInstance == null)
         {
