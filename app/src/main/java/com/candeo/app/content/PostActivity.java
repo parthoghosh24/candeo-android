@@ -53,6 +53,7 @@ public class PostActivity extends ActionBarActivity {
     Toolbar toolbar;
     String mimeType;
     String fileName;
+    int mediaType;
     byte[] dataArray;
     boolean isPlaying=false;
     int stopPosition=0;
@@ -269,7 +270,7 @@ public class PostActivity extends ActionBarActivity {
                 client.addFormPart("user_id","1");
                 client.addFormPart("tag","inspire");
                 System.out.println("FILE is " + fileName);
-                client.addFormPart("media_type","1");
+                client.addFormPart("media_type",Integer.toString(mediaType));
                 client.addFilePart("media",fileName,dataArray, mimeType);
                 client.finishMultipart();
                 System.out.println("Response is "+client.getResponse());
@@ -320,6 +321,15 @@ public class PostActivity extends ActionBarActivity {
             else if(requestCode == REQUEST_VIDEO_CAMERA|| requestCode == PICK_VIDEO_FILE)
             {
                 Uri uri = data.getData();
+                Cursor cursor = getContentResolver().query(uri, new String[]{MediaStore.Audio.Media.DATA},null,null,null);
+                cursor.moveToFirst();
+                String filePath = cursor.getString(0);
+                cursor.close();
+                File file = new File(filePath);
+                mimeType=CandeoUtil.getMimeType(uri, PostActivity.this);
+                fileName = file.getName();
+                dataArray = CandeoUtil.fileToByteArray(file);
+                mediaType=2;
                 videoPreview.setVideoURI(uri);
                 videoPreview.start();
                 videoPreview.seekTo(100);
@@ -362,6 +372,7 @@ public class PostActivity extends ActionBarActivity {
                 File file = new File(path);
                 mimeType=CandeoUtil.getMimeType(Uri.fromFile(file),PostActivity.this);
                 fileName = file.getName();
+                mediaType=1;
                 dataArray = CandeoUtil.fileToByteArray(file);
                 System.out.println("FILE IS "+fileName);
                 playAudio(path);
@@ -377,6 +388,7 @@ public class PostActivity extends ActionBarActivity {
                 mimeType=CandeoUtil.getMimeType(uri, PostActivity.this);
                 fileName = file.getName();
                 dataArray = CandeoUtil.fileToByteArray(file);
+                mediaType=1;
                 System.out.println("Path is "+ uri.getPath());
                 playAudio(uri);
             }
