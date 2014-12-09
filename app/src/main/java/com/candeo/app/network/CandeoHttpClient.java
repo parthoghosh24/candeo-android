@@ -45,7 +45,7 @@ public class CandeoHttpClient {
     {
         outputStream.write((delimiter+boundary+"\r\n").getBytes());
         outputStream.write(("Content-Disposition: form-data; name=\""+paramKey+"\"; filename=\""+fileName+"\"\r\n").getBytes());
-        outputStream.write(("Content-Type: "+mimeType+"\r\n").getBytes());
+        outputStream.write(("Content-Type: application/octet-stream\r\n").getBytes());
         outputStream.write(("Content-Transfer-Encoding: binary\r\n").getBytes());
         outputStream.write(("\r\n").getBytes());
         outputStream.write(data);
