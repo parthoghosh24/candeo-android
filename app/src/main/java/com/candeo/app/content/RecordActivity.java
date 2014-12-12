@@ -52,7 +52,7 @@ public class RecordActivity extends Activity {
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        outputFile = Environment.getExternalStorageDirectory().getAbsolutePath()+"/candeo/audios/candeorecord.m4a";
+        outputFile = Environment.getExternalStorageDirectory().getAbsolutePath()+"/candeo/audios/candeorecord.aac";
         recorder.setOutputFile(outputFile);
         recorder.setAudioChannels(2);
         recorder.setMaxDuration(180 * 1000);

@@ -143,9 +143,8 @@ public class PostActivity extends ActionBarActivity {
                         if(choices[which].equals("Click Something"))
                         {
                             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                           // File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
-                            //intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-                            intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, 90);
+                            File f = new File(android.os.Environment.getExternalStorageDirectory(), "candeo/images/temp.jpg");
+                            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
                             startActivityForResult(intent, REQUEST_IMAGE_CAMERA);
                         }
                         else if(choices[which].equals("Fetch From Gallery"))
