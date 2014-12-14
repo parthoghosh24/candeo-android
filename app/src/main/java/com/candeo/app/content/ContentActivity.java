@@ -45,6 +45,7 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
     Toolbar toolbar;
     TextView username = null;
     Button getInspired=null;
+    Button appreciate=null;
     private String contentURL = CandeoApplication.baseUrl+"/api/v1/contents";
     MediaController mediaController;
     MediaPlayer mediaPlayer;
@@ -75,6 +76,17 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
             public void onClick(View v) {
                 Toast.makeText(ContentActivity.this, "I got inspired", Toast.LENGTH_LONG).show();
                 getInspired.setEnabled(false);
+            }
+        });
+
+        appreciate=(Button)findViewById(R.id.appreciate);
+        appreciate.setTypeface(CandeoUtil.loadFont(getAssets(),"response.ttf"));
+        appreciate.setText("\ue801");
+        appreciate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ContentActivity.this, "I appreciated", Toast.LENGTH_LONG).show();
+                appreciate.setEnabled(false);
             }
         });
 
