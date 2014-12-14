@@ -2,6 +2,7 @@ package com.candeo.app.content;
 
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -32,9 +33,14 @@ import com.candeo.app.R;
 import com.candeo.app.network.CandeoHttpClient;
 import com.candeo.app.util.CandeoUtil;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
 
 public class PostActivity extends ActionBarActivity {
 
@@ -64,6 +70,15 @@ public class PostActivity extends ActionBarActivity {
     private static final int PICK_AUDIO_FILE=400;
     private static final int REQUEST_AUDIO_RECORD=500;
     private static final int PICK_IMAGE_FILE=600;
+
+    private static final int AUDIO=1;
+    private static final int VIDEO=2;
+    private static final int IMAGE=3;
+
+    private static final int INSPIRATION=1;
+    private static final int SHOWCASE=2;
+
+    private int contentType=INSPIRATION;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,8 +158,6 @@ public class PostActivity extends ActionBarActivity {
                         if(choices[which].equals("Click Something"))
                         {
                             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            File f = new File(android.os.Environment.getExternalStorageDirectory(), "candeo/images/temp.jpg");
-                            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
                             startActivityForResult(intent, REQUEST_IMAGE_CAMERA);
                         }
                         else if(choices[which].equals("Fetch From Gallery"))
@@ -186,7 +199,7 @@ public class PostActivity extends ActionBarActivity {
                             Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 
                             File f = new File(android.os.Environment
-                                    .getExternalStorageDirectory(), "candeo/videos/temp.mp4");
+                                    .getExternalStorageDirectory(), "candeo/videos/candeovideo.mp4");
                             intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 180);
                             intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, 90);
                             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
@@ -234,6 +247,7 @@ public class PostActivity extends ActionBarActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked)
                 {
+                    contentType=SHOWCASE;
                     copyrightText.setTypeface(CandeoUtil.loadFont(getAssets(), "fa.ttf"));
                     copyrightText.setText("\uf1f9 Anonymous");
                     copyrightText.setVisibility(View.VISIBLE);
@@ -241,6 +255,7 @@ public class PostActivity extends ActionBarActivity {
                 }
                 else
                 {
+                    contentType=INSPIRATION;
                     copyrightText.setVisibility(View.GONE);
                     showcaseTitleText.setVisibility(View.GONE);
                 }
@@ -251,9 +266,16 @@ public class PostActivity extends ActionBarActivity {
 
     private class PostContentTask extends AsyncTask<String, Void, String>
     {
+        private ProgressDialog pDialog;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            pDialog = new ProgressDialog(PostActivity.this);
+            System.out.println("Dialog is "+pDialog);
+            pDialog.setMessage("Creating Magic...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
         }
 
         @Override
@@ -264,7 +286,7 @@ public class PostActivity extends ActionBarActivity {
                 System.out.println("URL Is "+url);
                 CandeoHttpClient client = new CandeoHttpClient(url);
                 client.connectForMultipart();
-                client.addFormPart("type", "1");
+                client.addFormPart("type", Integer.toString(contentType));
                 client.addFormPart("description",description.getText().toString());
                 client.addFormPart("user_id","1");
                 client.addFormPart("tag","inspire");
@@ -284,6 +306,7 @@ public class PostActivity extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(String s) {
+            pDialog.dismiss();
             super.onPostExecute(s);
         }
     }
@@ -291,110 +314,171 @@ public class PostActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Bitmap bitmap=null;
+        Uri uri=null;
+        Cursor cursor=null;
+        String filePath="";
+        File file=null;
+        ByteArrayOutputStream bos=null;
+        int width=0;
+        int height=0;
+
         if(resultCode == RESULT_OK)
         {
-            if(requestCode == REQUEST_IMAGE_CAMERA)
+            switch (requestCode)
             {
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                System.out.println("Bitmap is " + bitmap);
-                imagePreview.setImageBitmap(bitmap);
-                imagePreview.setVisibility(View.VISIBLE);
-                videoPreview.setVisibility(View.GONE);
-                videoPreviewPlay.setVisibility(View.GONE);
-                audioPreview.setVisibility(View.GONE);
-            }
-            else if(requestCode == PICK_IMAGE_FILE)
-            {
-                   Uri uri = data.getData();
-                   Cursor cursor = getContentResolver().query(uri, new String[]{MediaStore.Images.ImageColumns.DATA},null,null,null);
-                   cursor.moveToFirst();
-                   String filePath = cursor.getString(0);
-                   cursor.close();
-                   imagePreview.setImageBitmap(BitmapFactory.decodeFile(filePath));
-                   imagePreview.setVisibility(View.VISIBLE);
-                   videoPreview.setVisibility(View.GONE);
-                   videoPreviewPlay.setVisibility(View.GONE);
-                   audioPreview.setVisibility(View.GONE);
-
-            }
-            else if(requestCode == REQUEST_VIDEO_CAMERA|| requestCode == PICK_VIDEO_FILE)
-            {
-                Uri uri = data.getData();
-                Cursor cursor = getContentResolver().query(uri, new String[]{MediaStore.Audio.Media.DATA},null,null,null);
-                cursor.moveToFirst();
-                String filePath = cursor.getString(0);
-                cursor.close();
-                File file = new File(filePath);
-                mimeType=CandeoUtil.getMimeType(uri, PostActivity.this);
-                fileName = file.getName();
-                dataArray = CandeoUtil.fileToByteArray(file);
-                mediaType=2;
-                videoPreview.setVideoURI(uri);
-                videoPreview.start();
-                videoPreview.seekTo(100);
-                imagePreview.setVisibility(View.GONE);
-                videoPreview.setVisibility(View.VISIBLE);
-                videoPreviewPlay.setVisibility(View.GONE);
-                audioPreview.setVisibility(View.GONE);
-                videoPreview.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                            if(!videoPreview.isPlaying())
-                            {
-                                videoPreview.seekTo(stopPosition);
-                                videoPreview.start();
-                            }
-                            else
-                            {
-                                stopPosition=videoPreview.getCurrentPosition();
-                                videoPreview.pause();
-                            }
-
-                        if(videoPreview!=null)
-                        {
-                            videoPreview.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                                @Override
-                                public void onCompletion(MediaPlayer mp) {
-                                    videoPreview.stopPlayback();
-                                }
-                            });
-                        }
-                        return true;
+                case REQUEST_IMAGE_CAMERA:
+                    bos = new ByteArrayOutputStream();
+                    bitmap = (Bitmap) data.getExtras().get("data");
+                    height=bitmap.getHeight();
+                    width=bitmap.getWidth();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG,100,bos);
+                    mimeType="image/jpeg";
+                    fileName = "candeoimage.jpg";
+                    dataArray = bos.toByteArray();
+                    mediaType=IMAGE;
+                    System.out.println("Bitmap is " + bitmap);
+                    if(width > height)
+                    {
+                        imagePreview.setImageBitmap(Bitmap.createScaledBitmap(bitmap,320,240,false));
                     }
-                });
-            }
-            else if(requestCode == REQUEST_AUDIO_RECORD)
-            {
+                    else
+                    {
+                        imagePreview.setImageBitmap(Bitmap.createScaledBitmap(bitmap,240,320,false));
+                    }
 
-                final String path = data.getStringExtra("path");
-                System.out.println("Path is "+ path);
-                File file = new File(path);
-                mimeType=CandeoUtil.getMimeType(Uri.fromFile(file),PostActivity.this);
-                fileName = file.getName();
-                mediaType=1;
-                dataArray = CandeoUtil.fileToByteArray(file);
-                System.out.println("FILE IS "+fileName);
-                playAudio(path);
-            }
-            else if(requestCode == PICK_AUDIO_FILE)
-            {
-                final Uri uri = data.getData();
-                Cursor cursor = getContentResolver().query(uri, new String[]{MediaStore.Audio.Media.DATA},null,null,null);
-                cursor.moveToFirst();
-                String filePath = cursor.getString(0);
-                cursor.close();
-                File file = new File(filePath);
-                mimeType=CandeoUtil.getMimeType(uri, PostActivity.this);
-                fileName = file.getName();
-                dataArray = CandeoUtil.fileToByteArray(file);
-                mediaType=1;
-                System.out.println("Path is "+ uri.getPath());
-                playAudio(uri);
+                    imagePreview.setVisibility(View.VISIBLE);
+                    videoPreview.setVisibility(View.GONE);
+                    videoPreviewPlay.setVisibility(View.GONE);
+                    audioPreview.setVisibility(View.GONE);
+                    break;
+                case PICK_IMAGE_FILE:
+                    uri = data.getData();
+                    cursor = getContentResolver().query(uri, new String[]{MediaStore.Images.ImageColumns.DATA}, null, null, null);
+                    cursor.moveToFirst();
+                    filePath = cursor.getString(0);
+                    cursor.close();
+                    file = new File(filePath);
+                    mimeType=CandeoUtil.getMimeType(uri, PostActivity.this);
+                    fileName = file.getName();
+                    bitmap=BitmapFactory.decodeFile(filePath);
+                    height=bitmap.getHeight();
+                    width=bitmap.getWidth();
+                    bos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG,100,bos);
+                    dataArray = CandeoUtil.fileToByteArray(file);
+                    mediaType=IMAGE;
+                    if(width > height)
+                    {
+                        imagePreview.setImageBitmap(Bitmap.createScaledBitmap(bitmap,320,240,false));
+                    }
+                    else
+                    {
+                        imagePreview.setImageBitmap(Bitmap.createScaledBitmap(bitmap,240,320,false));
+                    }
+                    imagePreview.setVisibility(View.VISIBLE);
+                    videoPreview.setVisibility(View.GONE);
+                    videoPreviewPlay.setVisibility(View.GONE);
+                    audioPreview.setVisibility(View.GONE);
+                    break;
+                case REQUEST_VIDEO_CAMERA:
+                    uri = data.getData();
+                    try {
+                        file = new File(android.os.Environment
+                                .getExternalStorageDirectory(), "candeo/videos/candeovideo.mp4");
+                        mimeType=CandeoUtil.getMimeType(uri, PostActivity.this);
+                        fileName = file.getName();
+                        dataArray = CandeoUtil.fileToByteArray(file);
+                        mediaType=VIDEO;
+                        playVideo(uri);
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.printStackTrace();
+                    }
+
+
+                    break;
+                case PICK_VIDEO_FILE:
+                    uri = data.getData();
+                    cursor = getContentResolver().query(uri, new String[]{MediaStore.Audio.Media.DATA},null,null,null);
+                    cursor.moveToFirst();
+                    filePath = cursor.getString(0);
+                    cursor.close();
+                    file = new File(filePath);
+                    mimeType=CandeoUtil.getMimeType(uri, PostActivity.this);
+                    fileName = file.getName();
+                    dataArray = CandeoUtil.fileToByteArray(file);
+                    mediaType=VIDEO;
+                    playVideo(uri);
+                    break;
+                case REQUEST_AUDIO_RECORD:
+                    filePath= data.getStringExtra("path");
+                    System.out.println("Path is "+ filePath);
+                    file = new File(filePath);
+                    mimeType=CandeoUtil.getMimeType(Uri.fromFile(file),PostActivity.this);
+                    fileName = file.getName();
+                    mediaType=AUDIO;
+                    dataArray = CandeoUtil.fileToByteArray(file);
+                    System.out.println("FILE IS "+fileName);
+                    playAudio(filePath);
+                    break;
+                case PICK_AUDIO_FILE:
+                    uri = data.getData();
+                    cursor = getContentResolver().query(uri, new String[]{MediaStore.Audio.Media.DATA},null,null,null);
+                    cursor.moveToFirst();
+                    filePath = cursor.getString(0);
+                    cursor.close();
+                    file = new File(filePath);
+                    mimeType=CandeoUtil.getMimeType(uri, PostActivity.this);
+                    fileName = file.getName();
+                    dataArray = CandeoUtil.fileToByteArray(file);
+                    mediaType=AUDIO;
+                    System.out.println("Path is "+ uri.getPath());
+                    playAudio(uri);
+                    break;
             }
 
         }
     }
 
+    private void playVideo(Uri uri)
+    {
+        videoPreview.setVideoURI(uri);
+        videoPreview.start();
+        videoPreview.seekTo(100);
+        imagePreview.setVisibility(View.GONE);
+        videoPreview.setVisibility(View.VISIBLE);
+        videoPreviewPlay.setVisibility(View.GONE);
+        audioPreview.setVisibility(View.GONE);
+        videoPreview.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(!videoPreview.isPlaying())
+                {
+                    videoPreview.seekTo(stopPosition);
+                    videoPreview.start();
+                }
+                else
+                {
+                    stopPosition=videoPreview.getCurrentPosition();
+                    videoPreview.pause();
+                }
+
+                if(videoPreview!=null)
+                {
+                    videoPreview.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            videoPreview.stopPlayback();
+                        }
+                    });
+                }
+                return true;
+            }
+        });
+
+    }
     private void playAudio(Object uri)
     {
 

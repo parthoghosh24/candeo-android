@@ -3,6 +3,8 @@ package com.candeo.app.content;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -17,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.TextView;
@@ -30,6 +33,11 @@ import com.candeo.app.util.JSONParser;
 
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 
 public class ContentActivity extends ActionBarActivity implements MediaController.MediaPlayerControl{
 
@@ -41,6 +49,7 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
     MediaController mediaController;
     MediaPlayer mediaPlayer;
     VideoView  videoView;
+    ImageView imageView;
     LinearLayout contentViewer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -232,6 +241,11 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
                             break;
                         case 3:
                             //Image
+                            imageView = new ImageView(ContentActivity.this);
+                            imageView.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                            contentViewer.addView(imageView);
+                            System.out.println("MEDIA URL is : "+mediaUrl);
+                            new LoadImageTask(mediaUrl,imageView).execute();
                             break;
                     }
                 }
@@ -245,6 +259,65 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
     }
 
 
+    private class LoadImageTask extends AsyncTask<String, String, Bitmap>
+    {
+        private ProgressDialog pDialog;
+        private String url="";
+        private ImageView imageView;
+
+        LoadImageTask(String url, ImageView imageView)
+        {
+            this.url=url;
+            this.imageView=imageView;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(ContentActivity.this);
+            pDialog.setMessage("Loading Content...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            Bitmap bitmap=null;
+            try
+            {
+                URL imageUrl = new URL(url);
+                bitmap = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
+            }
+            catch (IOException ioe)
+            {
+                    ioe.printStackTrace();
+            }
+
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            System.out.println("BITMAP IS "+bitmap);
+            if(bitmap!=null)
+            {
+                int height=bitmap.getHeight();
+                int width=bitmap.getWidth();
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG,100,bos);
+                if(width > height)
+                {
+                    imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap,640,400,false));
+                }
+                else
+                {
+                    imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap,400,640,false));
+                }
+            }
+            pDialog.dismiss();
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
