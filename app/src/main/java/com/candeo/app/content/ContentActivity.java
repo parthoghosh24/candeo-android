@@ -3,6 +3,7 @@ package com.candeo.app.content;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
@@ -28,6 +29,8 @@ import android.widget.VideoView;
 
 import com.candeo.app.CandeoApplication;
 import com.candeo.app.R;
+import com.candeo.app.response.AppreciateActivity;
+import com.candeo.app.response.GetInspiredActivity;
 import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.JSONParser;
 
@@ -75,7 +78,8 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
             @Override
             public void onClick(View v) {
                 Toast.makeText(ContentActivity.this, "I got inspired", Toast.LENGTH_LONG).show();
-                getInspired.setEnabled(false);
+                //getInspired.setEnabled(false);
+                startActivity(new Intent(ContentActivity.this, GetInspiredActivity.class));
             }
         });
 
@@ -86,7 +90,8 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
             @Override
             public void onClick(View v) {
                 Toast.makeText(ContentActivity.this, "I appreciated", Toast.LENGTH_LONG).show();
-                appreciate.setEnabled(false);
+                //appreciate.setEnabled(false);
+                startActivity(new Intent(ContentActivity.this, AppreciateActivity.class));
             }
         });
 

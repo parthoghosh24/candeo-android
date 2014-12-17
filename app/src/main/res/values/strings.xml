@@ -11,5 +11,7 @@
     <string name="title_activity_respond">RespondActivity</string>
     <string name="title_activity_record">RecordActivity</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_get_inspired">GetInspiredActivity</string>
+    <string name="title_activity_appreciate">AppreciateActivity</string>
 
 </resources>

@@ -64,6 +64,16 @@
             android:theme="@style/Theme.AppCompat.NoActionBar" >
         </activity>
         <activity
+            android:name="com.candeo.app.response.GetInspiredActivity"
+            android:label="@string/title_activity_get_inspired"
+            android:theme="@style/Theme.AppCompat.Light.Dialog" >
+        </activity>
+        <activity
+            android:name="com.candeo.app.response.AppreciateActivity"
+            android:label="@string/title_activity_appreciate"
+            android:theme="@style/Theme.AppCompat.Light.Dialog" >
+        </activity>
+        <activity
             android:name="android.support.v7.widget.TestActivity"
             android:label="RecyclerViewTestActivity" />
     </application>

@@ -19,7 +19,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.candeo.app.SplashActivity"
+            android:name=".SplashActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,35 +28,44 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.candeo.app.home.HomeActivity"
+            android:name=".home.HomeActivity"
             android:label="@string/title_activity_home" />
         <activity
-            android:name="com.candeo.app.content.ContentActivity"
+            android:name=".content.ContentActivity"
             android:label="@string/title_activity_content"
-            android:parentActivityName="com.candeo.app.home.HomeActivity" >
+            android:parentActivityName=".home.HomeActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".home.HomeActivity" />
         </activity>
         <activity
-            android:name="com.candeo.app.content.RespondActivity"
+            android:name=".content.RespondActivity"
             android:label="@string/title_activity_respond" >
         </activity>
         <activity
-            android:name="com.candeo.app.content.PostActivity"
+            android:name=".content.PostActivity"
             android:label="@string/title_activity_post"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
         </activity>
         <activity
-            android:name="com.candeo.app.content.RecordActivity"
+            android:name=".content.RecordActivity"
             android:label="@string/title_activity_record"
             android:theme="@style/Theme.AppCompat.Dialog" >
         </activity>
         <activity
-            android:name="com.candeo.app.user.LoginActivity"
+            android:name=".user.LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/Theme.AppCompat.NoActionBar" >
-
+        </activity>
+        <activity
+            android:name=".response.GetInspiredActivity"
+            android:label="@string/title_activity_get_inspired"
+            android:theme="@style/Theme.AppCompat.Light.Dialog">
+        </activity>
+        <activity
+            android:name=".response.AppreciateActivity"
+            android:label="@string/title_activity_appreciate"
+            android:theme="@style/Theme.AppCompat.Light.Dialog">
         </activity>
     </application>
 
