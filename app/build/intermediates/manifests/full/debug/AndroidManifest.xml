@@ -23,7 +23,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme.NoActionBar" >
         <activity
             android:name="com.candeo.app.SplashActivity"
             android:label="@string/app_name" >
@@ -51,7 +51,7 @@
         <activity
             android:name="com.candeo.app.content.PostActivity"
             android:label="@string/title_activity_post"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
             android:name="com.candeo.app.content.RecordActivity"
@@ -61,7 +61,7 @@
         <activity
             android:name="com.candeo.app.user.LoginActivity"
             android:label="@string/title_activity_login"
-            android:theme="@style/Theme.AppCompat.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
             android:name="com.candeo.app.response.GetInspiredActivity"
@@ -72,6 +72,11 @@
             android:name="com.candeo.app.response.AppreciateActivity"
             android:label="@string/title_activity_appreciate"
             android:theme="@style/Theme.AppCompat.Light.Dialog" >
+        </activity>
+        <activity
+            android:name="com.candeo.app.book.BookRenderActivity"
+            android:label="@string/title_activity_book_render"
+            android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
             android:name="android.support.v7.widget.TestActivity"

@@ -10,52 +10,92 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <LinearLayout
-        android:id="@+id/candeo_content_viewer"
-        android:layout_width="fill_parent"
-        android:layout_height="300dp"
-        android:orientation="vertical">
-
-    </LinearLayout>
-    <TextView
-        android:id="@+id/description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/get_inspired"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="@drawable/roundedbutton"
-            android:textColor="@android:color/background_dark"
-            android:gravity="center"
-           android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="Get Inspired"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/candeo_content_viewer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="300dp"
+                android:orientation="vertical">
+                <FrameLayout
+                    android:id="@+id/candeo_content_viewer_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:background="@color/candeo_primary_dark"
+                    android:visibility="gone">
+                    <VideoView
+                        android:id="@+id/candeo_video_viewer"
+                        android:layout_width="match_parent"
+                        android:layout_height="240dp"
+                        android:layout_gravity="center"/>
 
-        <Button
-            android:id="@+id/appreciate"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="@drawable/roundedbutton"
-            android:textColor="@android:color/background_dark"
-            android:gravity="center"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:text="Appreciate"/>
+                </FrameLayout>
+                <ImageView
+                    android:id="@+id/candeo_image_viewer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
+                <Button
+                    android:id="@+id/candeo_book_launcher"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="LAUNCH BOOK"
+                    android:visibility="gone"/>
+
+            </LinearLayout>
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <Button
+                    android:id="@+id/get_inspired"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@drawable/roundedbutton"
+                    android:textColor="@android:color/background_dark"
+                    android:gravity="center"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:text="Get Inspired"/>
+
+                <Button
+                    android:id="@+id/appreciate"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@drawable/roundedbutton"
+                    android:textColor="@android:color/background_dark"
+                    android:gravity="center"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:text="Appreciate"/>
 
 
-    </RelativeLayout>
+            </RelativeLayout>
+
+         </LinearLayout>
+
+
+    </ScrollView>
 
 
 

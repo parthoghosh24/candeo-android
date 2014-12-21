@@ -3,6 +3,7 @@ package com.candeo.app.content;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -16,9 +17,11 @@ import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -26,12 +29,16 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.candeo.app.CandeoApplication;
 import com.candeo.app.R;
 import com.candeo.app.network.CandeoHttpClient;
 import com.candeo.app.util.CandeoUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -47,6 +54,7 @@ public class PostActivity extends ActionBarActivity {
     Button audio;
     Button image;
     Button video;
+    Button book;
     Button postIt;
     Switch selector;
     TextView copyrightText;
@@ -70,15 +78,18 @@ public class PostActivity extends ActionBarActivity {
     private static final int PICK_AUDIO_FILE=400;
     private static final int REQUEST_AUDIO_RECORD=500;
     private static final int PICK_IMAGE_FILE=600;
+    private static final int PICK_EPUB_FILE=700;
 
     private static final int AUDIO=1;
     private static final int VIDEO=2;
     private static final int IMAGE=3;
+    private static final int BOOK=4;
 
     private static final int INSPIRATION=1;
     private static final int SHOWCASE=2;
 
     private int contentType=INSPIRATION;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,6 +221,7 @@ public class PostActivity extends ActionBarActivity {
                             Intent intent = new Intent(
                                     Intent.ACTION_PICK,
                                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 16*1024*1024); //16 MB Limit
                             intent.setType("video/*");
                             startActivityForResult(
                                     Intent.createChooser(intent, "Select File"),
@@ -225,6 +237,19 @@ public class PostActivity extends ActionBarActivity {
                 });
                 builder.show();
 
+            }
+        });
+
+        book=(Button)findViewById(R.id.candeo_book);
+        book.setTypeface(CandeoUtil.loadFont(getAssets(), "fa.ttf"));
+        book.setText("\uf02d");
+        book.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("epub/*");
+                startActivityForResult(Intent.createChooser(intent,"Select EPUB"),PICK_EPUB_FILE);
             }
         });
 
@@ -264,22 +289,28 @@ public class PostActivity extends ActionBarActivity {
 
     }
 
-    private class PostContentTask extends AsyncTask<String, Void, String>
+    private class PostContentTask extends AsyncTask<Void, Void, Void>
     {
-        private ProgressDialog pDialog;
+        private ProgressDialog pDialog=new ProgressDialog(PostActivity.this);
+        private String result="";
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(PostActivity.this);
-            System.out.println("Dialog is "+pDialog);
-            pDialog.setMessage("Creating Magic...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
+            try {
+                pDialog.setMessage("Creating Magic...");
+                pDialog.setIndeterminate(true);
+                pDialog.setCancelable(false);
+                pDialog.show();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
         }
 
         @Override
-        protected String doInBackground(String... params) {
+        protected Void doInBackground(Void... params) {
             try
             {
                 String url =CandeoApplication.baseUrl+"/api/v1/contents/create ";
@@ -294,20 +325,44 @@ public class PostActivity extends ActionBarActivity {
                 client.addFormPart("media_type",Integer.toString(mediaType));
                 client.addFilePart("media",fileName,dataArray, mimeType);
                 client.finishMultipart();
-                System.out.println("Response is "+client.getResponse());
+                result=client.getResponse();
+                System.out.println("Response is "+result);
             }
             catch (IOException ie)
             {
+                System.out.println("IN HERE");
 
                 ie.printStackTrace();
             }
+            Log.e(PostActivity.class.getName(),"RESPONSE RETURNED IS "+result);
             return null;
+
         }
 
+
+
         @Override
-        protected void onPostExecute(String s) {
-            pDialog.dismiss();
-            super.onPostExecute(s);
+        protected void onPostExecute(Void response) {
+            if(pDialog!=null)
+            {
+                pDialog.dismiss();
+            }
+            try
+            {
+                System.out.println("Respnse"+result+"finish");
+                JSONObject json = new JSONObject(result);
+                String id = json.getString("id");
+                Log.e(PostActivity.class.getName(),"AND THE ID IS "+id);
+                Intent contentIntent = new Intent(PostActivity.this,ContentActivity.class);
+                contentIntent.putExtra("contentId",id);
+                finish();
+                startActivity(contentIntent);
+            }
+            catch (JSONException jse)
+            {
+                jse.printStackTrace();
+            }
+
         }
     }
 
@@ -366,7 +421,7 @@ public class PostActivity extends ActionBarActivity {
                     width=bitmap.getWidth();
                     bos = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.JPEG,100,bos);
-                    dataArray = CandeoUtil.fileToByteArray(file);
+                    new PouplateDataArray().execute(file);
                     mediaType=IMAGE;
                     if(width > height)
                     {
@@ -388,7 +443,7 @@ public class PostActivity extends ActionBarActivity {
                                 .getExternalStorageDirectory(), "candeo/videos/candeovideo.mp4");
                         mimeType=CandeoUtil.getMimeType(uri, PostActivity.this);
                         fileName = file.getName();
-                        dataArray = CandeoUtil.fileToByteArray(file);
+                        new PouplateDataArray().execute(file);
                         mediaType=VIDEO;
                         playVideo(uri);
                     }
@@ -401,14 +456,14 @@ public class PostActivity extends ActionBarActivity {
                     break;
                 case PICK_VIDEO_FILE:
                     uri = data.getData();
-                    cursor = getContentResolver().query(uri, new String[]{MediaStore.Audio.Media.DATA},null,null,null);
+                    cursor = getContentResolver().query(uri, new String[]{MediaStore.Audio.Media.DATA}, null, null, null);
                     cursor.moveToFirst();
                     filePath = cursor.getString(0);
                     cursor.close();
                     file = new File(filePath);
                     mimeType=CandeoUtil.getMimeType(uri, PostActivity.this);
                     fileName = file.getName();
-                    dataArray = CandeoUtil.fileToByteArray(file);
+                    new PouplateDataArray().execute(file);
                     mediaType=VIDEO;
                     playVideo(uri);
                     break;
@@ -419,7 +474,7 @@ public class PostActivity extends ActionBarActivity {
                     mimeType=CandeoUtil.getMimeType(Uri.fromFile(file),PostActivity.this);
                     fileName = file.getName();
                     mediaType=AUDIO;
-                    dataArray = CandeoUtil.fileToByteArray(file);
+                    new PouplateDataArray().execute(file);
                     System.out.println("FILE IS "+fileName);
                     playAudio(filePath);
                     break;
@@ -432,13 +487,50 @@ public class PostActivity extends ActionBarActivity {
                     file = new File(filePath);
                     mimeType=CandeoUtil.getMimeType(uri, PostActivity.this);
                     fileName = file.getName();
-                    dataArray = CandeoUtil.fileToByteArray(file);
+                    new PouplateDataArray().execute(file);
                     mediaType=AUDIO;
                     System.out.println("Path is "+ uri.getPath());
                     playAudio(uri);
                     break;
+                case PICK_EPUB_FILE:
+                    break;
             }
 
+        }
+    }
+
+    private class PouplateDataArray extends AsyncTask<File,Void,Void>
+    {
+        private ProgressDialog pDialog=new ProgressDialog(PostActivity.this);
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            try {
+                pDialog.setMessage("Preparing File...");
+                pDialog.setIndeterminate(true);
+                pDialog.setCancelable(false);
+                //pDialog.show();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+        }
+
+        @Override
+        protected Void doInBackground(File... params) {
+            File file =params[0];
+            dataArray = CandeoUtil.fileToByteArray(file);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if(pDialog!=null)
+            {
+                pDialog.dismiss();
+            }
         }
     }
 

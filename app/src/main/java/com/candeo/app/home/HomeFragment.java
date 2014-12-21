@@ -118,7 +118,6 @@ public class HomeFragment extends Fragment {
             });
             refreshView.setColorSchemeColors(R.color.material_blue_grey_800, R.color.material_blue_grey_900);
 
-            new LoadFeeds().execute(feedsURL);
             feedView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -160,6 +159,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new LoadFeeds().execute(feedsURL);
+
     }
 
     private class LoadFeeds extends AsyncTask<String, String, JSONObject> {

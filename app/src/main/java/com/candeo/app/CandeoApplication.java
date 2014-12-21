@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
+import android.util.DisplayMetrics;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -17,7 +18,7 @@ import java.io.File;
  * Created by Partho on 7/12/14.
  */
 public class CandeoApplication extends Application {
-    public static final String baseUrl="http://192.168.43.239:3000";
+    public static final String baseUrl="http://192.168.0.105:3000";
     private static CandeoApplication sInstance;
     private RequestQueue appRequestQueue;
     private CandeoDbHelper appDatabase;
@@ -28,10 +29,12 @@ public class CandeoApplication extends Application {
     private static final String USER_USERNAME="username";
     private static final String USER_AUTH_TOKEN="auth_token";
     private static final String USER_UUID="uuid";
+    public static DisplayMetrics displayMetrics = null;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        displayMetrics = new DisplayMetrics();
         File candeoDirectory = new File(Environment.getExternalStorageDirectory()+"/candeo");
         candeoDirectory.mkdirs();
         File candeoAudioDirectory = new File(Environment.getExternalStorageDirectory()+"/candeo/audios");
@@ -40,6 +43,8 @@ public class CandeoApplication extends Application {
         candeoVideoDirectory.mkdirs();
         File candeoImageDirectory = new File(Environment.getExternalStorageDirectory()+"/candeo/images");
         candeoImageDirectory.mkdirs();
+        File candeoBookDirectory = new File(Environment.getExternalStorageDirectory()+"/candeo/books");
+        candeoBookDirectory.mkdirs();
 
         appRequestQueue = Volley.newRequestQueue(getApplicationContext());
         if (sInstance == null)

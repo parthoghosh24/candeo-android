@@ -13,5 +13,6 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_get_inspired">GetInspiredActivity</string>
     <string name="title_activity_appreciate">AppreciateActivity</string>
+    <string name="title_activity_book_render">BookRenderActivity</string>
 
 </resources>

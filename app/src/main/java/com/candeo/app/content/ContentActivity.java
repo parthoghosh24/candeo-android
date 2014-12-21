@@ -11,8 +11,10 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +22,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
@@ -37,7 +40,11 @@ import com.candeo.app.util.JSONParser;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -49,9 +56,11 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
     TextView username = null;
     Button getInspired=null;
     Button appreciate=null;
+    Button launchBook=null; //temporary
     private String contentURL = CandeoApplication.baseUrl+"/api/v1/contents";
     MediaController mediaController;
     MediaPlayer mediaPlayer;
+    FrameLayout videoHolder;
     VideoView  videoView;
     ImageView imageView;
     LinearLayout contentViewer;
@@ -60,6 +69,10 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
         toolbar = (Toolbar)findViewById(R.id.candeo_content_toolbar);
+        videoHolder=(FrameLayout)findViewById(R.id.candeo_content_viewer_holder);
+        videoView =(VideoView)findViewById(R.id.candeo_video_viewer);
+        imageView = (ImageView)findViewById(R.id.candeo_image_viewer);
+        launchBook = (Button)findViewById(R.id.candeo_book_launcher);
         setSupportActionBar(toolbar);
         contentViewer=(LinearLayout)findViewById(R.id.candeo_content_viewer);
         setTitle("Candeo");
@@ -215,10 +228,13 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
                 if(type>0)
                 {
                     mediaController = new MediaController(ContentActivity.this);
-                    String mediaUrl=CandeoApplication.baseUrl+jsonObject.optString("media");
+                    final String mediaUrl=CandeoApplication.baseUrl+jsonObject.optString("media");
                     switch (type)
                     {
                         case 1: //audio
+                            videoHolder.setVisibility(View.GONE);
+                            imageView.setVisibility(View.GONE);
+                            launchBook.setVisibility(View.GONE);
                             try
                             {
                                 mediaPlayer= new MediaPlayer();
@@ -244,26 +260,44 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
 
                             break;
                         case 2: //video
-
-                            videoView = new VideoView(ContentActivity.this);
-                            System.out.println("MEDIA URL is : "+mediaUrl);
+                            videoHolder.setVisibility(View.VISIBLE);
+                            imageView.setVisibility(View.GONE);
+                            launchBook.setVisibility(View.GONE);
+                            System.out.println("MEDIA URL is : " + mediaUrl);
                             videoView.setVideoPath(mediaUrl);
-                            videoView.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                            contentViewer.addView(videoView);
                             mediaController.setMediaPlayer(videoView);
                             mediaController.setAnchorView(contentViewer);
                             videoView.setMediaController(mediaController);
                             videoView.seekTo(100);
+                            Log.e("ContentActivity",videoView.toString());
                             videoView.start();
+                            Log.e("ContentActivity","IS PLAYING "+videoView.isPlaying());
                             break;
+
                         case 3:
                             //Image
-                            imageView = new ImageView(ContentActivity.this);
-                            imageView.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                            contentViewer.addView(imageView);
+                            videoHolder.setVisibility(View.GONE);
+                            imageView.setVisibility(View.VISIBLE);
+                            launchBook.setVisibility(View.GONE);
                             System.out.println("MEDIA URL is : "+mediaUrl);
                             new LoadImageTask(mediaUrl,imageView).execute();
                             break;
+
+                        case 4:
+                            //Book
+                            videoHolder.setVisibility(View.GONE);
+                            imageView.setVisibility(View.GONE);
+                            launchBook.setVisibility(View.VISIBLE);
+
+                            launchBook.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    new FetchBookTask().execute(mediaUrl);
+                                }
+                            });
+                            break;
+
+
                     }
                 }
                 description = (TextView)findViewById(R.id.description);
@@ -275,6 +309,56 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
         }
     }
 
+    private class FetchBookTask extends AsyncTask<String, Void, Void>
+    {
+
+        private ProgressDialog dialog = new ProgressDialog(ContentActivity.this);
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.setMessage("Processing Book...");
+            dialog.setIndeterminate(false);
+            dialog.setCancelable(true);
+            dialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try
+            {
+                URL url = new URL(params[0]);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.connect();
+                Log.e(ContentActivity.class.getName(),"REQUEST METHOD IS "+urlConnection.getRequestMethod());
+                File file = new File(Environment.getExternalStorageDirectory()+"/candeo/books/tmp.epub");
+                FileOutputStream fos = new FileOutputStream(file);
+                InputStream inputStream = urlConnection.getInputStream();
+                byte[] buffer = new byte[1024];
+                int bufferLength=0;
+                while((bufferLength=inputStream.read(buffer))>0)
+                {
+                    fos.write(buffer,0,bufferLength);
+                }
+                fos.close();
+            }
+            catch (IOException ioe)
+            {
+                ioe.printStackTrace();
+            }
+
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if(dialog!=null)
+            {
+                dialog.dismiss();
+            }
+        }
+    }
 
     private class LoadImageTask extends AsyncTask<String, String, Bitmap>
     {
@@ -323,14 +407,16 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
                 int width=bitmap.getWidth();
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG,100,bos);
-                if(width > height)
+                getWindowManager().getDefaultDisplay().getMetrics(CandeoApplication.displayMetrics);
+                int screenWidth=CandeoApplication.displayMetrics.widthPixels;
+                int scaleFactor = width/screenWidth;
+                int calculatedHeight=height;
+                if(scaleFactor>0)
                 {
-                    imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap,640,400,false));
+                    calculatedHeight = height/scaleFactor;
                 }
-                else
-                {
-                    imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap,400,640,false));
-                }
+
+                imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap,screenWidth,calculatedHeight,false));
             }
             pDialog.dismiss();
         }

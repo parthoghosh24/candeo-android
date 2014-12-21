@@ -31,14 +31,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
+                        android:layout_weight="0.8"
                         android:text="SHOWCASE"/>
 
                     <Switch
                         android:id="@+id/candeo_selector"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
+                        android:layout_weight="0.2"
                         />
 
                  </LinearLayout>
@@ -59,6 +59,12 @@
 
                     <Button
                         android:id="@+id/candeo_video"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"/>
+
+                    <Button
+                        android:id="@+id/candeo_book"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="?android:attr/selectableItemBackground"/>
@@ -147,12 +153,14 @@
                 <Button
                     android:id="@+id/candeo_post_it"
                     android:layout_below="@id/candeo_copyright_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
                     android:gravity="center"
-                    android:text="INSPIRE"
-                    android:background="?android:attr/selectableItemBackground"
+                    android:text="CREATE"
+                    android:textColor="@color/candeo_primary_dark"
+                    android:background="@drawable/roundedbutton"
                     />
 
 

@@ -8,8 +8,13 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.util.Log;
 import android.webkit.MimeTypeMap;
 
+import org.apache.http.util.ByteArrayBuffer;
+
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -42,7 +47,14 @@ public class CandeoUtil {
 
     public static byte[] fileToByteArray(File file)
     {
+        int maxLimit = 16777216; //16 MB
+        if(file.length() > maxLimit)
+        {
+            return null;
+        }
+
         FileInputStream inputStream =null;
+
 
         byte[] bytes= new byte[(int)file.length()];
 

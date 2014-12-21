@@ -1,5 +1,8 @@
 package com.candeo.app.network;
 
+import org.apache.http.util.ByteArrayBuffer;
+
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -32,6 +35,7 @@ public class CandeoHttpClient {
         connection.setDoOutput(true);//Required for POST
         connection.setRequestProperty("Connection","Keep-Alive");
         connection.setRequestProperty("Content-Type","multipart/form-data; boundary="+boundary);
+        connection.setChunkedStreamingMode(1024);
         connection.connect();
         outputStream=connection.getOutputStream();
     }
@@ -60,13 +64,24 @@ public class CandeoHttpClient {
     public String getResponse() throws IOException
     {
         InputStream iStream = connection.getInputStream();
-        byte[] bytes = new byte[1024];
-        StringBuffer buffer = new StringBuffer();
-        while(iStream.read(bytes)!=-1)
+        BufferedInputStream bInputStream = new BufferedInputStream(iStream);
+        ByteArrayBuffer buffer = new ByteArrayBuffer(50);
+        int read=0;
+        int bufferSize=512;
+        byte[] bytes = new byte[bufferSize];
+
+        while(true)
         {
-            buffer.append(new String(bytes));
+            read=bInputStream.read(bytes);
+            if(read == -1)
+            {
+                break;
+            }
+            buffer.append(bytes,0,read);
         }
-        return buffer.toString();
+        iStream.close();
+        bInputStream.close();
+        return new String(buffer.toByteArray(),"UTF-8");
     }
 
     private void writeParamData(String key, String value) throws IOException
