@@ -49,7 +49,7 @@ public class EpubCore {
 
     public String unzipEpub(String bookPath, String fileName) {
         String unzippedPath = "";
-        unzippedPath = mZipUtil.unzipBook(bookPath, Configuration.BOOKSROOT
+        unzippedPath = mZipUtil.unzipBook(bookPath, Configuration.CANDEO_BOOKSROOT
                 + File.separator + fileName);
         return unzippedPath;
     }
@@ -133,7 +133,7 @@ public class EpubCore {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(new File(opfFilePath));
 
-            Element ncxElement = (Element) document.getElementById("ncx");
+            Element ncxElement = document.getElementById("ncx");
             mTocPath = mBaseUrl + File.separator
                     + ncxElement.getAttributeNode("href").getValue();
             Log.i(TAG, "TOC path:" + mTocPath);

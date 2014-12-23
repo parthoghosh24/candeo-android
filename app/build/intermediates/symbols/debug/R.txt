@@ -445,8 +445,8 @@ int id disableHome 0x7f09000c
 int id dropdown 0x7f09001c
 int id edit_query 0x7f090033
 int id end 0x7f090014
-int id epub_nav_buttons 0x7f090041
-int id epub_renderer 0x7f090040
+int id epub_nav_buttons 0x7f090040
+int id epub_renderer 0x7f090043
 int id expand_activities_button 0x7f090022
 int id expanded_menu 0x7f090028
 int id feed_card 0x7f090072
@@ -460,7 +460,7 @@ int id home_pager 0x7f090050
 int id icon 0x7f090026
 int id ifRoom 0x7f090018
 int id image 0x7f090023
-int id left_btn 0x7f090042
+int id left_btn 0x7f090041
 int id listMode 0x7f090009
 int id list_item 0x7f090025
 int id middle 0x7f090015
@@ -472,7 +472,7 @@ int id progress_horizontal 0x7f090006
 int id radio 0x7f09002b
 int id rating_picker 0x7f09003f
 int id retry 0x7f09007e
-int id right_btn 0x7f090043
+int id right_btn 0x7f090042
 int id search_badge 0x7f090035
 int id search_bar 0x7f090034
 int id search_button 0x7f090036

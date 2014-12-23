@@ -9,6 +9,7 @@ import java.io.File;
  */
 public class Configuration {
     public static final String BOOKSROOT= Environment.getExternalStorageDirectory().getAbsolutePath()+ File.separator+"Books";
+    public static final String CANDEO_BOOKSROOT= Environment.getExternalStorageDirectory()+"/candeo/books";
     public static final String INTENTBOOK="book";
     public static final String INTENTCHAPTERLIST="chapterList";
     public static final String INTENTBASEURL="baseUrl";

@@ -1573,8 +1573,8 @@ containing a value of this type.
         public static final int dropdown=0x7f09001c;
         public static final int edit_query=0x7f090033;
         public static final int end=0x7f090014;
-        public static final int epub_nav_buttons=0x7f090041;
-        public static final int epub_renderer=0x7f090040;
+        public static final int epub_nav_buttons=0x7f090040;
+        public static final int epub_renderer=0x7f090043;
         public static final int expand_activities_button=0x7f090022;
         public static final int expanded_menu=0x7f090028;
         public static final int feed_card=0x7f090072;
@@ -1588,7 +1588,7 @@ containing a value of this type.
         public static final int icon=0x7f090026;
         public static final int ifRoom=0x7f090018;
         public static final int image=0x7f090023;
-        public static final int left_btn=0x7f090042;
+        public static final int left_btn=0x7f090041;
         public static final int listMode=0x7f090009;
         public static final int list_item=0x7f090025;
         public static final int middle=0x7f090015;
@@ -1600,7 +1600,7 @@ containing a value of this type.
         public static final int radio=0x7f09002b;
         public static final int rating_picker=0x7f09003f;
         public static final int retry=0x7f09007e;
-        public static final int right_btn=0x7f090043;
+        public static final int right_btn=0x7f090042;
         public static final int search_badge=0x7f090035;
         public static final int search_bar=0x7f090034;
         public static final int search_button=0x7f090036;

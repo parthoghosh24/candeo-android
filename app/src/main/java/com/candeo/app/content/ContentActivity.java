@@ -31,7 +31,12 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.candeo.app.CandeoApplication;
+import com.candeo.app.Configuration;
 import com.candeo.app.R;
+import com.candeo.app.book.BookRenderActivity;
+import com.candeo.app.book.EpubCore;
+import com.candeo.app.models.ebook.Book;
+import com.candeo.app.models.ebook.TableOfContents;
 import com.candeo.app.response.AppreciateActivity;
 import com.candeo.app.response.GetInspiredActivity;
 import com.candeo.app.util.CandeoUtil;
@@ -64,10 +69,14 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
     VideoView  videoView;
     ImageView imageView;
     LinearLayout contentViewer;
+    Book book;
+    TableOfContents bookToc;
+    EpubCore epubCore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
+        epubCore = new EpubCore();
         toolbar = (Toolbar)findViewById(R.id.candeo_content_toolbar);
         videoHolder=(FrameLayout)findViewById(R.id.candeo_content_viewer_holder);
         videoView =(VideoView)findViewById(R.id.candeo_video_viewer);
@@ -340,6 +349,12 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
                     fos.write(buffer,0,bufferLength);
                 }
                 fos.close();
+                String filePath =Environment.getExternalStorageDirectory()+"/candeo/books/tmp.epub";
+                String unzippedBookPath = epubCore.unzipEpub(filePath,"tmp");
+                book = new Book();
+                book = epubCore.loadBook(unzippedBookPath,book);
+                bookToc = epubCore.getToc();
+
             }
             catch (IOException ioe)
             {
@@ -357,6 +372,12 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
             {
                 dialog.dismiss();
             }
+            Intent intent = new Intent(ContentActivity.this, BookRenderActivity.class);
+            intent.putExtra(Configuration.INTENTBOOK,book);
+            intent.putParcelableArrayListExtra(Configuration.INTENTCHAPTERLIST,bookToc.getChapters());
+            intent.putExtra(Configuration.INTENTBASEURL,epubCore.getBaseUrl());
+            startActivity(intent);
+
         }
     }
 

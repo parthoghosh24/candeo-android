@@ -50,12 +50,14 @@ public class BookRenderActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_render);
-        unzippedBook = (Book)getIntent().getParcelableExtra(Configuration.INTENTBOOK);
+        unzippedBook = getIntent().getParcelableExtra(Configuration.INTENTBOOK);
         chapterList =getIntent().getParcelableArrayListExtra(Configuration.INTENTCHAPTERLIST);
         mBaseUrl=getIntent().getStringExtra(Configuration.INTENTBASEURL);
+        Log.e(TAG,"BASE URL "+mBaseUrl);
         initWidgets();
         activateButtons();
-        new BookOpenTask().execute();
+        //new BookOpenTask().execute();
+        openChapter(mCurrentChapter, bookView);
     }
 
     private void initWidgets() {
