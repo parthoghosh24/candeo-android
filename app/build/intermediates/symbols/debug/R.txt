@@ -380,7 +380,7 @@ int id action_menu_presenter 0x7f090003
 int id action_mode_bar 0x7f09002e
 int id action_mode_bar_stub 0x7f09002d
 int id action_mode_close_button 0x7f090020
-int id action_settings 0x7f090080
+int id action_settings 0x7f090081
 int id activity_chooser_view_content 0x7f090021
 int id always 0x7f090016
 int id appreciate 0x7f09004a
@@ -423,8 +423,8 @@ int id candeo_spinner_dropdown_item_list 0x7f09006e
 int id candeo_splash_bg 0x7f090069
 int id candeo_stop_record 0x7f090064
 int id candeo_toolbar 0x7f09004c
-int id candeo_tutorial_icon 0x7f09007e
-int id candeo_tutorial_text 0x7f09007f
+int id candeo_tutorial_icon 0x7f09007f
+int id candeo_tutorial_text 0x7f090080
 int id candeo_user 0x7f090079
 int id candeo_user_icon 0x7f09007c
 int id candeo_user_name 0x7f09004e
@@ -484,6 +484,7 @@ int id shortcut 0x7f09002a
 int id showCustom 0x7f09000f
 int id showHome 0x7f090010
 int id showTitle 0x7f090011
+int id showcase_details_holder 0x7f09007e
 int id split_action_bar 0x7f090007
 int id submit_area 0x7f09003c
 int id tabMode 0x7f09000b

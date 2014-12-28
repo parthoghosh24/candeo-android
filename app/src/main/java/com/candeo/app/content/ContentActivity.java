@@ -100,7 +100,7 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
         });
 
         appreciate=(Button)findViewById(R.id.appreciate);
-        appreciate.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/response.ttf"));
+        appreciate.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/applause.ttf"));
         appreciate.setText("\ue801");
         appreciate.setOnClickListener(new View.OnClickListener() {
             @Override

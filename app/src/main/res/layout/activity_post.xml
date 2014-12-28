@@ -4,7 +4,6 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         tools:context="com.candeo.app.content.PostActivity">
 
         <android.support.v7.widget.Toolbar
@@ -20,152 +19,164 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp">
-                <LinearLayout
-                    android:id="@+id/candeo_post_selector"
+                android:layout_height="match_parent"
+                >
+
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:padding="10dp"
+                    android:layout_centerInParent="true">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.8"
-                        android:text="SHOWCASE"/>
 
-                    <Switch
-                        android:id="@+id/candeo_selector"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.2"
-                        />
-
-                 </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/candeo_post_top_buttons"
-                    android:layout_below="@+id/candeo_post_selector"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/candeo_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="?android:attr/selectableItemBackground"
-                        />
-
-                    <Button
-                        android:id="@+id/candeo_video"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="?android:attr/selectableItemBackground"/>
-
-                    <Button
-                        android:id="@+id/candeo_book"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="?android:attr/selectableItemBackground"/>
-
-                    <Button
-                        android:id="@+id/candeo_audio"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="?android:attr/selectableItemBackground"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/candeo_post_content_preview"
-                    android:layout_below="@id/candeo_post_top_buttons"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <Button
-                        android:id="@+id/candeo_audio_preview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:background="?android:attr/selectableItemBackground"/>
-                    <ImageView
-                        android:id="@+id/candeo_image_preview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:layout_gravity="center"
-                        />
-                    <FrameLayout
+                    <LinearLayout
+                        android:id="@+id/candeo_post_selector"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@android:color/background_dark"
-                        android:layout_gravity="center">
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                        <VideoView
-                            android:id="@+id/candeo_video_preview"
-                            android:layout_width="match_parent"
-                            android:layout_height="240dp"
-                            android:layout_gravity="center"
-                            android:visibility="gone"
-                            />
-                        <Button
-                            android:id="@+id/candeo_video_preview_play"
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:textColor="@android:color/white"
-                            android:visibility="gone"
+                            android:layout_weight="0.8"
+                            android:text="SHOWCASE"/>
+
+                        <Switch
+                            android:id="@+id/candeo_selector"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/candeo_post_top_buttons"
+                        android:layout_below="@+id/candeo_post_selector"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/candeo_image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="?android:attr/selectableItemBackground"
+                            />
+
+                        <Button
+                            android:id="@+id/candeo_video"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:background="?android:attr/selectableItemBackground"/>
 
+                        <Button
+                            android:id="@+id/candeo_book"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="?android:attr/selectableItemBackground"/>
 
-                    </FrameLayout>
+                        <Button
+                            android:id="@+id/candeo_audio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="?android:attr/selectableItemBackground"/>
 
-                </LinearLayout>
-                <EditText
-                    android:id="@+id/candeo_post_title"
-                    android:layout_below="@id/candeo_post_content_preview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Give a Title to your Showcase"
-                    android:visibility="gone"
-                    />
-                <EditText
-                    android:id="@+id/candeo_content_create"
-                    android:layout_below="@id/candeo_post_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="false"
-                    android:lines="5"
-                    android:hint="Inspire the world"/>
+                    </LinearLayout>
 
-                <TextView
-                    android:id="@+id/candeo_copyright_text"
-                    android:layout_below="@id/candeo_content_create"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:padding="5dp"/>
+                    <LinearLayout
+                        android:id="@+id/candeo_post_content_preview"
+                        android:layout_below="@id/candeo_post_top_buttons"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <Button
+                            android:id="@+id/candeo_audio_preview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:background="?android:attr/selectableItemBackground"/>
+                        <ImageView
+                            android:id="@+id/candeo_image_preview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:layout_gravity="center"
+                            />
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@android:color/background_dark"
+                            android:layout_gravity="center">
+
+                            <VideoView
+                                android:id="@+id/candeo_video_preview"
+                                android:layout_width="match_parent"
+                                android:layout_height="240dp"
+                                android:layout_gravity="center"
+                                android:visibility="gone"
+                                />
+                            <Button
+                                android:id="@+id/candeo_video_preview_play"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:textColor="@android:color/white"
+                                android:visibility="gone"
+                                android:background="?android:attr/selectableItemBackground"/>
+
+
+                        </FrameLayout>
+
+                    </LinearLayout>
+                    <EditText
+                        android:id="@+id/candeo_post_title"
+                        android:layout_below="@id/candeo_post_content_preview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Give a Title to your Showcase"
+                        android:visibility="gone"
+                        />
+                    <EditText
+                        android:id="@+id/candeo_content_create"
+                        android:layout_below="@id/candeo_post_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="false"
+                        android:lines="5"
+                        android:hint="Inspire the world"/>
+
+                    <TextView
+                        android:id="@+id/candeo_copyright_text"
+                        android:layout_below="@id/candeo_content_create"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:padding="5dp"/>
 
 
 
-                <Button
-                    android:id="@+id/candeo_post_it"
-                    android:layout_below="@id/candeo_copyright_text"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:gravity="center"
-                    android:text="CREATE"
-                    android:textColor="@color/candeo_primary_dark"
-                    android:background="@drawable/roundedbutton"
-                    />
+                    <Button
+                        android:id="@+id/candeo_post_it"
+                        android:layout_below="@id/candeo_copyright_text"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="CREATE"
+                        android:textColor="@color/candeo_primary_dark"
+                        android:background="@drawable/roundedbutton"
+                        />
 
 
+
+                </RelativeLayout>
 
             </RelativeLayout>
+
+
 
 
 
