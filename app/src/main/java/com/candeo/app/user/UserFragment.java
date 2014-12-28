@@ -1,8 +1,6 @@
 package com.candeo.app.user;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.TypedValue;
@@ -35,7 +33,7 @@ public class UserFragment extends Fragment {
         {
             root=inflater.inflate(R.layout.fragment_user, container, false);
             icon=(TextView)root.findViewById(R.id.candeo_user_icon);
-            icon.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fa.ttf"));
+            icon.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
             icon.setText("\uf007");
             icon.setTextSize(TypedValue.COMPLEX_UNIT_SP,60);
             signIn=(Button)root.findViewById(R.id.candeo_user_sign_in);

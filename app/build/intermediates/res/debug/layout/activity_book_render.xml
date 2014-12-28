@@ -1,35 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
 
-    <LinearLayout
-        android:id="@+id/epub_nav_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_alignParentBottom="true"
-        >
-
-        <Button
-            android:id="@+id/left_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Left"/>
-        <Button
-            android:id="@+id/right_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Right"/>
-
-    </LinearLayout>
     <WebView
         android:id="@+id/epub_renderer"
-        android:layout_above="@id/epub_nav_buttons"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
-</RelativeLayout><!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/src/main/res/layout/activity_book_render.xml -->
+</FrameLayout><!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/src/main/res/layout/activity_book_render.xml -->

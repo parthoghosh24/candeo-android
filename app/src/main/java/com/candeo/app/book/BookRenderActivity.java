@@ -9,13 +9,18 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
 import com.candeo.app.models.ebook.Book;
 import com.candeo.app.models.ebook.TableOfContents;
+import com.candeo.app.util.DOMUtil;
 import com.candeo.app.util.FileUtil;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import java.io.File;
@@ -39,12 +44,12 @@ public class BookRenderActivity extends Activity {
 
     private static final String TAG = "BookRender";
     private WebView bookView;
-    private Button leftButton;
-    private Button rightButton;
     private String mBaseUrl;
     private int mCurrentChapter=1;
     Book unzippedBook;
     ArrayList<TableOfContents.Chapter> chapterList;
+    private static final int SCREEN_WIDTH_CORRECTION = 5;
+    private static final int SCREEN_HEIGHT_CORRECTION = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,36 +60,17 @@ public class BookRenderActivity extends Activity {
         mBaseUrl=getIntent().getStringExtra(Configuration.INTENTBASEURL);
         Log.e(TAG,"BASE URL "+mBaseUrl);
         initWidgets();
-        activateButtons();
-        //new BookOpenTask().execute();
         openChapter(mCurrentChapter, bookView);
     }
 
     private void initWidgets() {
         bookView = (WebView) findViewById(R.id.epub_renderer);
-        leftButton = (Button) findViewById(R.id.left_btn);
-        rightButton = (Button) findViewById(R.id.right_btn);
+        bookView.clearCache(true);
+        bookView.clearHistory();
+        bookView.getSettings().setJavaScriptEnabled(true);
+        bookView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
     }
 
-
-    private void activateButtons() {
-        leftButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                prevPage();
-            }
-
-        });
-
-        rightButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                nextPage();
-            }
-        });
-    }
 
 
     private void openChapter(int currentChapter, WebView webview)
@@ -93,7 +79,9 @@ public class BookRenderActivity extends Activity {
         Log.i(TAG, "base url " + baseUrl);
         String chapterPath = mBaseUrl+File.separator+chapterList.get(currentChapter-1).getUrl();
         Log.i(TAG, "chapterPath "+chapterPath);
-        String data=generateHTML(chapterPath);
+        int width = CandeoApplication.displayMetrics.widthPixels+SCREEN_WIDTH_CORRECTION;
+        int height = CandeoApplication.displayMetrics.widthPixels+SCREEN_HEIGHT_CORRECTION;
+        String data=preprocess(chapterPath,width,height);
         Log.i(TAG, data);
         bookView.loadDataWithBaseURL(baseUrl, data, "text/html", "UTF-8", null);
         mCurrentChapter = currentChapter;
@@ -147,6 +135,7 @@ public class BookRenderActivity extends Activity {
         {
             openChapter(++mCurrentChapter, bookView);
         }
+        bookView.loadUrl("javascript:nextPage()");
 
     }
 
@@ -162,6 +151,11 @@ public class BookRenderActivity extends Activity {
             openChapter(--mCurrentChapter, bookView);
         }
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -185,20 +179,117 @@ public class BookRenderActivity extends Activity {
         File zipDirFile = new File(zipDir);
         mBbFileUtil.deleteDir(zipDirFile);
     }
-    class BookOpenTask extends AsyncTask<Void, Void, Void>
+
+    private static void addJavaScriptLink(Document doc, Element element, String path) {
+        Element scriptElement = doc.createElement("script");
+        scriptElement.setAttribute("type", "text/javascript");
+        scriptElement.setAttribute("src", "url('file:///android_asset/" + path + "')");
+        element.appendChild(scriptElement);
+        element.appendChild(doc.createTextNode("\n"));
+    }
+
+    private static void addCssLink(Document doc, Element element, String path)
     {
+        Element linkElement = doc.createElement("link");
+        linkElement.setAttribute("href","");
+
+    }
 
 
-        @Override
-        protected Void doInBackground(Void... params) {
-            BookRenderActivity.this.openChapter(mCurrentChapter, bookView);
-            return null;
+    public static String preprocess(String chapter, int width, int height)  {
+
+        /*
+         * 1. prepare dom
+         */
+        // get dom
+        Document doc = null;
+        try {
+            doc = DOMUtil.getDom(chapter);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
+        /*
+         * 2. handle dom tree
+         */
+        NodeList nodeList = doc.getElementsByTagName("*");
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Document.ELEMENT_NODE) {
+                if ("head".equalsIgnoreCase(node.getNodeName())) {
+                    Element headElement = (Element) node;
+
+
+
+                    // append monocle interface script
+                    addJavaScriptLink(doc, headElement, "js/ui.js");
+                }
+                /*
+                 * <body> Element
+                 *
+                 * 1. insert div for monocle
+                 * 2. set font size
+                 */
+                else if ("body".equalsIgnoreCase(node.getNodeName())) {
+                    Element bodyElement = (Element) node;
+
+                    // 1. insert div for monocle
+                    Element divElement = doc.createElement("div");
+                    divElement.setAttribute("id", "reader");
+                    divElement.setAttribute("style", "width:" + width + "px; height:" + height + "px; border:none;");
+
+                    NodeList bodyChildList = bodyElement.getChildNodes();
+                    for (int j = 0; j < bodyChildList.getLength(); j++) {
+                        Node bodyChild = (Node) bodyChildList.item(j);
+                        divElement.appendChild(bodyChild);
+                    }
+                    bodyElement.appendChild(divElement);
+
+                    // 2. clear attributes
+                    bodyElement.removeAttribute("xml:lang");
+                    addJavaScriptLink(doc, bodyElement, "js/ui.js");
+                }
+                /*
+                 * <img> Element
+                 *
+                 * 1. image max size
+                 */
+                else if ("img".equalsIgnoreCase(node.getNodeName())) {
+                    Element imgElement = (Element) node;
+
+                    // 1. image max size
+                    int maxImageWidth = width - 30;
+                    int maxImageHeight = height - 80;
+                    Log.d(TAG, "maxImageWidth: " + maxImageWidth);
+                    Log.d(TAG, "maxImageHeight: " + maxImageHeight);
+
+                    imgElement.setAttribute("style", "max-width:" + maxImageWidth + "px; max-height:" + maxImageHeight + "px;");
+                }
+            }
         }
 
+        /*
+         * 3. DOM to string
+         */
+        StringWriter outText = new StringWriter();
+        StreamResult sr = new StreamResult(outText);
+
+        Properties oprops = new Properties();
+        oprops.put(OutputKeys.METHOD, "html");
+        // oprops.put("indent-amount", "4");
+
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer trans = null;
+        try {
+            trans = tf.newTransformer();
+            trans.setOutputProperties(oprops);
+            trans.transform(new DOMSource(doc), sr);
+        } catch (TransformerConfigurationException e) {
+            e.printStackTrace();
+        } catch (TransformerException e) {
+            e.printStackTrace();
+        }
+
+        return outText.toString();
     }
 }

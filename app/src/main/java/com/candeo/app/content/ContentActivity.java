@@ -1,12 +1,9 @@
 package com.candeo.app.content;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
@@ -15,12 +12,10 @@ import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -50,7 +45,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 
@@ -94,7 +88,7 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
         }
 
         getInspired = (Button)findViewById(R.id.get_inspired);
-        getInspired.setTypeface(CandeoUtil.loadFont(getAssets(),"response.ttf"));
+        getInspired.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/response.ttf"));
         getInspired.setText("\ue800");
         getInspired.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,7 +100,7 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
         });
 
         appreciate=(Button)findViewById(R.id.appreciate);
-        appreciate.setTypeface(CandeoUtil.loadFont(getAssets(),"response.ttf"));
+        appreciate.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/response.ttf"));
         appreciate.setText("\ue801");
         appreciate.setOnClickListener(new View.OnClickListener() {
             @Override

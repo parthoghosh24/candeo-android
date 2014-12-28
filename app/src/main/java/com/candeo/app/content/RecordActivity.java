@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.util.TypedValue;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -60,7 +58,7 @@ public class RecordActivity extends Activity {
         cancel=(Button)findViewById(R.id.candeo_record_cancel);
         stop =(Button)findViewById(R.id.candeo_stop_record);
         record =(Button)findViewById(R.id.candeo_record);
-        record.setTypeface(loadFont("fa.ttf"));
+        record.setTypeface(loadFont("fonts/fa.ttf"));
         record.setText("\uf111");
         record.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +90,7 @@ public class RecordActivity extends Activity {
             }
         });
         play=(Button)findViewById(R.id.candeo_play_record);
-        play.setTypeface(loadFont("fa.ttf"));
+        play.setTypeface(loadFont("fonts/fa.ttf"));
         play.setTextSize(TypedValue.COMPLEX_UNIT_SP, 80);
         play.setText("\uf04b");
 

@@ -41,7 +41,7 @@ public class SplashActivity extends Activity {
         textView=(TextView)findViewById(R.id.test);
         tutorialPager=(ViewPager)findViewById(R.id.tutorial);
         tutorialPager.setAdapter(new TutorialPagerAdapter(this,getAssets()));
-        textView.setTypeface(CandeoUtil.loadFont(getAssets(),"freebooter.ttf"),Typeface.BOLD);
+        textView.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/freebooter.ttf"),Typeface.BOLD);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 100);
         textView.setText("Candeo");
 

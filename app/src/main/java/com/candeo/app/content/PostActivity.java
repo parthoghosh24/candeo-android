@@ -3,7 +3,6 @@ package com.candeo.app.content;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -21,7 +20,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -29,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.candeo.app.CandeoApplication;
@@ -40,14 +37,9 @@ import com.candeo.app.util.CandeoUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.ByteBuffer;
 
 public class PostActivity extends ActionBarActivity {
 
@@ -103,17 +95,17 @@ public class PostActivity extends ActionBarActivity {
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
 
         audioPreview = (Button)findViewById(R.id.candeo_audio_preview);
-        audioPreview.setTypeface(CandeoUtil.loadFont(getAssets(), "fa.ttf"));
+        audioPreview.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
         audioPreview.setText("\uf04b");
         imagePreview=(ImageView)findViewById(R.id.candeo_image_preview);
         videoPreview=(VideoView)findViewById(R.id.candeo_video_preview);
         videoPreviewPlay=(Button)findViewById(R.id.candeo_video_preview_play);
-        videoPreviewPlay.setTypeface(CandeoUtil.loadFont(getAssets(), "fa.ttf"));
+        videoPreviewPlay.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
         videoPreviewPlay.setText("\uf04b");
         description=(EditText)findViewById(R.id.candeo_content_create);
 
         audio=(Button)findViewById(R.id.candeo_audio);
-        audio.setTypeface(CandeoUtil.loadFont(getAssets(), "fa.ttf"));
+        audio.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
         audio.setText("\uf001");
         audio.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,7 +146,7 @@ public class PostActivity extends ActionBarActivity {
         });
 
         image=(Button)findViewById(R.id.candeo_image);
-        image.setTypeface(CandeoUtil.loadFont(getAssets(), "fa.ttf"));
+        image.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
         image.setText("\uf030");
         image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,7 +186,7 @@ public class PostActivity extends ActionBarActivity {
         });
 
         video=(Button)findViewById(R.id.candeo_video);
-        video.setTypeface(CandeoUtil.loadFont(getAssets(), "fa.ttf"));
+        video.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
         video.setText("\uf008");
         video.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -241,7 +233,7 @@ public class PostActivity extends ActionBarActivity {
         });
 
         book=(Button)findViewById(R.id.candeo_book);
-        book.setTypeface(CandeoUtil.loadFont(getAssets(), "fa.ttf"));
+        book.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
         book.setText("\uf02d");
         book.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -254,7 +246,7 @@ public class PostActivity extends ActionBarActivity {
         });
 
         postIt=(Button)findViewById(R.id.candeo_post_it);
-        postIt.setTypeface(CandeoUtil.loadFont(getAssets(), "fa.ttf"));
+        postIt.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
         postIt.setText("\uf0d0");
         postIt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -273,7 +265,7 @@ public class PostActivity extends ActionBarActivity {
                 if(isChecked)
                 {
                     contentType=SHOWCASE;
-                    copyrightText.setTypeface(CandeoUtil.loadFont(getAssets(), "fa.ttf"));
+                    copyrightText.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
                     copyrightText.setText("\uf1f9 Anonymous");
                     copyrightText.setVisibility(View.VISIBLE);
                     showcaseTitleText.setVisibility(View.VISIBLE);

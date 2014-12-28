@@ -41,9 +41,9 @@ public class TutorialPagerAdapter extends PagerAdapter
         container.addView(view);
         TextView content=(TextView)view.findViewById(R.id.candeo_tutorial_text);
         TextView icon =(TextView)view.findViewById(R.id.candeo_tutorial_icon);
-        icon.setTypeface(CandeoUtil.loadFont(assets,"fa.ttf"));
+        icon.setTypeface(CandeoUtil.loadFont(assets, "fonts/fa.ttf"));
         icon.setTextSize(TypedValue.COMPLEX_UNIT_SP,80);
-        content.setTypeface(CandeoUtil.loadFont(assets, "pt_sans.ttf"));
+        content.setTypeface(CandeoUtil.loadFont(assets, "fonts/pt_sans.ttf"));
         content.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
         switch (position)
         {

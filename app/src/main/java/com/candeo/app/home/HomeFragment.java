@@ -1,12 +1,7 @@
 package com.candeo.app.home;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,12 +14,10 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
 
 import com.candeo.app.CandeoApplication;
 import com.candeo.app.adapters.FeedAdapter;
 import com.candeo.app.adapters.ShowcaseAdapter;
-import com.candeo.app.adapters.TutorialPagerAdapter;
 import com.candeo.app.content.ContentActivity;
 import com.candeo.app.R;
 import com.candeo.app.content.PostActivity;
@@ -91,7 +84,7 @@ public class HomeFragment extends Fragment {
                     }, 5000);
                 }
             });
-            inspire.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fa.ttf"));
+            inspire.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
             inspire.setText("\uf0d0");
             inspire.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -100,7 +93,7 @@ public class HomeFragment extends Fragment {
                     startActivity(postIntent);
                 }
             });
-            feed.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fa.ttf"));
+            feed.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
             feed.setText("\uf09e");
             feed.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -108,7 +101,7 @@ public class HomeFragment extends Fragment {
                     parentHomePager.setCurrentItem(0);
                 }
             });
-            user.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fa.ttf"));
+            user.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
             user.setText("\uf007");
             user.setOnClickListener(new View.OnClickListener() {
                 @Override
