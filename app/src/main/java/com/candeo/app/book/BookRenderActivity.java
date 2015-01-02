@@ -183,7 +183,7 @@ public class BookRenderActivity extends Activity {
     private static void addJavaScriptLink(Document doc, Element element, String path) {
         Element scriptElement = doc.createElement("script");
         scriptElement.setAttribute("type", "text/javascript");
-        scriptElement.setAttribute("src", "'file:///android_asset/" + path + "'");
+        scriptElement.setAttribute("src", "file:///android_asset/" + path);
         element.appendChild(scriptElement);
         element.appendChild(doc.createTextNode("\n"));
     }
@@ -193,6 +193,8 @@ public class BookRenderActivity extends Activity {
         Element linkElement = doc.createElement("link");
         linkElement.setAttribute("href","'file:///android_asset/" + path + "'");
         linkElement.setAttribute("rel","stylesheet");
+        linkElement.setAttribute("type","text/css");
+        element.appendChild(linkElement);
         element.appendChild(doc.createTextNode("\n"));
 
     }
@@ -220,9 +222,8 @@ public class BookRenderActivity extends Activity {
             if (node.getNodeType() == Document.ELEMENT_NODE) {
                 if ("head".equalsIgnoreCase(node.getNodeName())) {
                     Element headElement = (Element) node;
+
                     addCssLink(doc,headElement,"js/monocle/styles/monocore.css");
-
-
                     // append monocle interface script
                     addJavaScriptLink(doc, headElement, "js/ui.js");
                 }
