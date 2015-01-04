@@ -3,7 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:cardBackgroundColor="@android:color/background_dark">
+    android:minHeight="360dp"
+    android:clipToPadding="false"
+    app:cardCornerRadius="4dp"
+    app:cardUseCompatPadding="true"
+    app:contentPadding="4dp"
+    android:layout_margin="3dp"
+    app:cardElevation="5dp"
+    app:cardBackgroundColor="@color/candeo_primary_dark">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -17,7 +24,8 @@
         <RelativeLayout
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:padding="5dp">
+            android:padding="5dp"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -33,15 +41,18 @@
                     android:gravity="left">
 
                     <TextView
+                        android:id="@+id/candeo_inspired_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="3.4K"
                         android:textSize="25sp"/>
 
                     <TextView
+                        android:id="@+id/candeo_inspired_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="INSPIRED"/>
+                        android:text="INSPIRED"
+                        android:textSize="25sp"/>
 
                 </LinearLayout>
 
@@ -53,15 +64,18 @@
                     android:gravity="right">
 
                     <TextView
+                        android:id="@+id/candeo_appreciated_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="2.4K"
                         android:textSize="25sp"/>
 
                     <TextView
+                        android:id="@+id/candeo_appreciated_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="APPRECIATED"/>
+                        android:text="APPRECIATED"
+                        android:textSize="25sp"/>
 
                 </LinearLayout>
 
@@ -72,7 +86,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
                 android:layout_alignParentBottom="true"
-
                 android:layout_marginTop="20dp">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -95,13 +108,34 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <TextView
-                            android:text="Partho Ghosh"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:textSize="15sp"
-                            android:layout_alignParentBottom="true"/>
+                            android:orientation="horizontal"
+                            android:layout_gravity="center"
+                            android:gravity="center">
+
+                            <TextView
+                                android:id="@+id/candeo_copyright_icon"
+                                android:text="c"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textSize="15sp"
+                                />
+
+                            <TextView
+                                android:id="@+id/candeo_user_name"
+                                android:text="Partho Ghosh"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:layout_marginLeft="5dp"
+                                android:textSize="15sp"
+                                />
+
+                         </LinearLayout>
+
 
                         <TextView
                             android:text="My Awesome Creation"
@@ -109,10 +143,50 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:textSize="20sp"
-                            android:layout_alignParentBottom="true"/>
+                            />
 
 
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="5dp"
+                            android:gravity="left">
+
+                            <TextView
+                                android:id="@+id/candeo_showcase_carousel_icon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="ICON"
+                                android:textSize="20sp"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:padding="5dp"
+                            android:gravity="right">
+
+                            <TextView
+                                android:id="@+id/candeo_showcase_carousel_days"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="2 days ago"
+                                android:textSize="20sp"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
 
 
                 </LinearLayout>

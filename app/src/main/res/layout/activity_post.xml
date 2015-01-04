@@ -70,11 +70,11 @@
                             android:layout_height="wrap_content"
                             android:background="?android:attr/selectableItemBackground"/>
 
-                        <Button
-                            android:id="@+id/candeo_book"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="?android:attr/selectableItemBackground"/>
+                        <!--<Button-->
+                            <!--android:id="@+id/candeo_book"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:background="?android:attr/selectableItemBackground"/>-->
 
                         <Button
                             android:id="@+id/candeo_audio"
@@ -133,19 +133,26 @@
                     <EditText
                         android:id="@+id/candeo_post_title"
                         android:layout_below="@id/candeo_post_content_preview"
+                        android:layout_marginTop="20dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Give a Title to your Showcase"
+                        android:hint="Title in 50 chars"
+                        android:maxLength="50"
+                        android:background="@android:color/transparent"
                         android:visibility="gone"
                         />
                     <EditText
                         android:id="@+id/candeo_content_create"
                         android:layout_below="@id/candeo_post_title"
+                        android:layout_marginTop="20dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="top|left"
                         android:singleLine="false"
-                        android:lines="5"
-                        android:hint="Inspire the world"/>
+                        android:lines="10"
+                        android:maxLength="500"
+                        android:background="@android:color/transparent"
+                        android:hint="Inspire the world in 500 chars"/>
 
                     <TextView
                         android:id="@+id/candeo_copyright_text"
@@ -164,6 +171,7 @@
                         android:layout_height="100dp"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
+                        android:layout_marginTop="20dp"
                         android:gravity="center"
                         android:text="CREATE"
                         android:textColor="@color/candeo_primary_dark"

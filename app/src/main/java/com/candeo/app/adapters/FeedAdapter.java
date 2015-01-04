@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.candeo.app.R;
+import com.candeo.app.util.CandeoUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,8 +38,10 @@ public class FeedAdapter extends BaseAdapter
     class ViewHolder
     {
         TextView description;
-        TextView username;
+        TextView name;
         TextView time;
+        TextView mediaIcon;
+        TextView inspirationIcon;
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -48,9 +51,13 @@ public class FeedAdapter extends BaseAdapter
         {
             convertView= LayoutInflater.from(activity).inflate(R.layout.feed_item, parent, false);
             holder = new ViewHolder();
-            holder.description = (TextView)convertView.findViewById(R.id.content_description);
-            holder.username = (TextView)convertView.findViewById(R.id.username);
+            holder.description = (TextView)convertView.findViewById(R.id.candeo_content_description);
+            holder.name= (TextView)convertView.findViewById(R.id.name);
             holder.time = (TextView)convertView.findViewById(R.id.timestamp);
+            holder.mediaIcon =(TextView)convertView.findViewById(R.id.candeo_media_icon);
+            holder.mediaIcon.setTypeface(CandeoUtil.loadFont(activity.getAssets(),"fonts/fa.ttf"));
+            holder.inspirationIcon = (TextView)convertView.findViewById(R.id.candeo_inspire_icon);
+            holder.inspirationIcon.setTypeface(CandeoUtil.loadFont(activity.getAssets(),"fonts/response.ttf"));
             convertView.setTag(holder);
         }
         else
@@ -58,8 +65,27 @@ public class FeedAdapter extends BaseAdapter
             holder = (ViewHolder)convertView.getTag();
         }
         holder.description.setText(feed.get("desc"));
-        holder.username.setText(feed.get("username"));
+        holder.name.setText(feed.get("name"));
         holder.time.setText(feed.get("timestamp"));
+        switch (Integer.parseInt(feed.get("media_type")))
+        {
+            case 0: //No Media
+                holder.mediaIcon.setText("");
+                break;
+            case 1://Audio
+                holder.mediaIcon.setText("\uf001");
+                break;
+            case 2://Video
+                holder.mediaIcon.setText("\uf008");
+                break;
+            case 3: //Image
+                holder.mediaIcon.setText("\uf030");
+                break;
+            case 4: //Book
+                holder.mediaIcon.setText("\uf02d");
+                break;
+        }
+        holder.inspirationIcon.setText("\ue800");
         return convertView;
     }
 

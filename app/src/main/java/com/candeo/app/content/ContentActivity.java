@@ -50,6 +50,7 @@ import java.net.URL;
 
 public class ContentActivity extends ActionBarActivity implements MediaController.MediaPlayerControl{
 
+    private static final String TAG="Candeo-Content Activity";
     TextView description = null;
     Toolbar toolbar;
     TextView username = null;
@@ -77,8 +78,10 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
         imageView = (ImageView)findViewById(R.id.candeo_image_viewer);
         launchBook = (Button)findViewById(R.id.candeo_book_launcher);
         setSupportActionBar(toolbar);
-        contentViewer=(LinearLayout)findViewById(R.id.candeo_content_viewer);
         setTitle("Candeo");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        contentViewer=(LinearLayout)findViewById(R.id.candeo_content_viewer);
+
         String id = getIntent().getStringExtra("contentId");
         System.out.println("ID is :"+id);
         if(id!=null)
@@ -101,7 +104,7 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
 
         appreciate=(Button)findViewById(R.id.appreciate);
         appreciate.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/applause.ttf"));
-        appreciate.setText("\ue801");
+        appreciate.setText("\ue600");
         appreciate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -286,19 +289,19 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
                             new LoadImageTask(mediaUrl,imageView).execute();
                             break;
 
-                        case 4:
-                            //Book
-                            videoHolder.setVisibility(View.GONE);
-                            imageView.setVisibility(View.GONE);
-                            launchBook.setVisibility(View.VISIBLE);
-
-                            launchBook.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    new FetchBookTask().execute(mediaUrl);
-                                }
-                            });
-                            break;
+//                        case 4:
+//                            //Book
+//                            videoHolder.setVisibility(View.GONE);
+//                            imageView.setVisibility(View.GONE);
+//                            launchBook.setVisibility(View.VISIBLE);
+//
+//                            launchBook.setOnClickListener(new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View v) {
+//                                    new FetchBookTask().execute(mediaUrl);
+//                                }
+//                            });
+//                            break;
 
 
                     }
@@ -420,17 +423,21 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
             {
                 int height=bitmap.getHeight();
                 int width=bitmap.getWidth();
+                Log.e(TAG,"Bitmap width is "+ width+" and height is "+height);
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG,100,bos);
                 getWindowManager().getDefaultDisplay().getMetrics(CandeoApplication.displayMetrics);
                 int screenWidth=CandeoApplication.displayMetrics.widthPixels;
-                int scaleFactor = width/screenWidth;
+                Log.e(TAG,"Screen width is "+ screenWidth);
+                double scaleFactor = (width*1.0)/(screenWidth*1.0);
+                Log.e(TAG,"Scale Factor is "+scaleFactor);
                 int calculatedHeight=height;
                 if(scaleFactor>0)
                 {
-                    calculatedHeight = height/scaleFactor;
+                    calculatedHeight = (int)(height/scaleFactor);
                 }
 
+                Log.e(TAG,"Calculated width is "+ screenWidth+" and height is "+calculatedHeight);
                 imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap,screenWidth,calculatedHeight,false));
             }
             pDialog.dismiss();

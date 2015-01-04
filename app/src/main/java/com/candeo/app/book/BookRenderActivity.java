@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.Toast;
@@ -67,8 +69,21 @@ public class BookRenderActivity extends Activity {
         bookView = (WebView) findViewById(R.id.epub_renderer);
         bookView.clearCache(true);
         bookView.clearHistory();
+        bookView.setClickable(false);
+        bookView.setSelected(true);
+        bookView.setHorizontalScrollBarEnabled(false);
+        bookView.setVerticalScrollBarEnabled(false);
         bookView.getSettings().setJavaScriptEnabled(true);
-        bookView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        bookView.getSettings().setUseWideViewPort(true);
+        bookView.getSettings().setLoadWithOverviewMode(true);
+        bookView.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+                Log.e(TAG,"INCOMING ALERT MESSAGE IS "+message);
+                result.confirm();
+                return true;
+            }
+        });
     }
 
 
@@ -79,8 +94,11 @@ public class BookRenderActivity extends Activity {
         Log.i(TAG, "base url " + baseUrl);
         String chapterPath = mBaseUrl+File.separator+chapterList.get(currentChapter-1).getUrl();
         Log.i(TAG, "chapterPath "+chapterPath);
+        getWindowManager().getDefaultDisplay().getMetrics(CandeoApplication.displayMetrics);
+        Log.e(TAG, "Screen Width is "+CandeoApplication.displayMetrics.widthPixels);
+        Log.e(TAG, "Screen Height is "+CandeoApplication.displayMetrics.heightPixels);
         int width = CandeoApplication.displayMetrics.widthPixels+SCREEN_WIDTH_CORRECTION;
-        int height = CandeoApplication.displayMetrics.widthPixels+SCREEN_HEIGHT_CORRECTION;
+        int height = CandeoApplication.displayMetrics.heightPixels+SCREEN_HEIGHT_CORRECTION;
         String data=preprocess(chapterPath,width,height);
         Log.i(TAG, data);
         bookView.loadDataWithBaseURL(baseUrl, data, "text/html", "UTF-8", null);
@@ -180,10 +198,20 @@ public class BookRenderActivity extends Activity {
         mBbFileUtil.deleteDir(zipDirFile);
     }
 
+    private static void addMetaLink(Document doc, Element element)
+    {
+        Element metaElement = doc.createElement("meta");
+        metaElement.setAttribute("name","viewport");
+        metaElement.setAttribute("content","width=device-width, initial-scale=1.0, user-scalable=no");
+        element.appendChild(metaElement);
+        element.appendChild(doc.createTextNode("\n"));
+    }
+
     private static void addJavaScriptLink(Document doc, Element element, String path) {
         Element scriptElement = doc.createElement("script");
         scriptElement.setAttribute("type", "text/javascript");
-        scriptElement.setAttribute("src", "file:///android_asset/" + path);
+//        scriptElement.setAttribute("src", "url('file:///android_asset/" + path+"')");
+        scriptElement.setAttribute("src",path);
         element.appendChild(scriptElement);
         element.appendChild(doc.createTextNode("\n"));
     }
@@ -191,7 +219,8 @@ public class BookRenderActivity extends Activity {
     private static void addCssLink(Document doc, Element element, String path)
     {
         Element linkElement = doc.createElement("link");
-        linkElement.setAttribute("href","'file:///android_asset/" + path + "'");
+//        linkElement.setAttribute("href","url('file:///android_asset/" + path+"')");
+        linkElement.setAttribute("href",path);
         linkElement.setAttribute("rel","stylesheet");
         linkElement.setAttribute("type","text/css");
         element.appendChild(linkElement);
@@ -223,9 +252,13 @@ public class BookRenderActivity extends Activity {
                 if ("head".equalsIgnoreCase(node.getNodeName())) {
                     Element headElement = (Element) node;
 
-                    addCssLink(doc,headElement,"js/monocle/styles/monocore.css");
+                    addMetaLink(doc, headElement);
+                    //Enabling Monocle js
+                    addJavaScriptLink(doc, headElement, "js/monocle/src/monocore.js");
                     // append monocle interface script
                     addJavaScriptLink(doc, headElement, "js/ui.js");
+                    // Monocle core css
+                    addCssLink(doc,headElement,"js/monocle/styles/monocore.css");
                 }
                 /*
                  * <body> Element
@@ -250,7 +283,6 @@ public class BookRenderActivity extends Activity {
 
                     // 2. clear attributes
                     bodyElement.removeAttribute("xml:lang");
-                    addJavaScriptLink(doc, bodyElement, "js/ui.js");
                 }
                 /*
                  * <img> Element

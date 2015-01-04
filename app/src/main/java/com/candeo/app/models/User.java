@@ -1,5 +1,6 @@
 package com.candeo.app.models;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -58,6 +59,20 @@ public class User {
 
         }
 
+        return user;
+    }
+
+    public static User create(User user)
+    {
+        SQLiteDatabase db = CandeoApplication.getInstance().getDatabase().getReadableDatabase();
+        System.out.println("DB IS "+db.getPath());
+        ContentValues anonymousValues = new ContentValues();
+        anonymousValues.put(USER_NAME,user.name);
+        anonymousValues.put(USER_EMAIL,user.email);
+        anonymousValues.put(USER_USERNAME,user.username);
+        anonymousValues.put(USER_AUTH_TOKEN,user.authToken);
+        anonymousValues.put(USER_UUID,user.uuid);
+        db.insert(TABLE_NAME,null,anonymousValues);
         return user;
     }
 

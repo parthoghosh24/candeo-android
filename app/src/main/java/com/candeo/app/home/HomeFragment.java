@@ -67,7 +67,7 @@ public class HomeFragment extends Fragment {
             showcasePager.setAdapter(new ShowcaseAdapter(getActivity()));
             showcasePager.setPageTransformer(true, new ShowcaseTransformer());
             feedView = (StaggeredGridView)homeView.findViewById(R.id.feed_list);
-            feeds = new ArrayList<HashMap<String, String>>();
+            feeds = new ArrayList<>();
             feedAdapter= new FeedAdapter(getActivity(),feeds);
             feedView.setAdapter(feedAdapter);
             inspire = (Button)homeView.findViewById(R.id.candeo_init_post);
@@ -184,11 +184,12 @@ public class HomeFragment extends Fragment {
                     for(int index=0; index< array.length(); ++index)
                     {
                         JSONObject content = array.getJSONObject(index);
-                        HashMap<String, String> feedMap = new HashMap<String, String>();
+                        HashMap<String, String> feedMap = new HashMap<>();
                         feedMap.put("id", content.optString("id"));
                         feedMap.put("desc", content.optString("desc"));
-                        feedMap.put("username", content.optString("username"));
+                        feedMap.put("name", content.optString("name"));
                         feedMap.put("timestamp", content.optString("time"));
+                        feedMap.put("media_type", content.optString("media_type"));
                         feeds.add(feedMap);
 
 

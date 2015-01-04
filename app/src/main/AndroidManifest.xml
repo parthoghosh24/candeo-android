@@ -29,7 +29,8 @@
         </activity>
         <activity
             android:name=".home.HomeActivity"
-            android:label="@string/title_activity_home" />
+            android:label="@string/title_activity_home"/>
+
         <activity
             android:name=".content.ContentActivity"
             android:label="@string/title_activity_content"
@@ -45,7 +46,10 @@
         <activity
             android:name=".content.PostActivity"
             android:label="@string/title_activity_post"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:parentActivityName=".home.HomeActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".home.HomeActivity" />
         </activity>
         <activity
             android:name=".content.RecordActivity"

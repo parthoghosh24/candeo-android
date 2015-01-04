@@ -3,11 +3,15 @@ package com.candeo.app.content;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -16,6 +20,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.candeo.app.CandeoApplication;
@@ -40,29 +46,34 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 public class PostActivity extends ActionBarActivity {
 
-    Button audio;
-    Button image;
-    Button video;
-    Button book;
-    Button postIt;
-    Switch selector;
-    TextView copyrightText;
-    EditText showcaseTitleText;
-    EditText description;
-    Button audioPreview;
-    ImageView imagePreview;
-    VideoView videoPreview;
-    Button videoPreviewPlay;
-    Toolbar toolbar;
-    String mimeType;
-    String fileName;
-    int mediaType;
-    byte[] dataArray;
-    boolean isPlaying=false;
-    int stopPosition=0;
+    private static final String TAG="Candeo - Post Activity";
+    private Button audio;
+    private Button image;
+    private Button video;
+    private Uri imageUri;
+    private Bitmap bitmap;
+//    Button book; //Next version. Currently running into multiple issues. Need to research alot more to find the right solution. Webview or custom viewer???
+    private Button postIt;
+    private Switch selector;
+    private TextView copyrightText;
+    private EditText showcaseTitleText;
+    private EditText description;
+    private EditText showcaseTitle;
+    private Button audioPreview;
+    private ImageView imagePreview;
+    private VideoView videoPreview;
+    private Button videoPreviewPlay;
+    private Toolbar toolbar;
+    private String mimeType;
+    private String fileName;
+    private int mediaType;
+    private byte[] dataArray;
+    private boolean isPlaying=false;
+    private int stopPosition=0;
     MediaPlayer player;
     private static final int REQUEST_IMAGE_CAMERA=100;
     private static final int PICK_VIDEO_FILE=200;
@@ -70,12 +81,12 @@ public class PostActivity extends ActionBarActivity {
     private static final int PICK_AUDIO_FILE=400;
     private static final int REQUEST_AUDIO_RECORD=500;
     private static final int PICK_IMAGE_FILE=600;
-    private static final int PICK_EPUB_FILE=700;
+//    private static final int PICK_EPUB_FILE=700;
 
     private static final int AUDIO=1;
     private static final int VIDEO=2;
     private static final int IMAGE=3;
-    private static final int BOOK=4;
+//    private static final int BOOK=4;
 
     private static final int INSPIRATION=1;
     private static final int SHOWCASE=2;
@@ -91,9 +102,8 @@ public class PostActivity extends ActionBarActivity {
         setFinishOnTouchOutside(false);
         toolbar = (Toolbar)findViewById(R.id.candeo_toolbar);
         setSupportActionBar(toolbar);
-        setTitle("Candeo");
+        setTitle("Create Magic");
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
-
         audioPreview = (Button)findViewById(R.id.candeo_audio_preview);
         audioPreview.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
         audioPreview.setText("\uf04b");
@@ -103,13 +113,13 @@ public class PostActivity extends ActionBarActivity {
         videoPreviewPlay.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
         videoPreviewPlay.setText("\uf04b");
         description=(EditText)findViewById(R.id.candeo_content_create);
-
+        showcaseTitle = (EditText)findViewById(R.id.candeo_post_title);
         audio=(Button)findViewById(R.id.candeo_audio);
         audio.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
         audio.setText("\uf001");
         audio.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 if(player!=null)
                 {
                     player.stop();
@@ -160,7 +170,11 @@ public class PostActivity extends ActionBarActivity {
 
                         if(choices[which].equals("Click Something"))
                         {
+                            ContentValues values = new ContentValues();
+                            values.put(MediaStore.Images.Media.TITLE, UUID.randomUUID().toString()+".jpg");
+                            imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,values);
                             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                             startActivityForResult(intent, REQUEST_IMAGE_CAMERA);
                         }
                         else if(choices[which].equals("Fetch From Gallery"))
@@ -205,6 +219,7 @@ public class PostActivity extends ActionBarActivity {
                                     .getExternalStorageDirectory(), "candeo/videos/candeovideo.mp4");
                             intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 180);
                             intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, 90);
+                            intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 16*1024*1024); //16 MB Limit
                             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
                             startActivityForResult(intent, REQUEST_VIDEO_CAMERA);
                         }
@@ -232,18 +247,18 @@ public class PostActivity extends ActionBarActivity {
             }
         });
 
-        book=(Button)findViewById(R.id.candeo_book);
-        book.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
-        book.setText("\uf02d");
-        book.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("epub/*");
-                startActivityForResult(Intent.createChooser(intent,"Select EPUB"),PICK_EPUB_FILE);
-            }
-        });
+//        book=(Button)findViewById(R.id.candeo_book);
+//        book.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
+//        book.setText("\uf02d");
+//        book.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//                intent.addCategory(Intent.CATEGORY_OPENABLE);
+//                intent.setType("epub/*");
+//                startActivityForResult(Intent.createChooser(intent,"Select EPUB"),PICK_EPUB_FILE);
+//            }
+//        });
 
         postIt=(Button)findViewById(R.id.candeo_post_it);
         postIt.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
@@ -306,18 +321,28 @@ public class PostActivity extends ActionBarActivity {
             try
             {
                 String url =CandeoApplication.baseUrl+"/api/v1/contents/create ";
-                System.out.println("URL Is "+url);
-                CandeoHttpClient client = new CandeoHttpClient(url);
-                client.connectForMultipart();
-                client.addFormPart("type", Integer.toString(contentType));
-                client.addFormPart("description",description.getText().toString());
-                client.addFormPart("user_id","1");
-                client.addFormPart("tag","inspire");
-                System.out.println("FILE is " + fileName);
-                client.addFormPart("media_type",Integer.toString(mediaType));
-                client.addFilePart("media",fileName,dataArray, mimeType);
-                client.finishMultipart();
-                result=client.getResponse();
+                Log.e(TAG,"URL Is "+url);
+                result="";
+                if(mediaType >0 && dataArray != null) //Data Array can't be empty for media files. In Showcase, media types are mandatory
+                {
+                    CandeoHttpClient client = new CandeoHttpClient(url);
+                    client.connectForMultipart();
+                    client.addFormPart("type", Integer.toString(contentType)); //showcase or inspiration
+                    client.addFormPart("description",description.getText().toString());
+                    if(SHOWCASE == contentType)
+                    {
+                      client.addFormPart("title",showcaseTitle.getText().toString());
+                    }
+                    client.addFormPart("user_id","1");
+                    client.addFormPart("tag","inspire");
+                    System.out.println("FILE is " + fileName);
+                    client.addFormPart("media_type",Integer.toString(mediaType));
+                    client.addFilePart("media",fileName,dataArray, mimeType);
+                    client.finishMultipart();
+                    result=client.getResponse();
+                }
+
+
                 System.out.println("Response is "+result);
             }
             catch (IOException ie)
@@ -342,13 +367,21 @@ public class PostActivity extends ActionBarActivity {
             try
             {
                 System.out.println("Respnse"+result+"finish");
-                JSONObject json = new JSONObject(result);
-                String id = json.getString("id");
-                Log.e(PostActivity.class.getName(),"AND THE ID IS "+id);
-                Intent contentIntent = new Intent(PostActivity.this,ContentActivity.class);
-                contentIntent.putExtra("contentId",id);
-                finish();
-                startActivity(contentIntent);
+                if(TextUtils.isEmpty(result))
+                {
+                    CandeoUtil.appAlertDialog(PostActivity.this, "Posting Failed. Please Try Again! Sorry for the inconvenience");
+                }
+                else
+                {
+                    JSONObject json = new JSONObject(result);
+                    String id = json.getString("id");
+                    Log.e(PostActivity.class.getName(),"AND THE ID IS "+id);
+                    Intent contentIntent = new Intent(PostActivity.this,ContentActivity.class);
+                    contentIntent.putExtra("contentId",id);
+                    finish();
+                    startActivity(contentIntent);
+                }
+
             }
             catch (JSONException jse)
             {
@@ -361,7 +394,6 @@ public class PostActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Bitmap bitmap=null;
         Uri uri=null;
         Cursor cursor=null;
         String filePath="";
@@ -369,64 +401,60 @@ public class PostActivity extends ActionBarActivity {
         ByteArrayOutputStream bos=null;
         int width=0;
         int height=0;
-
+        ExifInterface exifInterface = null;
+        BitmapFactory.Options options = null;
         if(resultCode == RESULT_OK)
         {
             switch (requestCode)
             {
                 case REQUEST_IMAGE_CAMERA:
-                    bos = new ByteArrayOutputStream();
-                    bitmap = (Bitmap) data.getExtras().get("data");
-                    height=bitmap.getHeight();
-                    width=bitmap.getWidth();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG,100,bos);
-                    mimeType="image/jpeg";
-                    fileName = "candeoimage.jpg";
-                    dataArray = bos.toByteArray();
                     mediaType=IMAGE;
-                    System.out.println("Bitmap is " + bitmap);
-                    if(width > height)
-                    {
-                        imagePreview.setImageBitmap(Bitmap.createScaledBitmap(bitmap,320,240,false));
+                    filePath = getRealPathFromUri(imageUri);
+                    file = new File(filePath);
+                    Log.e(TAG,"Capture image path is "+filePath);
+                    fileName = file.getName();
+                    mimeType=CandeoUtil.getMimeType(imageUri, PostActivity.this);
+                    options = new BitmapFactory.Options();
+                    options.inJustDecodeBounds = false;
+                    options.inPreferredConfig = Bitmap.Config.RGB_565;
+                    options.inDither = true;
+                    bitmap = BitmapFactory.decodeFile(filePath,options);
+                    try {
+                        exifInterface = new ExifInterface(filePath);
+                        int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+                        Log.e(TAG,"orientation in image capture is "+orientation);
+                        new RotateTask(orientation).execute(bitmap);
                     }
-                    else
+                    catch(IOException ioe)
                     {
-                        imagePreview.setImageBitmap(Bitmap.createScaledBitmap(bitmap,240,320,false));
+                        ioe.printStackTrace();
                     }
 
-                    imagePreview.setVisibility(View.VISIBLE);
-                    videoPreview.setVisibility(View.GONE);
-                    videoPreviewPlay.setVisibility(View.GONE);
-                    audioPreview.setVisibility(View.GONE);
                     break;
+
                 case PICK_IMAGE_FILE:
+                    mediaType=IMAGE;
                     uri = data.getData();
-                    cursor = getContentResolver().query(uri, new String[]{MediaStore.Images.ImageColumns.DATA}, null, null, null);
-                    cursor.moveToFirst();
-                    filePath = cursor.getString(0);
-                    cursor.close();
+                    filePath = getRealPathFromUri(uri);
                     file = new File(filePath);
+                    Log.e(TAG,"Picked image path is "+filePath);
                     mimeType=CandeoUtil.getMimeType(uri, PostActivity.this);
                     fileName = file.getName();
-                    bitmap=BitmapFactory.decodeFile(filePath);
-                    height=bitmap.getHeight();
-                    width=bitmap.getWidth();
-                    bos = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG,100,bos);
-                    new PouplateDataArray().execute(file);
-                    mediaType=IMAGE;
-                    if(width > height)
-                    {
-                        imagePreview.setImageBitmap(Bitmap.createScaledBitmap(bitmap,320,240,false));
+                    options = new BitmapFactory.Options();
+                    options.inJustDecodeBounds = false;
+                    options.inPreferredConfig = Bitmap.Config.RGB_565;
+                    options.inDither = true;
+                    bitmap=BitmapFactory.decodeFile(filePath, options);
+                    try {
+                        exifInterface = new ExifInterface(filePath);
+                        int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+                        Log.e(TAG,"orientation in pick image is "+orientation);
+                        new RotateTask(orientation).execute(bitmap);
                     }
-                    else
+                    catch(IOException ioe)
                     {
-                        imagePreview.setImageBitmap(Bitmap.createScaledBitmap(bitmap,240,320,false));
+                        ioe.printStackTrace();
                     }
-                    imagePreview.setVisibility(View.VISIBLE);
-                    videoPreview.setVisibility(View.GONE);
-                    videoPreviewPlay.setVisibility(View.GONE);
-                    audioPreview.setVisibility(View.GONE);
                     break;
                 case REQUEST_VIDEO_CAMERA:
                     uri = data.getData();
@@ -435,9 +463,17 @@ public class PostActivity extends ActionBarActivity {
                                 .getExternalStorageDirectory(), "candeo/videos/candeovideo.mp4");
                         mimeType=CandeoUtil.getMimeType(uri, PostActivity.this);
                         fileName = file.getName();
-                        new PouplateDataArray().execute(file);
                         mediaType=VIDEO;
-                        playVideo(uri);
+                        dataArray = CandeoUtil.fileToByteArray(file);
+                        if(dataArray == null)
+                        {
+                            CandeoUtil.appAlertDialog(PostActivity.this,"Please Upload video of size upto 16 mb. Bigger file support coming soon!");
+                        }
+                        else
+                        {
+                            playVideo(uri);
+                        }
+
                     }
                     catch (Exception ex)
                     {
@@ -455,9 +491,16 @@ public class PostActivity extends ActionBarActivity {
                     file = new File(filePath);
                     mimeType=CandeoUtil.getMimeType(uri, PostActivity.this);
                     fileName = file.getName();
-                    new PouplateDataArray().execute(file);
                     mediaType=VIDEO;
-                    playVideo(uri);
+                    dataArray = CandeoUtil.fileToByteArray(file);
+                    if(dataArray == null)
+                    {
+                        CandeoUtil.appAlertDialog(PostActivity.this,"Please Upload video of size upto 16 mb. Bigger file support coming soon!");
+                    }
+                    else
+                    {
+                        playVideo(uri);
+                    }
                     break;
                 case REQUEST_AUDIO_RECORD:
                     filePath= data.getStringExtra("path");
@@ -466,7 +509,7 @@ public class PostActivity extends ActionBarActivity {
                     mimeType=CandeoUtil.getMimeType(Uri.fromFile(file),PostActivity.this);
                     fileName = file.getName();
                     mediaType=AUDIO;
-                    new PouplateDataArray().execute(file);
+                    dataArray = CandeoUtil.fileToByteArray(file);
                     System.out.println("FILE IS "+fileName);
                     playAudio(filePath);
                     break;
@@ -479,50 +522,15 @@ public class PostActivity extends ActionBarActivity {
                     file = new File(filePath);
                     mimeType=CandeoUtil.getMimeType(uri, PostActivity.this);
                     fileName = file.getName();
-                    new PouplateDataArray().execute(file);
+                    dataArray = CandeoUtil.fileToByteArray(file);
                     mediaType=AUDIO;
                     System.out.println("Path is "+ uri.getPath());
                     playAudio(uri);
                     break;
-                case PICK_EPUB_FILE:
-                    break;
+//                case PICK_EPUB_FILE:
+//                    break;
             }
 
-        }
-    }
-
-    private class PouplateDataArray extends AsyncTask<File,Void,Void>
-    {
-        private ProgressDialog pDialog=new ProgressDialog(PostActivity.this);
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            try {
-                pDialog.setMessage("Preparing File...");
-                pDialog.setIndeterminate(true);
-                pDialog.setCancelable(false);
-                //pDialog.show();
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-        }
-
-        @Override
-        protected Void doInBackground(File... params) {
-            File file =params[0];
-            dataArray = CandeoUtil.fileToByteArray(file);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            if(pDialog!=null)
-            {
-                pDialog.dismiss();
-            }
         }
     }
 
@@ -622,6 +630,134 @@ public class PostActivity extends ActionBarActivity {
             }
         });
 
+    }
+
+    class RotateTask extends AsyncTask<Bitmap, Void, Bitmap>
+    {
+        private int orientation = ExifInterface.ORIENTATION_UNDEFINED;
+        public RotateTask(int orientation)
+        {
+            this.orientation = orientation;
+        }
+        private ProgressDialog pDialog=new ProgressDialog(PostActivity.this);
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            try {
+                pDialog.setMessage("Preparing Image...");
+                pDialog.setIndeterminate(true);
+                pDialog.setCancelable(false);
+                pDialog.show();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+        }
+
+        @Override
+        protected Bitmap doInBackground(Bitmap... params) {
+            Bitmap bitmap =params[0];
+            bitmap = rotateBitmap(bitmap, orientation);
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            if(pDialog!=null)
+            {
+                pDialog.dismiss();
+                if(result!=null)
+                {
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    bitmap=result;
+                    bitmap.compress(Bitmap.CompressFormat.JPEG,100,bos);
+                    dataArray = bos.toByteArray();
+                    System.out.println("Bitmap is " + bitmap);
+                    if(bitmap.getWidth() > bitmap.getHeight())
+                    {
+                        imagePreview.setImageBitmap(Bitmap.createScaledBitmap(bitmap,320,240,false));
+                    }
+                    else
+                    {
+                        imagePreview.setImageBitmap(Bitmap.createScaledBitmap(bitmap,240,320,false));
+                    }
+
+                    imagePreview.setVisibility(View.VISIBLE);
+                    videoPreview.setVisibility(View.GONE);
+                    videoPreviewPlay.setVisibility(View.GONE);
+                    audioPreview.setVisibility(View.GONE);
+
+                }
+            }
+        }
+
+    }
+
+    private Bitmap rotateBitmap(Bitmap bitmap, int orientation)
+    {
+        Matrix matrix = new Matrix();
+        try
+        {
+            switch (orientation)
+            {
+                case ExifInterface.ORIENTATION_NORMAL:
+                    return bitmap;
+                case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+                    matrix.setScale(-1,1);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    matrix.setRotate(180);
+                    break;
+                case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+                    matrix.setRotate(180);
+                    matrix.postScale(-1,1);
+                    break;
+                case ExifInterface.ORIENTATION_TRANSPOSE:
+                    matrix.setRotate(90);
+                    matrix.postScale(-1,1);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    matrix.setRotate(90);
+                    break;
+                case ExifInterface.ORIENTATION_TRANSVERSE:
+                    matrix.setRotate(-90);
+                    matrix.postScale(-1,1);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    matrix.setRotate(-90);
+                    break;
+                default:
+                    return bitmap;
+
+            }
+            Bitmap bitmapRotated = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
+            return bitmapRotated;
+
+        }
+        catch (OutOfMemoryError ome)
+        {
+            ome.printStackTrace();
+            return  bitmap;
+        }
+
+    }
+
+    private Uri getImageUri(Context context, Bitmap bitmap, String title)
+    {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,100,baos);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(),bitmap,title,null);
+        return Uri.parse(path);
+    }
+
+    private String getRealPathFromUri(Uri uri)
+    {
+        Cursor cursor = getContentResolver().query(uri,null,null,null,null);
+        cursor.moveToFirst();
+        int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return cursor.getString(index);
     }
 
 }

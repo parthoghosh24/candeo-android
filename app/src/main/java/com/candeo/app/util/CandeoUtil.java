@@ -3,8 +3,10 @@ package com.candeo.app.util;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -79,5 +81,16 @@ public class CandeoUtil {
     {
         ContentResolver contentResolver = context.getContentResolver();
         return contentResolver.getType(uri);
+    }
+
+    public static void appAlertDialog(Context context, String mesg)
+    {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(context);
+        alert.setMessage(mesg).setCancelable(true).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+            }
+        }).create().show();
     }
 }

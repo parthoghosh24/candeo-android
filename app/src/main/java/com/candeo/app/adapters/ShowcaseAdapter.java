@@ -10,12 +10,16 @@ import android.widget.TextView;
 import com.candeo.app.R;
 import com.candeo.app.util.CandeoUtil;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
- * Created by dholu on 1/12/14.
+ * Created by Partho on 1/12/14.
  */
 public class ShowcaseAdapter extends PagerAdapter {
 
-    Activity activity;
+    private Activity activity;
+    private List<HashMap<String, String>> showcases;
 
     public ShowcaseAdapter(Activity activity)
     {
@@ -34,6 +38,15 @@ public class ShowcaseAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View view = activity.getLayoutInflater().inflate(R.layout.showcase_item, container, false);
+        TextView copyRightView = (TextView)view.findViewById(R.id.candeo_copyright_icon);
+        TextView inspiredIconView = (TextView)view.findViewById(R.id.candeo_inspired_icon);
+        TextView appreciateIconView = (TextView)view.findViewById(R.id.candeo_appreciated_icon);
+        copyRightView.setTypeface(CandeoUtil.loadFont(activity.getAssets(),"fonts/fa.ttf"));
+        copyRightView.setText("\uf1f9");
+        inspiredIconView.setTypeface(CandeoUtil.loadFont(activity.getAssets(),"fonts/response.ttf"));
+        inspiredIconView.setText("\ue800");
+        appreciateIconView.setTypeface(CandeoUtil.loadFont(activity.getAssets(),"fonts/applause.ttf"));
+        appreciateIconView.setText("\ue600");
         container.addView(view);
         return view;
     }
