@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -48,33 +49,37 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 
-public class ContentActivity extends ActionBarActivity implements MediaController.MediaPlayerControl{
+public class ContentActivity extends ActionBarActivity{
 
     private static final String TAG="Candeo-Content Activity";
-    TextView description = null;
-    Toolbar toolbar;
-    TextView username = null;
-    Button getInspired=null;
-    Button appreciate=null;
-    Button launchBook=null; //temporary
+    private TextView description = null;
+    private Toolbar toolbar;
+    private TextView username = null;
+    private Button getInspired=null;
+    private Button appreciate=null;
+    private Button launchBook=null; //temporary
     private String contentURL = CandeoApplication.baseUrl+"/api/v1/contents";
-    MediaController mediaController;
-    MediaPlayer mediaPlayer;
-    FrameLayout videoHolder;
-    VideoView  videoView;
-    ImageView imageView;
-    LinearLayout contentViewer;
-    Book book;
-    TableOfContents bookToc;
-    EpubCore epubCore;
+    private Button play = null;
+    private int stopPosition=0;
+    private MediaPlayer mediaPlayer;
+    private FrameLayout videoHolder;
+    private VideoView  videoView;
+    private ImageView imageView;
+    private LinearLayout contentViewer;
+//    private Book book;
+//    private TableOfContents bookToc;
+//    private EpubCore epubCore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
-        epubCore = new EpubCore();
+//        epubCore = new EpubCore();
         toolbar = (Toolbar)findViewById(R.id.candeo_content_toolbar);
         videoHolder=(FrameLayout)findViewById(R.id.candeo_content_viewer_holder);
         videoView =(VideoView)findViewById(R.id.candeo_video_viewer);
+        play = (Button)findViewById(R.id.candeo_media_play);
+        play.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
+        play.setText("\uf04b");
         imageView = (ImageView)findViewById(R.id.candeo_image_viewer);
         launchBook = (Button)findViewById(R.id.candeo_book_launcher);
         setSupportActionBar(toolbar);
@@ -122,10 +127,6 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
     @Override
     protected void onStop() {
         super.onStop();
-        if(mediaController!=null)
-        {
-            mediaController.hide();
-        }
 
         if(mediaPlayer!=null)
         {
@@ -140,72 +141,8 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
 
     }
 
-    @Override
-    public void start() {
-        mediaPlayer.start();
-    }
 
-    @Override
-    public void pause() {
-        if(mediaPlayer.isPlaying())
-        {
-            mediaPlayer.pause();
-        }
-    }
 
-    @Override
-    public boolean canPause() {
-        return true;
-    }
-
-    @Override
-    public int getDuration() {
-        return 0;
-    }
-
-    @Override
-    public boolean canSeekBackward() {
-        return true;
-    }
-
-    @Override
-    public boolean canSeekForward() {
-        return true;
-    }
-
-    @Override
-    public int getCurrentPosition() {
-        return mediaPlayer.getCurrentPosition();
-    }
-
-    @Override
-    public void seekTo(int pos) {
-        mediaPlayer.seekTo(pos);
-    }
-
-    @Override
-    public int getBufferPercentage() {
-        return (mediaPlayer.getCurrentPosition()*100)/mediaPlayer.getDuration();
-    }
-
-    @Override
-    public int getAudioSessionId() {
-        return 0;
-    }
-
-    @Override
-    public boolean isPlaying() {
-        return mediaPlayer.isPlaying();
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if((Integer)contentViewer.getTag() == 1 || (Integer)contentViewer.getTag() == 2)
-        {
-            mediaController.show(0);
-        }
-        return false;
-    }
 
     private class LoadContent extends AsyncTask<String, String, JSONObject> {
 
@@ -233,7 +170,6 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
                 contentViewer.setTag(type);
                 if(type>0)
                 {
-                    mediaController = new MediaController(ContentActivity.this);
                     final String mediaUrl=CandeoApplication.baseUrl+jsonObject.optString("media");
                     switch (type)
                     {
@@ -244,16 +180,12 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
                             try
                             {
                                 mediaPlayer= new MediaPlayer();
-                                mediaController = new MediaController(ContentActivity.this);
-                                mediaController.setMediaPlayer(ContentActivity.this);
-                                mediaController.setAnchorView(contentViewer);
                                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                                 mediaPlayer.setDataSource(mediaUrl);
                                 mediaPlayer.prepareAsync();
                                 mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                                     @Override
                                     public void onPrepared(MediaPlayer mp) {
-                                        mediaController.show(0);
                                         mediaPlayer.start();
                                     }
                                 });
@@ -267,22 +199,19 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
                             break;
                         case 2: //video
                             videoHolder.setVisibility(View.VISIBLE);
+                            videoView.setVisibility(View.VISIBLE);
+                            play.setVisibility(View.VISIBLE);
+                            play.setText("\uf04c");
                             imageView.setVisibility(View.GONE);
                             launchBook.setVisibility(View.GONE);
                             System.out.println("MEDIA URL is : " + mediaUrl);
-                            videoView.setVideoPath(mediaUrl);
-                            mediaController.setMediaPlayer(videoView);
-                            mediaController.setAnchorView(contentViewer);
-                            videoView.setMediaController(mediaController);
-                            videoView.seekTo(100);
-                            Log.e("ContentActivity",videoView.toString());
-                            videoView.start();
-                            Log.e("ContentActivity","IS PLAYING "+videoView.isPlaying());
+                            playVideo(mediaUrl);
                             break;
 
                         case 3:
                             //Image
                             videoHolder.setVisibility(View.GONE);
+                            play.setVisibility(View.GONE);
                             imageView.setVisibility(View.VISIBLE);
                             launchBook.setVisibility(View.GONE);
                             System.out.println("MEDIA URL is : "+mediaUrl);
@@ -315,68 +244,106 @@ public class ContentActivity extends ActionBarActivity implements MediaControlle
         }
     }
 
-    private class FetchBookTask extends AsyncTask<String, Void, Void>
+    private void playVideo(String url)
     {
-
-        private ProgressDialog dialog = new ProgressDialog(ContentActivity.this);
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            dialog.setMessage("Processing Book...");
-            dialog.setIndeterminate(false);
-            dialog.setCancelable(true);
-            dialog.show();
-        }
-
-        @Override
-        protected Void doInBackground(String... params) {
-            try
-            {
-                URL url = new URL(params[0]);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.connect();
-                Log.e(ContentActivity.class.getName(),"REQUEST METHOD IS "+urlConnection.getRequestMethod());
-                File file = new File(Environment.getExternalStorageDirectory()+"/candeo/books/tmp.epub");
-                FileOutputStream fos = new FileOutputStream(file);
-                InputStream inputStream = urlConnection.getInputStream();
-                byte[] buffer = new byte[1024];
-                int bufferLength=0;
-                while((bufferLength=inputStream.read(buffer))>0)
+        videoView.setVideoPath(url);
+        videoView.start();
+        videoView.setVisibility(View.VISIBLE);
+        play.setVisibility(View.VISIBLE);
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!videoView.isPlaying())
                 {
-                    fos.write(buffer,0,bufferLength);
+                    videoView.seekTo(stopPosition);
+                    videoView.start();
+                    play.setText("\uf04c");
                 }
-                fos.close();
-                String filePath =Environment.getExternalStorageDirectory()+"/candeo/books/tmp.epub";
-                String unzippedBookPath = epubCore.unzipEpub(filePath,"tmp");
-                book = new Book();
-                book = epubCore.loadBook(unzippedBookPath,book);
-                bookToc = epubCore.getToc();
+                else
+                {
+                    stopPosition=videoView.getCurrentPosition();
+                    videoView.pause();
+                    play.setText("\uf04b");
+                }
 
+                if(videoView!=null)
+                {
+                    videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            videoView.stopPlayback();
+                            play.setText("\uf04b");
+                            stopPosition=0;
+                        }
+                    });
+                }
             }
-            catch (IOException ioe)
-            {
-                ioe.printStackTrace();
-            }
+        });
 
-
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            if(dialog!=null)
-            {
-                dialog.dismiss();
-            }
-            Intent intent = new Intent(ContentActivity.this, BookRenderActivity.class);
-            intent.putExtra(Configuration.INTENTBOOK,book);
-            intent.putParcelableArrayListExtra(Configuration.INTENTCHAPTERLIST,bookToc.getChapters());
-            intent.putExtra(Configuration.INTENTBASEURL,epubCore.getBaseUrl());
-            startActivity(intent);
-
-        }
     }
+
+//    private class FetchBookTask extends AsyncTask<String, Void, Void>
+//    {
+//
+//        private ProgressDialog dialog = new ProgressDialog(ContentActivity.this);
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//            dialog.setMessage("Processing Book...");
+//            dialog.setIndeterminate(false);
+//            dialog.setCancelable(true);
+//            dialog.show();
+//        }
+//
+//        @Override
+//        protected Void doInBackground(String... params) {
+//            try
+//            {
+//                URL url = new URL(params[0]);
+//                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+//                urlConnection.connect();
+//                Log.e(ContentActivity.class.getName(),"REQUEST METHOD IS "+urlConnection.getRequestMethod());
+//                File file = new File(Environment.getExternalStorageDirectory()+"/candeo/books/tmp.epub");
+//                FileOutputStream fos = new FileOutputStream(file);
+//                InputStream inputStream = urlConnection.getInputStream();
+//                byte[] buffer = new byte[1024];
+//                int bufferLength=0;
+//                while((bufferLength=inputStream.read(buffer))>0)
+//                {
+//                    fos.write(buffer,0,bufferLength);
+//                }
+//                fos.close();
+//                String filePath =Environment.getExternalStorageDirectory()+"/candeo/books/tmp.epub";
+////                String unzippedBookPath = epubCore.unzipEpub(filePath,"tmp");
+////                book = new Book();
+////                book = epubCore.loadBook(unzippedBookPath,book);
+////                bookToc = epubCore.getToc();
+//
+//            }
+//            catch (IOException ioe)
+//            {
+//                ioe.printStackTrace();
+//            }
+//
+//
+//
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Void aVoid) {
+//            if(dialog!=null)
+//            {
+//                dialog.dismiss();
+//            }
+//            Intent intent = new Intent(ContentActivity.this, BookRenderActivity.class);
+//            intent.putExtra(Configuration.INTENTBOOK,book);
+//            intent.putParcelableArrayListExtra(Configuration.INTENTCHAPTERLIST,bookToc.getChapters());
+//            intent.putExtra(Configuration.INTENTBASEURL,epubCore.getBaseUrl());
+//            startActivity(intent);
+//
+//        }
+//    }
 
     private class LoadImageTask extends AsyncTask<String, String, Bitmap>
     {

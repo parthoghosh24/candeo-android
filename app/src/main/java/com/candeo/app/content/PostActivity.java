@@ -22,6 +22,8 @@ import android.support.v7.widget.Toolbar;
 
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -74,7 +76,7 @@ public class PostActivity extends ActionBarActivity {
     private byte[] dataArray;
     private boolean isPlaying=false;
     private int stopPosition=0;
-    MediaPlayer player;
+    private MediaPlayer player;
     private static final int REQUEST_IMAGE_CAMERA=100;
     private static final int PICK_VIDEO_FILE=200;
     private static final int REQUEST_VIDEO_CAMERA=300;
@@ -99,11 +101,10 @@ public class PostActivity extends ActionBarActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
-        setFinishOnTouchOutside(false);
-        toolbar = (Toolbar)findViewById(R.id.candeo_toolbar);
+        toolbar = (Toolbar)findViewById(R.id.candeo_post_toolbar);
         setSupportActionBar(toolbar);
         setTitle("Create Magic");
-        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         audioPreview = (Button)findViewById(R.id.candeo_audio_preview);
         audioPreview.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
         audioPreview.setText("\uf04b");
@@ -111,7 +112,7 @@ public class PostActivity extends ActionBarActivity {
         videoPreview=(VideoView)findViewById(R.id.candeo_video_preview);
         videoPreviewPlay=(Button)findViewById(R.id.candeo_video_preview_play);
         videoPreviewPlay.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
-        videoPreviewPlay.setText("\uf04b");
+        videoPreviewPlay.setText("\uf04c");
         description=(EditText)findViewById(R.id.candeo_content_create);
         showcaseTitle = (EditText)findViewById(R.id.candeo_post_title);
         audio=(Button)findViewById(R.id.candeo_audio);
@@ -267,7 +268,6 @@ public class PostActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 new PostContentTask().execute();
-                //finish();
             }
         });
 
@@ -538,23 +538,25 @@ public class PostActivity extends ActionBarActivity {
     {
         videoPreview.setVideoURI(uri);
         videoPreview.start();
-        videoPreview.seekTo(100);
         imagePreview.setVisibility(View.GONE);
         videoPreview.setVisibility(View.VISIBLE);
-        videoPreviewPlay.setVisibility(View.GONE);
+        videoPreviewPlay.setVisibility(View.VISIBLE);
+        videoPreviewPlay.setText("\uf04c");
         audioPreview.setVisibility(View.GONE);
-        videoPreview.setOnTouchListener(new View.OnTouchListener() {
+        videoPreviewPlay.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View v) {
                 if(!videoPreview.isPlaying())
                 {
                     videoPreview.seekTo(stopPosition);
                     videoPreview.start();
+                    videoPreviewPlay.setText("\uf04c");
                 }
                 else
                 {
                     stopPosition=videoPreview.getCurrentPosition();
                     videoPreview.pause();
+                    videoPreviewPlay.setText("\uf04b");
                 }
 
                 if(videoPreview!=null)
@@ -563,10 +565,11 @@ public class PostActivity extends ActionBarActivity {
                         @Override
                         public void onCompletion(MediaPlayer mp) {
                             videoPreview.stopPlayback();
+                            videoPreviewPlay.setText("\uf04b");
+                            stopPosition=0;
                         }
                     });
                 }
-                return true;
             }
         });
 
@@ -759,5 +762,25 @@ public class PostActivity extends ActionBarActivity {
         int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
         return cursor.getString(index);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.content, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }

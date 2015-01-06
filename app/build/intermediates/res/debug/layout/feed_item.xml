@@ -97,7 +97,7 @@
                     android:layout_toEndOf="@id/candeo_user_avatar_holder"
                     android:text="About 23 hours ago"
                     android:layout_below="@id/name"
-                    android:gravity="end"
+                    android:gravity="bottom|end"
                     android:layout_alignBottom="@id/candeo_user_avatar_holder"
                     android:textColor="@color/candeo_light_gray"
                     android:layout_width="match_parent"
@@ -114,4 +114,4 @@
 
 </android.support.v7.widget.CardView>
 
-<!-- From: file:/home/dholu/projects/Candeo/app/src/main/res/layout/feed_item.xml -->
+<!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/src/main/res/layout/feed_item.xml -->
