@@ -130,13 +130,7 @@ public class ContentActivity extends ActionBarActivity{
 
         if(mediaPlayer!=null)
         {
-            mediaPlayer.stop();
             mediaPlayer.release();
-        }
-
-        if(videoView!=null)
-        {
-            videoView.stopPlayback();
         }
 
     }
@@ -247,21 +241,25 @@ public class ContentActivity extends ActionBarActivity{
     private void playVideo(String url)
     {
         videoView.setVideoPath(url);
-        videoView.start();
         videoView.setVisibility(View.VISIBLE);
         play.setVisibility(View.VISIBLE);
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mediaPlayer=mp;
+                mediaPlayer.start();
+            }
+        });
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!videoView.isPlaying())
+                if(!mediaPlayer.isPlaying())
                 {
-                    videoView.seekTo(stopPosition);
                     videoView.start();
                     play.setText("\uf04c");
                 }
                 else
                 {
-                    stopPosition=videoView.getCurrentPosition();
                     videoView.pause();
                     play.setText("\uf04b");
                 }
@@ -271,9 +269,9 @@ public class ContentActivity extends ActionBarActivity{
                     videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mp) {
-                            videoView.stopPlayback();
+                            mediaPlayer.pause();
+                            mediaPlayer.seekTo(0);
                             play.setText("\uf04b");
-                            stopPosition=0;
                         }
                     });
                 }

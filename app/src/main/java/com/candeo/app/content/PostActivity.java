@@ -537,36 +537,42 @@ public class PostActivity extends ActionBarActivity {
     private void playVideo(Uri uri)
     {
         videoPreview.setVideoURI(uri);
-        videoPreview.start();
         imagePreview.setVisibility(View.GONE);
         videoPreview.setVisibility(View.VISIBLE);
         videoPreviewPlay.setVisibility(View.VISIBLE);
         videoPreviewPlay.setText("\uf04c");
         audioPreview.setVisibility(View.GONE);
+        videoPreview.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                player = mp;
+                player.start();
+            }
+        });
+
         videoPreviewPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!videoPreview.isPlaying())
+                if(!player.isPlaying())
                 {
-                    videoPreview.seekTo(stopPosition);
-                    videoPreview.start();
-                    videoPreviewPlay.setText("\uf04c");
+                  player.start();
+                  videoPreviewPlay.setText("\uf04c");
                 }
                 else
                 {
-                    stopPosition=videoPreview.getCurrentPosition();
-                    videoPreview.pause();
+                    player.pause();
                     videoPreviewPlay.setText("\uf04b");
                 }
+
 
                 if(videoPreview!=null)
                 {
                     videoPreview.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mp) {
-                            videoPreview.stopPlayback();
+                            player.pause();
+                            player.seekTo(0);
                             videoPreviewPlay.setText("\uf04b");
-                            stopPosition=0;
                         }
                     });
                 }
@@ -630,6 +636,13 @@ public class PostActivity extends ActionBarActivity {
                     audioPreview.setText("\uf04b");
 
                 }
+
+            }
+        });
+        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+
             }
         });
 
