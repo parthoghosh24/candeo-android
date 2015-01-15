@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:minHeight="360dp"
     android:clipToPadding="false"
     app:cardCornerRadius="4dp"
     app:cardUseCompatPadding="true"
@@ -41,17 +40,17 @@
                     android:gravity="left">
 
                     <TextView
-                        android:id="@+id/candeo_inspired_count"
+                        android:id="@+id/candeo_appreciate_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="3.4K"
                         android:textSize="25sp"/>
 
                     <TextView
-                        android:id="@+id/candeo_inspired_icon"
+                        android:id="@+id/candeo_appreciate_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="INSPIRED"
+                        android:text="APPRECIATE"
                         android:textSize="25sp"/>
 
                 </LinearLayout>
@@ -64,18 +63,12 @@
                     android:gravity="right">
 
                     <TextView
-                        android:id="@+id/candeo_appreciated_count"
+                        android:id="@+id/candeo_showcase_media_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2.4K"
+                        android:text="ICON"
                         android:textSize="25sp"/>
 
-                    <TextView
-                        android:id="@+id/candeo_appreciated_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="APPRECIATED"
-                        android:textSize="25sp"/>
 
                 </LinearLayout>
 
@@ -84,9 +77,9 @@
             <FrameLayout
                 android:id="@+id/showcase_details_holder"
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
+                android:layout_height="220dp"
                 android:layout_alignParentBottom="true"
-                android:layout_marginTop="20dp">
+                >
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -97,15 +90,32 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         >
-                        <ImageView
+                        <Button
+                            android:id="@+id/candeo_showcase_appreciate_button"
                             android:layout_width="65dp"
                             android:layout_height="65dp"
+                            android:text="APPRECIATE"
+                            android:background="@drawable/roundedbuttontranslucent"
+                            android:textSize="25sp"/>
+                        <ImageView
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_marginLeft="60dp"
                             android:background="@drawable/roundedbutton"/>
+                        <Button
+                            android:id="@+id/candeo_showcase_skip_button"
+                            android:layout_width="65dp"
+                            android:layout_height="65dp"
+                            android:layout_marginLeft="60dp"
+                            android:text="Skip"
+                            android:background="@drawable/roundedbuttontranslucent"
+                            android:textSize="20sp"/>
 
                      </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         android:orientation="vertical">
 
                         <LinearLayout
@@ -138,7 +148,7 @@
 
 
                         <TextView
-                            android:text="My Awesome Creation"
+                            android:text="My Awesome Creation My Awesome Creation My Awesome Creation "
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
@@ -147,47 +157,6 @@
 
 
                     </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="5dp"
-                            android:gravity="left">
-
-                            <TextView
-                                android:id="@+id/candeo_showcase_carousel_icon"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="ICON"
-                                android:textSize="20sp"/>
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:padding="5dp"
-                            android:gravity="right">
-
-                            <TextView
-                                android:id="@+id/candeo_showcase_carousel_days"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="2 days ago"
-                                android:textSize="20sp"/>
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-
 
                 </LinearLayout>
 

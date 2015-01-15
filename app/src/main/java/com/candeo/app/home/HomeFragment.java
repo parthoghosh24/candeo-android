@@ -36,16 +36,11 @@ import java.util.HashMap;
 
 public class HomeFragment extends Fragment {
 
-//    ListView feedView;
-    StaggeredGridView feedView;
     ViewPager parentHomePager;
     ViewPager showcasePager;
     Button inspire;
     Button feed;
     Button user;
-    SwipeRefreshLayout refreshView;
-    FeedAdapter feedAdapter;
-    ArrayList<HashMap<String, String>> feeds;
     private String feedsURL = CandeoApplication.baseUrl+"/api/v1/contents";
     View homeView=null;
 
@@ -64,26 +59,11 @@ public class HomeFragment extends Fragment {
             homeView= inflater.inflate(R.layout.fragment_home, container, false);
             parentHomePager=(ViewPager)getActivity().findViewById(R.id.home_pager);
             showcasePager = (ViewPager)homeView.findViewById(R.id.candeo_showcase_pager);
-            showcasePager.setAdapter(new ShowcaseAdapter(getActivity()));
+            showcasePager.setAdapter(new ShowcaseAdapter(getActivity(),showcasePager));
             showcasePager.setPageTransformer(true, new ShowcaseTransformer());
-            feedView = (StaggeredGridView)homeView.findViewById(R.id.feed_list);
-            feeds = new ArrayList<>();
-            feedAdapter= new FeedAdapter(getActivity(),feeds);
-            feedView.setAdapter(feedAdapter);
             inspire = (Button)homeView.findViewById(R.id.candeo_init_post);
             feed=(Button)homeView.findViewById(R.id.candeo_feed);
             user=(Button)homeView.findViewById(R.id.candeo_user);
-            refreshView = (SwipeRefreshLayout)homeView.findViewById(R.id.home_list_refresh);
-            refreshView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override public void run() {
-                            refreshView.setRefreshing(false);
-                        }
-                    }, 5000);
-                }
-            });
             inspire.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
             inspire.setText("\uf0d0");
             inspire.setOnClickListener(new View.OnClickListener() {
@@ -109,41 +89,6 @@ public class HomeFragment extends Fragment {
                     parentHomePager.setCurrentItem(2);
                 }
             });
-            refreshView.setColorSchemeColors(R.color.material_blue_grey_800, R.color.material_blue_grey_900);
-
-            feedView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    HashMap<String, String> feed = feeds.get(position);
-                    Intent contentIntent = new Intent(getActivity(),ContentActivity.class);
-                    System.out.println("PUSHIN ID IS :"+feed.get("id"));
-                    contentIntent.putExtra("contentId",feed.get("id"));
-                    startActivity(contentIntent);
-                }
-            });
-            feedView.setOnScrollListener(new AbsListView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-                }
-
-                @Override
-                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-                    boolean enable =false;
-                    if(feedView != null && feedView.getChildCount() > 0){
-                        // check if the first item of the list is visible
-                        boolean firstItemVisible = feedView.getFirstVisiblePosition() == 0;
-                        // check if the top of the first item is visible
-                        boolean topOfFirstItemVisible = feedView.getChildAt(0).getTop() == 0;
-                        // enabling or disabling the refresh layout
-                        enable = firstItemVisible && topOfFirstItemVisible;
-                    }
-                    refreshView.setEnabled(enable);
-
-                }
-            });
-
         }
         return homeView;
     }
@@ -152,7 +97,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new LoadFeeds().execute(feedsURL);
 
     }
 
@@ -190,12 +134,9 @@ public class HomeFragment extends Fragment {
                         feedMap.put("name", content.optString("name"));
                         feedMap.put("timestamp", content.optString("time"));
                         feedMap.put("media_type", content.optString("media_type"));
-                        feeds.add(feedMap);
 
 
                     }
-                    System.out.println("Feeds Size in post exec: "+feeds.size());
-                    feedAdapter.notifyDataSetChanged();
                 }catch (JSONException je)
                 {
                     je.printStackTrace();

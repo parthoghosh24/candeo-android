@@ -36,6 +36,7 @@
     <color name="candeo_light_gray">#ffbdbdbd</color>
     <color name="candeo_primary">#f6353535</color>
     <color name="candeo_primary_dark">#fa181818</color>
+    <color name="candeo_translucent_white">#32fafafa</color>
     <!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/21.0.0/res/values/values.xml -->
     <eat-comment/>
     <color name="cardview_dark_background">#FF202020</color>
