@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.candeo.app.feed.FeedFragment;
+import com.candeo.app.leaderboard.LeaderBoardFragment;
 import com.candeo.app.home.HomeFragment;
 import com.candeo.app.user.UserFragment;
 
@@ -27,7 +27,7 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
         switch (index)
         {
             case 0:
-                fragment = new FeedFragment();
+                fragment = new LeaderBoardFragment();
                 break;
             case 1:
                 fragment = new HomeFragment();

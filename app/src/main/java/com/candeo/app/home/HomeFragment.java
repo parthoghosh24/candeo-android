@@ -4,34 +4,26 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.Button;
 
 import com.candeo.app.CandeoApplication;
-import com.candeo.app.adapters.FeedAdapter;
 import com.candeo.app.adapters.ShowcaseAdapter;
-import com.candeo.app.content.ContentActivity;
 import com.candeo.app.R;
 import com.candeo.app.content.PostActivity;
 import com.candeo.app.transformers.ShowcaseTransformer;
 import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.JSONParser;
 import com.candeo.app.util.NetworkUtil;
-import com.etsy.android.grid.StaggeredGridView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class HomeFragment extends Fragment {

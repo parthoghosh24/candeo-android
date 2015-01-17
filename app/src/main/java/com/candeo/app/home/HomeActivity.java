@@ -49,7 +49,7 @@ public class HomeActivity extends ActionBarActivity{
                 {
                     case 0:
                         getSupportActionBar().show();
-                        getSupportActionBar().setTitle("My Feeds");
+                        getSupportActionBar().setTitle("Leaderboard");
                         break;
                     case 1:
                         getSupportActionBar().hide();

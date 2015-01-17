@@ -1,4 +1,4 @@
-package com.candeo.app.feed;
+package com.candeo.app.leaderboard;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +15,7 @@ import com.candeo.app.user.LoginActivity;
 import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.NetworkUtil;
 
-public class FeedFragment extends Fragment {
+public class LeaderBoardFragment extends Fragment {
 
     View root=null;
     TextView icon;
@@ -30,7 +30,7 @@ public class FeedFragment extends Fragment {
         }
         else
         {
-            root=inflater.inflate(R.layout.fragment_feed, container, false);
+            root=inflater.inflate(R.layout.fragment_leader_board, container, false);
             icon=(TextView)root.findViewById(R.id.candeo_feed_icon);
             icon.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
             icon.setText("\uf09e");
