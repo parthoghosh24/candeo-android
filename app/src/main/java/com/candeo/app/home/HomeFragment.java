@@ -16,9 +16,11 @@ import com.candeo.app.adapters.ShowcaseAdapter;
 import com.candeo.app.R;
 import com.candeo.app.content.PostActivity;
 import com.candeo.app.transformers.ShowcaseTransformer;
+import com.candeo.app.user.LoginActivity;
 import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.JSONParser;
 import com.candeo.app.util.NetworkUtil;
+import com.candeo.app.util.Preferences;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,14 +42,6 @@ public class HomeFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
 
-
-        if(!NetworkUtil.isNetworkAvailable(getActivity()))
-        {
-
-            homeView= inflater.inflate(R.layout.fragment_no_connectivity, container, false);
-        }
-        else
-        {
             homeView= inflater.inflate(R.layout.fragment_home, container, false);
             parentHomePager=(ViewPager)getActivity().findViewById(R.id.home_pager);
             showcasePager = (ViewPager)homeView.findViewById(R.id.candeo_showcase_pager);
@@ -78,10 +72,18 @@ public class HomeFragment extends Fragment {
             user.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    parentHomePager.setCurrentItem(2);
+                    if(Preferences.isUserLoggedIn(getActivity()))
+                    {
+                        parentHomePager.setCurrentItem(2);
+                    }
+                    else
+                    {
+                        startActivity(new Intent(getActivity(), LoginActivity.class));
+                    }
+
                 }
             });
-        }
+
         return homeView;
     }
 

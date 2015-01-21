@@ -1678,20 +1678,21 @@ containing a value of this type.
         public static final int activity_record=0x7f03001e;
         public static final int activity_respond=0x7f03001f;
         public static final int activity_splash=0x7f030020;
-        public static final int candeo_email_spinner_item=0x7f030021;
-        public static final int candeo_spinner_dropdown_item=0x7f030022;
-        public static final int fragment_appreciated=0x7f030023;
-        public static final int fragment_feed=0x7f030024;
-        public static final int fragment_home=0x7f030025;
-        public static final int fragment_inspirations=0x7f030026;
-        public static final int fragment_leader_board=0x7f030027;
-        public static final int fragment_no_connectivity=0x7f030028;
-        public static final int fragment_showcases=0x7f030029;
-        public static final int fragment_social=0x7f03002a;
-        public static final int fragment_user=0x7f03002b;
-        public static final int showcase_item=0x7f03002c;
-        public static final int support_simple_spinner_dropdown_item=0x7f03002d;
-        public static final int tutorial_pager_item=0x7f03002e;
+        public static final int activity_user_verify=0x7f030021;
+        public static final int candeo_email_spinner_item=0x7f030022;
+        public static final int candeo_spinner_dropdown_item=0x7f030023;
+        public static final int fragment_appreciated=0x7f030024;
+        public static final int fragment_feed=0x7f030025;
+        public static final int fragment_home=0x7f030026;
+        public static final int fragment_inspirations=0x7f030027;
+        public static final int fragment_leader_board=0x7f030028;
+        public static final int fragment_no_connectivity=0x7f030029;
+        public static final int fragment_showcases=0x7f03002a;
+        public static final int fragment_social=0x7f03002b;
+        public static final int fragment_user=0x7f03002c;
+        public static final int showcase_item=0x7f03002d;
+        public static final int support_simple_spinner_dropdown_item=0x7f03002e;
+        public static final int tutorial_pager_item=0x7f03002f;
     }
     public static final class menu {
         public static final int content=0x7f0d0000;
@@ -1704,10 +1705,12 @@ containing a value of this type.
         public static final int menu_post=0x7f0d0007;
         public static final int menu_record=0x7f0d0008;
         public static final int menu_respond=0x7f0d0009;
-        public static final int splash=0x7f0d000a;
+        public static final int menu_user_verify=0x7f0d000a;
+        public static final int splash=0x7f0d000b;
     }
     public static final class raw {
         public static final int bg=0x7f050000;
+        public static final int default_avatar=0x7f050001;
     }
     public static final class string {
         public static final int abc_action_bar_home_description=0x7f0b0000;
@@ -1739,6 +1742,7 @@ containing a value of this type.
         public static final int title_activity_post=0x7f0b001a;
         public static final int title_activity_record=0x7f0b001b;
         public static final int title_activity_respond=0x7f0b001c;
+        public static final int title_activity_user_verify=0x7f0b001d;
     }
     public static final class style {
         public static final int AppTheme=0x7f0c0000;

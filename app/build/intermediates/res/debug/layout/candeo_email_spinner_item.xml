@@ -3,6 +3,6 @@
     style="?android:attr/spinnerItemStyle"
     android:singleLine="true"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="60dp"
     android:ellipsize="marquee"
     /><!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/src/main/res/layout/candeo_email_spinner_item.xml -->

@@ -1,6 +1,7 @@
 package com.candeo.app.home;
 
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -11,8 +12,10 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.candeo.app.R;
+import com.candeo.app.SplashActivity;
 import com.candeo.app.adapters.TabPagerAdapter;
-
+import com.candeo.app.user.LoginActivity;
+import com.candeo.app.util.Preferences;
 
 
 public class HomeActivity extends ActionBarActivity{
@@ -25,6 +28,12 @@ public class HomeActivity extends ActionBarActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        if(Preferences.isFirstRun(getApplicationContext()))
+        {
+            finish();
+            startActivity(new Intent(getApplicationContext(), SplashActivity.class));
+        }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
@@ -55,8 +64,16 @@ public class HomeActivity extends ActionBarActivity{
                         getSupportActionBar().hide();
                         break;
                     case 2:
-                        getSupportActionBar().show();
-                        getSupportActionBar().setTitle("My Profile");
+                        if(Preferences.isUserLoggedIn(getApplicationContext()))
+                        {
+                            getSupportActionBar().show();
+                            getSupportActionBar().setTitle("My Profile");
+                        }
+                        else
+                        {
+                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                        }
+
                         break;
                 }
             }

@@ -17,10 +17,12 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.candeo.app.CandeoApplication;
 import com.candeo.app.R;
 import com.candeo.app.util.CandeoUtil;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -33,7 +35,8 @@ public class LoginActivity extends Activity {
     EditText name;
     Button signup;
     ArrayList<String> emails;
-    private static final String apiUrl = CandeoApplication.baseUrl+"/api/v1/users/register";
+    private static final String apiRegisterUrl = CandeoApplication.baseUrl+"/api/v1/users/register";
+    private static final String apiLoginUrl = CandeoApplication.baseUrl+"/api/v1/users/login";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,14 +67,42 @@ public class LoginActivity extends Activity {
         params.put("email",email);
 
         JsonObjectRequest registerRequest = new JsonObjectRequest(Request.Method.POST,
-                apiUrl,
+                apiRegisterUrl,
                 new JSONObject(params),
                 new Response.Listener<JSONObject>(){
                     @Override
                     public void onResponse(JSONObject response) {
-                        JSONObject postResonse = response;
-                        System.out.println("Response is "+postResonse.toString());
-                        finish();
+                        try
+                        {
+                            String id = Integer.toString(response.getInt("id"));
+                            System.out.println("Response is "+id);
+                            Map<String, String> loginParams = new HashMap<>();
+                            loginParams.put("id",id);
+                            JsonObjectRequest loginRequest = new JsonObjectRequest(
+                              Request.Method.POST,
+                              apiLoginUrl,
+                              new JSONObject(loginParams),
+                              new Response.Listener<JSONObject>() {
+                                  @Override
+                                  public void onResponse(JSONObject response) {
+                                      CandeoUtil.appAlertDialog(LoginActivity.this, "You Must Have Received an email. Please check to continue login.");
+                                  }
+                              },
+                              new Response.ErrorListener() {
+                                  @Override
+                                  public void onErrorResponse(VolleyError error) {
+                                      System.out.println("Something went wrong");
+                                  }
+                              }
+
+                            );
+                            CandeoApplication.getInstance().getAppRequestQueue().add(loginRequest);
+                        }
+                        catch (JSONException je)
+                        {
+                            je.printStackTrace();
+                        }
+
                     }
                 },
                 new Response.ErrorListener() {
@@ -83,5 +114,7 @@ public class LoginActivity extends Activity {
         System.out.println("Getting Request Queue "+CandeoApplication.getInstance());
         CandeoApplication.getInstance().getAppRequestQueue().add(registerRequest);
     }
+
+
 
 }

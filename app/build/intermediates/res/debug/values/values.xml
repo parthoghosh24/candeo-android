@@ -201,6 +201,7 @@
     <string name="title_activity_post">PostActivity</string>
     <string name="title_activity_record">RecordActivity</string>
     <string name="title_activity_respond">RespondActivity</string>
+    <string name="title_activity_user_verify">UserVerifyActivity</string>
     <!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/src/main/res/values/styles.xml -->
     <eat-comment/>
     <style name="AppTheme" parent="Theme.AppCompat">

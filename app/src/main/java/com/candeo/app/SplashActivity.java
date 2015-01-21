@@ -18,8 +18,8 @@ import android.widget.TextView;
 import android.widget.VideoView;
 import com.candeo.app.adapters.TutorialPagerAdapter;
 import com.candeo.app.home.HomeActivity;
-import com.candeo.app.models.User;
 import com.candeo.app.util.CandeoUtil;
+import com.candeo.app.util.Preferences;
 
 
 public class SplashActivity extends Activity {
@@ -53,6 +53,7 @@ public class SplashActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
+                Preferences.setFirstRun(getApplicationContext(),false);
                 startActivity(intent);
                 finish();
 
@@ -65,7 +66,6 @@ public class SplashActivity extends Activity {
                 mp.setVolume(0f, 0f);
             }
         });
-        System.out.println("FETCHED USER IS "+ User.find(1));
         splashView.start();
     }
 

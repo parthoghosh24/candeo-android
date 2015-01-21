@@ -26,7 +26,15 @@
         android:theme="@style/AppTheme.NoActionBar" >
         <activity
             android:name="com.candeo.app.SplashActivity"
-            android:label="@string/app_name" >
+            android:configChanges="keyboard|orientation|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.candeo.app.home.HomeActivity"
+            android:configChanges="keyboard|orientation|screenSize"
+            android:label="@string/title_activity_home"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,52 +42,83 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.candeo.app.home.HomeActivity"
-            android:label="@string/title_activity_home" />
-        <activity
             android:name="com.candeo.app.content.ContentActivity"
+            android:configChanges="keyboard|orientation|screenSize"
             android:label="@string/title_activity_content"
-            android:parentActivityName="com.candeo.app.home.HomeActivity" >
+            android:parentActivityName="com.candeo.app.home.HomeActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".home.HomeActivity" />
         </activity>
         <activity
             android:name="com.candeo.app.content.RespondActivity"
-            android:label="@string/title_activity_respond" >
+            android:configChanges="keyboard|orientation|screenSize"
+            android:label="@string/title_activity_respond"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.candeo.app.content.PostActivity"
+            android:configChanges="keyboard|orientation|screenSize"
             android:label="@string/title_activity_post"
-            android:parentActivityName="com.candeo.app.home.HomeActivity" >
+            android:parentActivityName="com.candeo.app.home.HomeActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".home.HomeActivity" />
         </activity>
         <activity
             android:name="com.candeo.app.content.RecordActivity"
+            android:configChanges="keyboard|orientation|screenSize"
             android:label="@string/title_activity_record"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Dialog" >
         </activity>
         <activity
             android:name="com.candeo.app.user.LoginActivity"
+            android:configChanges="keyboard|orientation|screenSize"
             android:label="@string/title_activity_login"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
             android:name="com.candeo.app.response.GetInspiredActivity"
+            android:configChanges="keyboard|orientation|screenSize"
             android:label="@string/title_activity_get_inspired"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.Dialog" >
         </activity>
         <activity
             android:name="com.candeo.app.response.AppreciateActivity"
+            android:configChanges="keyboard|orientation|screenSize"
             android:label="@string/title_activity_appreciate"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.Dialog" >
         </activity>
         <activity
             android:name="com.candeo.app.book.BookRenderActivity"
+            android:configChanges="keyboard|orientation|screenSize"
             android:label="@string/title_activity_book_render"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name="com.candeo.app.user.UserVerifyActivity"
+            android:configChanges="keyboard|orientation|screenSize"
+            android:label="@string/title_activity_user_verify"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="www.candeoapp.com"
+                    android:pathPattern="/api/v1/.*"
+                    android:scheme="http" />
+            </intent-filter>
         </activity>
         <activity
             android:name="android.support.v7.widget.TestActivity"

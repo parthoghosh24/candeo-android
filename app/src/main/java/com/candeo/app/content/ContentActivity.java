@@ -232,7 +232,6 @@ public class ContentActivity extends ActionBarActivity{
                 description = (TextView)findViewById(R.id.description);
                 username = (TextView)findViewById(R.id.username);
                 description.setText(jsonObject.optString("desc"));
-                System.out.println("User is "+jsonObject.optString("user"));
                 username.setText(jsonObject.optString("user"));
 
         }
