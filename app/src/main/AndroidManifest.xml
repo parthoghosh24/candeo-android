@@ -113,7 +113,7 @@
 
                 <data android:scheme="http"
                       android:host="www.candeoapp.com"
-                      android:pathPattern="/.*" />
+                      android:pathPattern="/verify/.*" />
             </intent-filter>
 
         </activity>

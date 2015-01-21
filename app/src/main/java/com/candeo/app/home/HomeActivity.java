@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -43,7 +44,16 @@ public class HomeActivity extends ActionBarActivity{
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         homePager.setAdapter(tabPagerAdapter);
-        homePager.setCurrentItem(1);
+        String fromVerify = getIntent().getStringExtra("fromVerify");
+        if(!TextUtils.isEmpty(fromVerify) && "verified".equalsIgnoreCase(fromVerify))
+        {
+            homePager.setCurrentItem(2);
+        }
+        else
+        {
+            homePager.setCurrentItem(1);
+        }
+
         getSupportActionBar().hide();
         homePager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

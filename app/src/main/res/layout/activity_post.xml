@@ -40,7 +40,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.8"
-                            android:text="SHOWCASE"/>
+                            android:text="SHOWCASE YOUR TALENT"/>
 
                         <Switch
                             android:id="@+id/candeo_selector"

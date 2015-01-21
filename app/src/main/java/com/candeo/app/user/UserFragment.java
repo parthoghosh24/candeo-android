@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.candeo.app.home.HomeActivity;
 import com.candeo.app.ui.SlidingTabLayout;
 import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.NetworkUtil;
+import com.candeo.app.util.Preferences;
 
 public class UserFragment extends Fragment {
 
@@ -42,21 +44,24 @@ public class UserFragment extends Fragment {
 
     private View root;
 
+    private final static String TAG="Candeo - User Fragment";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-//        if(!NetworkUtil.isNetworkAvailable(getActivity()))
-//        {
-//
-//            root= inflater.inflate(R.layout.fragment_no_connectivity, container, false);
-//        }
-//        else
-        {
             root=inflater.inflate(R.layout.fragment_user, container, false);
+
+
+
+            Log.e(TAG,"User API KEY is "+ Preferences.getUserApiKey(getActivity()));
+            Log.e(TAG,"User username is "+ Preferences.getUserUsername(getActivity()));
+            Log.e(TAG,"User Full Name is "+ Preferences.getUserName(getActivity()));
+            Log.e(TAG,"User Email is "+ Preferences.getUserEmail(getActivity()));
+            Log.e(TAG,"User Server Db row Id is "+ Preferences.getUserRowId(getActivity()));
             initWidgets();
 
-        }
+
         return root;
     }
 

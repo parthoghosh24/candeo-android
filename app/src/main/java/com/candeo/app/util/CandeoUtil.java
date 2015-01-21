@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
@@ -22,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -83,6 +85,23 @@ public class CandeoUtil {
         return contentResolver.getType(uri);
     }
 
+    public static String getCodeFromUrl(String url)
+    {
+        if(!TextUtils.isEmpty(url))
+        {
+            Pattern pattern = Pattern.compile("-?\\d+");
+            Matcher matcher = pattern.matcher(url);
+            if(matcher.find())
+            {
+                return matcher.group(0);
+            }
+            else
+            {
+                return  null;
+            }
+        }
+        return null;
+    }
     public static void appAlertDialog(Context context, String mesg)
     {
         final AlertDialog.Builder alert = new AlertDialog.Builder(context);

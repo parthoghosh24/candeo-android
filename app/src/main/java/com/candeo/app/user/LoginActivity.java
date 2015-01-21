@@ -3,6 +3,7 @@ package com.candeo.app.user;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,8 +36,9 @@ public class LoginActivity extends Activity {
     EditText name;
     Button signup;
     ArrayList<String> emails;
-    private static final String apiRegisterUrl = CandeoApplication.baseUrl+"/api/v1/users/register";
-    private static final String apiLoginUrl = CandeoApplication.baseUrl+"/api/v1/users/login";
+    private static final String API_REGISTER_URL = CandeoApplication.baseUrl+"/api/v1/users/register";
+    private static final String API_LOGIN_URL = CandeoApplication.baseUrl+"/api/v1/users/login";
+    private static final String TAG ="Candeo - Login Activity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +69,7 @@ public class LoginActivity extends Activity {
         params.put("email",email);
 
         JsonObjectRequest registerRequest = new JsonObjectRequest(Request.Method.POST,
-                apiRegisterUrl,
+                API_REGISTER_URL,
                 new JSONObject(params),
                 new Response.Listener<JSONObject>(){
                     @Override
@@ -80,11 +82,12 @@ public class LoginActivity extends Activity {
                             loginParams.put("id",id);
                             JsonObjectRequest loginRequest = new JsonObjectRequest(
                               Request.Method.POST,
-                              apiLoginUrl,
+                              API_LOGIN_URL,
                               new JSONObject(loginParams),
                               new Response.Listener<JSONObject>() {
                                   @Override
                                   public void onResponse(JSONObject response) {
+                                      Log.e(TAG, "Response is "+response);
                                       CandeoUtil.appAlertDialog(LoginActivity.this, "You Must Have Received an email. Please check to continue login.");
                                   }
                               },
