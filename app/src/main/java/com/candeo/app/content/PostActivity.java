@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -72,6 +73,7 @@ public class PostActivity extends ActionBarActivity {
     private Toolbar toolbar;
     private String mimeType;
     private String fileName;
+    private ViewPager mediaChooser;
     private int mediaType;
     private byte[] dataArray;
     private boolean isPlaying=false;
@@ -94,6 +96,7 @@ public class PostActivity extends ActionBarActivity {
     private static final int SHOWCASE=2;
 
     private int contentType=INSPIRATION;
+    private String type="";
 
 
     @Override
@@ -102,9 +105,11 @@ public class PostActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
         toolbar = (Toolbar)findViewById(R.id.candeo_post_toolbar);
+        type = getIntent().getStringExtra("type");
         setSupportActionBar(toolbar);
         setTitle("Create Magic");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mediaChooser = (ViewPager)findViewById(R.id.candeo_showcase_media_chooser);
         audioPreview = (Button)findViewById(R.id.candeo_audio_preview);
         audioPreview.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
         audioPreview.setText("\uf04b");

@@ -56,6 +56,7 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent postIntent = new Intent(getActivity(),PostActivity.class);
+                    postIntent.putExtra("type","showcase");
                     startActivity(postIntent);
                 }
             });
