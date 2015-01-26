@@ -68,21 +68,15 @@ public class HomeActivity extends ActionBarActivity{
                 {
                     case 0:
                         getSupportActionBar().show();
-                        getSupportActionBar().setTitle("Leaderboard");
+                        getSupportActionBar().setTitle("Performances");
                         break;
                     case 1:
                         getSupportActionBar().hide();
                         break;
                     case 2:
-                        if(Preferences.isUserLoggedIn(getApplicationContext()))
-                        {
-                            getSupportActionBar().show();
-                            getSupportActionBar().setTitle("My Profile");
-                        }
-                        else
-                        {
-                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                        }
+                         getSupportActionBar().show();
+                         getSupportActionBar().setTitle("My Profile");
+
 
                         break;
                 }

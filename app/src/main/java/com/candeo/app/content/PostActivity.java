@@ -1,6 +1,7 @@
 package com.candeo.app.content;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -17,21 +18,25 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -39,9 +44,12 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.candeo.app.CandeoApplication;
+import com.candeo.app.Configuration;
 import com.candeo.app.R;
+
 import com.candeo.app.network.CandeoHttpClient;
 import com.candeo.app.util.CandeoUtil;
+import com.candeo.app.util.Preferences;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,7 +69,6 @@ public class PostActivity extends ActionBarActivity {
     private Bitmap bitmap;
 //    Button book; //Next version. Currently running into multiple issues. Need to research alot more to find the right solution. Webview or custom viewer???
     private Button postIt;
-    private Switch selector;
     private TextView copyrightText;
     private EditText showcaseTitleText;
     private EditText description;
@@ -74,6 +81,7 @@ public class PostActivity extends ActionBarActivity {
     private String mimeType;
     private String fileName;
     private ViewPager mediaChooser;
+    private LinearLayout mediaButtonsForInspire;
     private int mediaType;
     private byte[] dataArray;
     private boolean isPlaying=false;
@@ -107,9 +115,9 @@ public class PostActivity extends ActionBarActivity {
         toolbar = (Toolbar)findViewById(R.id.candeo_post_toolbar);
         type = getIntent().getStringExtra("type");
         setSupportActionBar(toolbar);
-        setTitle("Create Magic");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mediaChooser = (ViewPager)findViewById(R.id.candeo_showcase_media_chooser);
+        mediaButtonsForInspire = (LinearLayout)findViewById(R.id.candeo_post_top_buttons);
         audioPreview = (Button)findViewById(R.id.candeo_audio_preview);
         audioPreview.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
         audioPreview.setText("\uf04b");
@@ -122,7 +130,7 @@ public class PostActivity extends ActionBarActivity {
         showcaseTitle = (EditText)findViewById(R.id.candeo_post_title);
         audio=(Button)findViewById(R.id.candeo_audio);
         audio.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
-        audio.setText("\uf001");
+        audio.setText(Configuration.FA_AUDIO);
         audio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -163,7 +171,7 @@ public class PostActivity extends ActionBarActivity {
 
         image=(Button)findViewById(R.id.candeo_image);
         image.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
-        image.setText("\uf030");
+        image.setText(Configuration.FA_IMAGE);
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -207,7 +215,7 @@ public class PostActivity extends ActionBarActivity {
 
         video=(Button)findViewById(R.id.candeo_video);
         video.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
-        video.setText("\uf008");
+        video.setText(Configuration.FA_VIDEO);
         video.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -255,7 +263,7 @@ public class PostActivity extends ActionBarActivity {
 
 //        book=(Button)findViewById(R.id.candeo_book);
 //        book.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
-//        book.setText("\uf02d");
+//        book.setText(Configuration.FA_BOOK);
 //        book.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -268,7 +276,7 @@ public class PostActivity extends ActionBarActivity {
 
         postIt=(Button)findViewById(R.id.candeo_post_it);
         postIt.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
-        postIt.setText("\uf0d0");
+        postIt.setText(Configuration.FA_MAGIC);
         postIt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -278,26 +286,31 @@ public class PostActivity extends ActionBarActivity {
 
         copyrightText=(TextView)findViewById(R.id.candeo_copyright_text);
         showcaseTitleText=(EditText)findViewById(R.id.candeo_post_title);
-        selector=(Switch)findViewById(R.id.candeo_selector);
-        selector.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked)
-                {
-                    contentType=SHOWCASE;
-                    copyrightText.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
-                    copyrightText.setText("\uf1f9 Anonymous");
-                    copyrightText.setVisibility(View.VISIBLE);
-                    showcaseTitleText.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-                    contentType=INSPIRATION;
-                    copyrightText.setVisibility(View.GONE);
-                    showcaseTitleText.setVisibility(View.GONE);
-                }
-            }
-        });
+
+        if("showcase".equalsIgnoreCase(type))
+        {
+            contentType=SHOWCASE;
+            copyrightText.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
+            copyrightText.setText(Configuration.FA_COPYRIGHT + " " + Preferences.getUserName(getApplicationContext()));
+            copyrightText.setVisibility(View.VISIBLE);
+            showcaseTitleText.setVisibility(View.VISIBLE);
+            mediaChooser.setVisibility(View.VISIBLE);
+            mediaChooser.setAdapter(new ShowcaseMediaChooserAdapter(PostActivity.this));
+            description.setVisibility(View.GONE);
+            mediaButtonsForInspire.setVisibility(View.GONE);
+            setTitle("Showcase your talent");
+
+        }
+        else
+        {
+            contentType=INSPIRATION;
+            copyrightText.setVisibility(View.GONE);
+            showcaseTitleText.setVisibility(View.GONE);
+            mediaChooser.setVisibility(View.GONE);
+            description.setVisibility(View.VISIBLE);
+            mediaButtonsForInspire.setVisibility(View.VISIBLE);
+            setTitle("Inspire the world");
+        }
 
     }
 
@@ -545,7 +558,7 @@ public class PostActivity extends ActionBarActivity {
         imagePreview.setVisibility(View.GONE);
         videoPreview.setVisibility(View.VISIBLE);
         videoPreviewPlay.setVisibility(View.VISIBLE);
-        videoPreviewPlay.setText("\uf04c");
+        videoPreviewPlay.setText(Configuration.FA_PAUSE);
         audioPreview.setVisibility(View.GONE);
         videoPreview.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
@@ -561,12 +574,12 @@ public class PostActivity extends ActionBarActivity {
                 if(!player.isPlaying())
                 {
                   player.start();
-                  videoPreviewPlay.setText("\uf04c");
+                  videoPreviewPlay.setText(Configuration.FA_PAUSE);
                 }
                 else
                 {
                     player.pause();
-                    videoPreviewPlay.setText("\uf04b");
+                    videoPreviewPlay.setText(Configuration.FA_PLAY);
                 }
 
 
@@ -577,7 +590,7 @@ public class PostActivity extends ActionBarActivity {
                         public void onCompletion(MediaPlayer mp) {
                             player.pause();
                             player.seekTo(0);
-                            videoPreviewPlay.setText("\uf04b");
+                            videoPreviewPlay.setText(Configuration.FA_PLAY);
                         }
                     });
                 }
@@ -610,7 +623,7 @@ public class PostActivity extends ActionBarActivity {
             player.start();
             player.setLooping(true);
             isPlaying=true;
-            audioPreview.setText("\uf04c");
+            audioPreview.setText(Configuration.FA_PAUSE);
         }
         catch (IOException ioe)
         {
@@ -631,14 +644,14 @@ public class PostActivity extends ActionBarActivity {
                     isPlaying=true;
                     player.seekTo(stopPosition);
                     player.start();
-                    audioPreview.setText("\uf04c");
+                    audioPreview.setText(Configuration.FA_PAUSE);
                 }
                 else
                 {
                     isPlaying=false;
                     stopPosition=player.getCurrentPosition();
                     player.pause();
-                    audioPreview.setText("\uf04b");
+                    audioPreview.setText(Configuration.FA_PLAY);
 
                 }
 
@@ -800,5 +813,144 @@ public class PostActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public class ShowcaseMediaChooserAdapter extends PagerAdapter {
+        Activity activity;
+
+        public ShowcaseMediaChooserAdapter (Activity activity)
+        {
+            this.activity=activity;
+        }
+        @Override
+        public boolean isViewFromObject(View view, Object o) {
+            return o == view;
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            View view = activity.getLayoutInflater().inflate(R.layout.showcase_media_chooser, container, false);
+            container.addView(view);
+            TextView content=(TextView)view.findViewById(R.id.candeo_showcase_media_chooser_text);
+            TextView icon =(TextView)view.findViewById(R.id.candeo_showcase_media_chooser_icon);
+            TextView chevron = (TextView)view.findViewById(R.id.candeo_showcase_media_chooser_chevron);
+            icon.setTypeface(CandeoUtil.loadFont(activity.getAssets(), "fonts/fa.ttf"));
+            icon.setTextSize(TypedValue.COMPLEX_UNIT_SP,80);
+
+            chevron.setTypeface(CandeoUtil.loadFont(activity.getAssets(), "fonts/fa.ttf"));
+            chevron.setTextSize(TypedValue.COMPLEX_UNIT_SP,40);
+            chevron.setText(Configuration.FA_CHEVRON);
+
+            content.setTypeface(CandeoUtil.loadFont(activity.getAssets(), "fonts/pt_sans.ttf"));
+            content.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+            switch (position)
+            {
+                case 0:
+
+                    icon.setText(Configuration.FA_AUDIO);
+                    chevron.setVisibility(View.VISIBLE);
+                    content.setText("Flex Your talent for music");
+                    view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            if(player!=null)
+                            {
+                                player.stop();
+                                player.release();
+                                player=null;
+                                audioPreview.setVisibility(View.GONE);
+                                audioPreview.setText(Configuration.FA_PLAY);
+                            }
+                            final CharSequence[] choices ={"Record Something", "Fetch From Device", "Cancel"};
+                            AlertDialog.Builder builder = new AlertDialog.Builder(PostActivity.this);
+                            builder.setItems(choices,new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    if(choices[which].equals("Record Something"))
+                                    {
+                                        Intent intent =new Intent(PostActivity.this, RecordActivity.class);
+                                        startActivityForResult(intent,REQUEST_AUDIO_RECORD);
+                                    }
+                                    else if(choices[which].equals("Fetch From Device"))
+                                    {
+                                        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+                                        startActivityForResult(Intent.createChooser(intent, "Gallery"), PICK_AUDIO_FILE);
+                                    }
+                                    else if(choices[which].equals("Cancel"))
+                                    {
+                                        dialog.dismiss();
+                                    }
+
+                                }
+                            });
+                            builder.show();
+
+                        }
+                    });
+                    break;
+
+                case 1:
+                    icon.setText(Configuration.FA_IMAGE);
+                    chevron.setVisibility(View.GONE);
+                    content.setText("Bring out the artist in you");
+                    view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            System.out.println("Clicking image......");
+                            final CharSequence[] choices ={"Click Something", "Fetch From Gallery", "Cancel"};
+                            AlertDialog.Builder builder = new AlertDialog.Builder(PostActivity.this);
+                            builder.setItems(choices,new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    if(choices[which].equals("Click Something"))
+                                    {
+                                        ContentValues values = new ContentValues();
+                                        values.put(MediaStore.Images.Media.TITLE, UUID.randomUUID().toString()+".jpg");
+                                        imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,values);
+                                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                                        startActivityForResult(intent, REQUEST_IMAGE_CAMERA);
+                                    }
+                                    else if(choices[which].equals("Fetch From Gallery"))
+                                    {
+                                        Intent intent = new Intent(
+                                                Intent.ACTION_PICK,
+                                                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                        intent.setType("image/*");
+                                        startActivityForResult(
+                                                Intent.createChooser(intent, "Select File"),
+                                                PICK_IMAGE_FILE);
+
+                                    }
+                                    else if(choices[which].equals("Cancel"))
+                                    {
+                                        dialog.dismiss();
+                                    }
+
+                                }
+                            });
+                            builder.show();
+                        }
+                    });
+                    break;
+
+            }
+            return view;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((View) object);
+        }
+    }
+
 
 }
+
+

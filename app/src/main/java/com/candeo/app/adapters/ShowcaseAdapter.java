@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.candeo.app.Configuration;
 import com.candeo.app.R;
 import com.candeo.app.util.CandeoUtil;
 
@@ -49,7 +50,7 @@ public class ShowcaseAdapter extends PagerAdapter {
         Button appreciateButtonView = (Button)view.findViewById(R.id.candeo_showcase_appreciate_button);
         Button skipButtonView = (Button)view.findViewById(R.id.candeo_showcase_skip_button);
         appreciateButtonView.setTypeface(CandeoUtil.loadFont(activity.getAssets(),"fonts/applause.ttf"));
-        appreciateButtonView.setText("\ue600");
+        appreciateButtonView.setText(Configuration.FA_APPRECIATE);
         appreciateButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,7 +59,7 @@ public class ShowcaseAdapter extends PagerAdapter {
             }
         });
         skipButtonView.setTypeface(CandeoUtil.loadFont(activity.getAssets(), "fonts/fa.ttf"));
-        skipButtonView.setText("\uf088");
+        skipButtonView.setText(Configuration.FA_SKIP);
         skipButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,11 +68,11 @@ public class ShowcaseAdapter extends PagerAdapter {
             }
         });
         mediaIconView.setTypeface(CandeoUtil.loadFont(activity.getAssets(),"fonts/fa.ttf"));
-        mediaIconView.setText("\uf001");
+        mediaIconView.setText(Configuration.FA_AUDIO);
         copyRightView.setTypeface(CandeoUtil.loadFont(activity.getAssets(),"fonts/fa.ttf"));
-        copyRightView.setText("\uf1f9");
+        copyRightView.setText(Configuration.FA_COPYRIGHT);
         appreciateIconView.setTypeface(CandeoUtil.loadFont(activity.getAssets(),"fonts/applause.ttf"));
-        appreciateIconView.setText("\ue600");
+        appreciateIconView.setText(Configuration.FA_APPRECIATE);
         container.addView(view);
         return view;
     }

@@ -2,6 +2,7 @@ package com.candeo.app.user;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -22,6 +24,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.candeo.app.CandeoApplication;
 import com.candeo.app.R;
 import com.candeo.app.util.CandeoUtil;
+import com.candeo.app.util.Preferences;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,10 +35,12 @@ import java.util.Map;
 
 public class LoginActivity extends Activity {
 
-    Spinner emailSelector;
-    EditText name;
-    Button signup;
+    private Spinner emailSelector;
+    private EditText name;
+    private Button signup;
+    private ImageView userProfile;
     ArrayList<String> emails;
+
     private static final String API_REGISTER_URL = CandeoApplication.baseUrl+"/api/v1/users/register";
     private static final String API_LOGIN_URL = CandeoApplication.baseUrl+"/api/v1/users/login";
     private static final String TAG ="Candeo - Login Activity";
@@ -55,6 +60,14 @@ public class LoginActivity extends Activity {
             public void onClick(View v) {
                registerUser(name.getText().toString(), emailSelector.getSelectedItem().toString());
 
+            }
+        });
+        userProfile=(ImageView)findViewById(R.id.candeo_user_profile_image);
+        userProfile.setImageURI(Uri.parse(Preferences.getUserAvatarPath(getApplicationContext())));
+        userProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Upload Image
             }
         });
 

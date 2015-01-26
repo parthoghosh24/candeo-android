@@ -36,11 +36,11 @@
                         android:orientation="horizontal"
                         android:weightSum="1">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.8"
-                            android:text="SHOWCASE YOUR TALENT"/>
+                        <!--<TextView-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_weight="0.8"-->
+                            <!--android:text="SHOWCASE YOUR TALENT"/>-->
 
 
 
@@ -82,9 +82,10 @@
                     </LinearLayout>
                     <android.support.v4.view.ViewPager
                         android:id="@+id/candeo_showcase_media_chooser"
+                        android:layout_marginTop="20dp"
                         android:layout_below="@id/candeo_post_top_buttons"
                         android:layout_width="match_parent"
-                        android:layout_height="100dp"
+                        android:layout_height="150dp"
                         />
 
                     <LinearLayout
@@ -160,6 +161,7 @@
 
                     <TextView
                         android:id="@+id/candeo_copyright_text"
+                        android:layout_marginTop="20dp"
                         android:layout_below="@id/candeo_content_create"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

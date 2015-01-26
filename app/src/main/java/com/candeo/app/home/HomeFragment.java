@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.candeo.app.CandeoApplication;
+import com.candeo.app.Configuration;
 import com.candeo.app.adapters.ShowcaseAdapter;
 import com.candeo.app.R;
 import com.candeo.app.content.PostActivity;
@@ -51,17 +52,27 @@ public class HomeFragment extends Fragment {
             feed=(Button)homeView.findViewById(R.id.candeo_feed);
             user=(Button)homeView.findViewById(R.id.candeo_user);
             inspire.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
-            inspire.setText("\uf0d0");
+            inspire.setText(Configuration.FA_MAGIC);
             inspire.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent postIntent = new Intent(getActivity(),PostActivity.class);
-                    postIntent.putExtra("type","showcase");
+                    Intent postIntent=null;
+                    if(Preferences.isUserLoggedIn(getActivity()))
+                    {
+                        postIntent = new Intent(getActivity(),PostActivity.class);
+                        postIntent.putExtra("type","showcase");
+
+                    }
+                    else
+                    {
+                        postIntent = new Intent(getActivity(),LoginActivity.class);
+                    }
                     startActivity(postIntent);
+
                 }
             });
             feed.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
-            feed.setText("\uf09e");
+            feed.setText(Configuration.FA_STATS);
             feed.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -69,7 +80,7 @@ public class HomeFragment extends Fragment {
                 }
             });
             user.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
-            user.setText("\uf007");
+            user.setText(Configuration.FA_USER);
             user.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

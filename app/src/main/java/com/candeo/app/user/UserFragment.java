@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.candeo.app.Configuration;
 import com.candeo.app.R;
 import com.candeo.app.adapters.UserContentAdapter;
 import com.candeo.app.home.HomeActivity;
@@ -41,6 +42,7 @@ public class UserFragment extends Fragment {
 
     private ViewPager userContentPager;
     private UserContentAdapter contentAdapter;
+    private View notLoggedIn;
 
     private View root;
 
@@ -72,11 +74,11 @@ public class UserFragment extends Fragment {
         userName = (TextView)root.findViewById(R.id.candeo_user_name_text);
         appreciateIcon = (TextView)root.findViewById(R.id.candeo_user_appreciate_icon);
         appreciateIcon.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/applause.ttf"));
-        appreciateIcon.setText("\ue600");
+        appreciateIcon.setText(Configuration.FA_APPRECIATE);
         appreciateCount=(TextView)root.findViewById(R.id.candeo_user_appreciate_count);
         inspireIcon=(TextView)root.findViewById(R.id.candeo_user_inspired_icon);
         inspireIcon.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/response.ttf"));
-        inspireIcon.setText("\ue800");
+        inspireIcon.setText(Configuration.FA_INSPIRE);
         inspireCount=(TextView)root.findViewById(R.id.candeo_user_inspired_count);
         rankIcon =(TextView)root.findViewById(R.id.candeo_user_highest_rank_icon);
         rankCount=(TextView)root.findViewById(R.id.candeo_user_highest_rank_count);
@@ -85,6 +87,23 @@ public class UserFragment extends Fragment {
         contentAdapter = new UserContentAdapter((HomeActivity)getActivity());
         userContentPager.setAdapter(contentAdapter);
         slidingTabs.setViewPager(userContentPager);
+        notLoggedIn = root.findViewById(R.id.candeo_user_not_logged_in);
+        ((TextView)notLoggedIn.findViewById(R.id.candeo_user_signup_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/fa.ttf"));
+        ((TextView)notLoggedIn.findViewById(R.id.candeo_user_signup_icon)).setText(Configuration.FA_USER);
+        notLoggedIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
+            }
+        });
+        if(Preferences.isUserLoggedIn(getActivity()))
+        {
+            notLoggedIn.setVisibility(View.GONE);
+        }
+        else
+        {
+            notLoggedIn.setVisibility(View.VISIBLE);
+        }
 
 
     }

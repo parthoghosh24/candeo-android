@@ -6,6 +6,9 @@
     android:padding="10dp"
     tools:context="com.candeo.app.user.UserFragment">
 
+    <include layout="@layout/user_signup_layout"
+        android:id="@+id/candeo_user_not_logged_in"/>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:minHeight="300dp"
@@ -147,4 +150,4 @@
        android:layout_height="match_parent"
        />
 </LinearLayout>
-<!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/src/main/res/layout/fragment_user.xml -->
+<!-- From: file:/home/dholu/projects/Candeo/app/src/main/res/layout/fragment_user.xml -->

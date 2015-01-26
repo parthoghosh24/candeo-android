@@ -10,15 +10,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/candeo_user_profile_image"
+            android:layout_width="80dp"
+            android:layout_height="80dp" />
 
         <EditText
             android:id="@+id/candeo_user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:hint="Enter Full Name"/>
         <Spinner
             android:id="@+id/candeo_login_email_selector"
+            android:layout_marginTop="40dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="100dp">
