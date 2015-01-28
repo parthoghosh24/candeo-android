@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/candeo_user_signup_layout"
+    android:id="@+id/candeo_no_content_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -8,7 +8,7 @@
     android:gravity="center">
 
     <LinearLayout
-        android:id="@+id/candeo_user_signup_box"
+        android:id="@+id/candeo_no_content_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -17,7 +17,7 @@
         android:padding="15dp">
 
         <TextView
-            android:id="@+id/candeo_user_signup_icon"
+            android:id="@+id/candeo_no_content_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/candeo_light_gray"
@@ -26,6 +26,7 @@
 
 
         <TextView
+            android:id="@+id/candeo_no_content_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -36,4 +37,4 @@
 
 
 
-</LinearLayout>
+</LinearLayout><!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/src/main/res/layout/no_content.xml -->

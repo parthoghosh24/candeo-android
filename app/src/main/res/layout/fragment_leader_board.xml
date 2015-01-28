@@ -8,6 +8,10 @@
         android:orientation="vertical"
         >
 
+        <include layout="@layout/no_content"
+          android:id="@+id/candeo_leaderboard_no_content"/>
+          <!--android:visibility="gone"/>-->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

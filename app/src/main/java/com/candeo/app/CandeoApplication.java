@@ -12,9 +12,9 @@ import java.io.File;
  * Created by Partho on 7/12/14.
  */
 public class CandeoApplication extends Application {
-    public static final String baseUrl="http://192.168.0.105:3000";
-//    public static final String baseUrl="http://192.168.43.239:3000";
-//    public static final String baseUrl="http://10.0.3.116:3000";
+//    public static final String BASE_URL ="http://192.168.0.105:3000";
+    public static final String BASE_URL="http://192.168.43.239:3000";
+//    public static final String BASE_URL="http://10.0.3.116:3000";
     private static CandeoApplication sInstance;
     private RequestQueue appRequestQueue;
     public static DisplayMetrics displayMetrics = null;

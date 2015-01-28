@@ -6,7 +6,7 @@
     android:padding="10dp"
     tools:context="com.candeo.app.user.UserFragment">
 
-    <include layout="@layout/user_signup_layout"
+    <include layout="@layout/no_content"
         android:id="@+id/candeo_user_not_logged_in"/>
 
     <FrameLayout

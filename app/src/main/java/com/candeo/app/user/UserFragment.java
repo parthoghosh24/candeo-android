@@ -88,8 +88,8 @@ public class UserFragment extends Fragment {
         userContentPager.setAdapter(contentAdapter);
         slidingTabs.setViewPager(userContentPager);
         notLoggedIn = root.findViewById(R.id.candeo_user_not_logged_in);
-        ((TextView)notLoggedIn.findViewById(R.id.candeo_user_signup_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/fa.ttf"));
-        ((TextView)notLoggedIn.findViewById(R.id.candeo_user_signup_icon)).setText(Configuration.FA_USER);
+        ((TextView)notLoggedIn.findViewById(R.id.candeo_no_content_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/fa.ttf"));
+        ((TextView)notLoggedIn.findViewById(R.id.candeo_no_content_icon)).setText(Configuration.FA_USER);
         notLoggedIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

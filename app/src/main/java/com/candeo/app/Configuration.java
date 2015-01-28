@@ -12,7 +12,7 @@ public class Configuration {
     public static final String CANDEO_BOOKSROOT= Environment.getExternalStorageDirectory()+"/candeo/books";
     public static final String INTENTBOOK="book";
     public static final String INTENTCHAPTERLIST="chapterList";
-    public static final String INTENTBASEURL="baseUrl";
+    public static final String INTENTBASEURL="BASE_URL";
     public static final String CONTAINERFOLDER="/META-INF/container.xml";
 //    public static final boolean DEBUG=true;
     public static final boolean DEBUG=false;

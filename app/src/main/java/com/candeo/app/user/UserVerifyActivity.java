@@ -4,11 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -27,7 +24,7 @@ import java.util.Map;
 public class UserVerifyActivity extends ActionBarActivity {
 
 
-    private static final String API_USER_VERIFY_URL= CandeoApplication.baseUrl+"/api/v1/users/verify";
+    private static final String API_USER_VERIFY_URL= CandeoApplication.BASE_URL +"/api/v1/users/verify";
     private static final String TAG="Candeo - User Verify Activity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {

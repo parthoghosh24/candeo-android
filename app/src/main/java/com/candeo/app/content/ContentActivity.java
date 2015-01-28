@@ -6,33 +6,24 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.candeo.app.CandeoApplication;
-import com.candeo.app.Configuration;
 import com.candeo.app.R;
-import com.candeo.app.book.BookRenderActivity;
-import com.candeo.app.book.EpubCore;
-import com.candeo.app.models.ebook.Book;
-import com.candeo.app.models.ebook.TableOfContents;
 import com.candeo.app.response.AppreciateActivity;
 import com.candeo.app.response.GetInspiredActivity;
 import com.candeo.app.util.CandeoUtil;
@@ -41,11 +32,7 @@ import com.candeo.app.util.JSONParser;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
 
@@ -58,7 +45,7 @@ public class ContentActivity extends ActionBarActivity{
     private Button getInspired=null;
     private Button appreciate=null;
     private Button launchBook=null; //temporary
-    private String contentURL = CandeoApplication.baseUrl+"/api/v1/contents";
+    private String contentURL = CandeoApplication.BASE_URL +"/api/v1/contents";
     private Button play = null;
     private int stopPosition=0;
     private MediaPlayer mediaPlayer;
@@ -164,7 +151,7 @@ public class ContentActivity extends ActionBarActivity{
                 contentViewer.setTag(type);
                 if(type>0)
                 {
-                    final String mediaUrl=CandeoApplication.baseUrl+jsonObject.optString("media");
+                    final String mediaUrl=CandeoApplication.BASE_URL +jsonObject.optString("media");
                     switch (type)
                     {
                         case 1: //audio

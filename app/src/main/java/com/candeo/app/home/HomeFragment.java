@@ -20,7 +20,6 @@ import com.candeo.app.transformers.ShowcaseTransformer;
 import com.candeo.app.user.LoginActivity;
 import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.JSONParser;
-import com.candeo.app.util.NetworkUtil;
 import com.candeo.app.util.Preferences;
 
 import org.json.JSONArray;
@@ -36,7 +35,7 @@ public class HomeFragment extends Fragment {
     Button inspire;
     Button feed;
     Button user;
-    private String feedsURL = CandeoApplication.baseUrl+"/api/v1/contents";
+    private String feedsURL = CandeoApplication.BASE_URL +"/api/v1/contents";
     View homeView=null;
 
     @Override

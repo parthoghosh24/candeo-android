@@ -1,6 +1,7 @@
 package com.candeo.app.adapters;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
@@ -12,7 +13,9 @@ import android.widget.Toast;
 
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
+import com.candeo.app.user.LoginActivity;
 import com.candeo.app.util.CandeoUtil;
+import com.candeo.app.util.Preferences;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,8 +57,16 @@ public class ShowcaseAdapter extends PagerAdapter {
         appreciateButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(activity,"You Appreciated",Toast.LENGTH_SHORT).show();
-                pager.setCurrentItem(position+1);
+                if(Preferences.isUserLoggedIn(activity))
+                {
+                    Toast.makeText(activity,"You Appreciated",Toast.LENGTH_SHORT).show();
+                    pager.setCurrentItem(position+1);
+                }
+                else
+                {
+                    activity.startActivity(new Intent(activity, LoginActivity.class));
+                }
+
             }
         });
         skipButtonView.setTypeface(CandeoUtil.loadFont(activity.getAssets(), "fonts/fa.ttf"));
@@ -63,8 +74,16 @@ public class ShowcaseAdapter extends PagerAdapter {
         skipButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(activity,"Skip pressed",Toast.LENGTH_SHORT).show();
-                pager.setCurrentItem(position+1);
+                if(Preferences.isUserLoggedIn(activity))
+                {
+                    Toast.makeText(activity,"Skip pressed",Toast.LENGTH_SHORT).show();
+                    pager.setCurrentItem(position+1);
+                }
+                else
+                {
+                    activity.startActivity(new Intent(activity, LoginActivity.class));
+                }
+
             }
         });
         mediaIconView.setTypeface(CandeoUtil.loadFont(activity.getAssets(),"fonts/fa.ttf"));

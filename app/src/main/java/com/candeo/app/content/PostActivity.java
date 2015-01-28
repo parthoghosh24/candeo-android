@@ -28,19 +28,15 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.candeo.app.CandeoApplication;
@@ -338,7 +334,7 @@ public class PostActivity extends ActionBarActivity {
         protected Void doInBackground(Void... params) {
             try
             {
-                String url =CandeoApplication.baseUrl+"/api/v1/contents/create ";
+                String url =CandeoApplication.BASE_URL +"/api/v1/contents/create ";
                 Log.e(TAG,"URL Is "+url);
                 result="";
                 if(mediaType >0 && dataArray != null) //Data Array can't be empty for media files. In Showcase, media types are mandatory
