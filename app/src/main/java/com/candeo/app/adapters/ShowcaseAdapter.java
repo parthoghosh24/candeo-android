@@ -2,12 +2,14 @@ package com.candeo.app.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +21,8 @@ import com.candeo.app.util.Preferences;
 
 import java.util.HashMap;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Partho on 1/12/14.
@@ -52,6 +56,10 @@ public class ShowcaseAdapter extends PagerAdapter {
         TextView mediaIconView = (TextView)view.findViewById(R.id.candeo_showcase_media_icon);
         Button appreciateButtonView = (Button)view.findViewById(R.id.candeo_showcase_appreciate_button);
         Button skipButtonView = (Button)view.findViewById(R.id.candeo_showcase_skip_button);
+        CircleImageView avatar = (CircleImageView)view.findViewById(R.id.candeo_showcase_user_avatar);
+        avatar.setImageURI(Uri.parse(Preferences.getUserAvatarPath(activity)));
+        ImageView mediaBg = (ImageView)view.findViewById(R.id.candeo_showcase_media_bg);
+        mediaBg.setImageURI(Uri.parse(Preferences.getUserAvatarPath(activity)));
         appreciateButtonView.setTypeface(CandeoUtil.loadFont(activity.getAssets(),"fonts/applause.ttf"));
         appreciateButtonView.setText(Configuration.FA_APPRECIATE);
         appreciateButtonView.setOnClickListener(new View.OnClickListener() {

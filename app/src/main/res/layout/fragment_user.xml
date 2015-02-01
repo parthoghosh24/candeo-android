@@ -3,150 +3,169 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="10dp"
     tools:context="com.candeo.app.user.UserFragment">
 
     <include layout="@layout/no_content"
-        android:id="@+id/candeo_user_not_logged_in"/>
+        android:id="@+id/candeo_user_not_logged_in"
+        android:visibility="gone"/>
 
-    <FrameLayout
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          android:paddingTop="10dp">
+
+
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:weightSum="3"
+              android:paddingTop="25dp">
+
+              <!--Appreciations-->
+              <LinearLayout
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:padding="5dp"
+                  android:gravity="center"
+                  android:layout_weight="1">
+
+                  <TextView
+                      android:id="@+id/candeo_user_appreciate_icon"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="CLAP"
+                      android:textSize="20sp"/>
+
+                  <TextView
+                      android:id="@+id/candeo_user_appreciate_count"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="3.4K"
+                      android:textSize="25sp"/>
+
+
+
+              </LinearLayout>
+
+
+              <!--User name and image-->
+
+              <LinearLayout
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:layout_weight="1">
+
+                  <LinearLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:gravity="center">
+
+                      <de.hdodenhof.circleimageview.CircleImageView
+                          xmlns:app="http://schemas.android.com/apk/res-auto"
+                          android:id="@+id/candeo_user_avatar"
+                          android:layout_width="80dp"
+                          android:layout_height="80dp"
+                          app:border_width="2dp"
+                          app:border_color="#ffffffff"/>
+
+
+                  </LinearLayout>
+
+
+
+                  <LinearLayout
+                      android:id="@+id/candeo_user_name"
+                      android:layout_below="@id/candeo_user_avatar"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="10dp"
+                      android:gravity="center"
+                      android:orientation="vertical">
+
+                      <TextView
+                          android:id="@+id/candeo_user_name_text"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Partho Ghosh"
+                          android:textSize="18sp"/>
+                  </LinearLayout>
+              </LinearLayout>
+
+
+              <!--Inspirations-->
+              <LinearLayout
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:padding="5dp"
+                  android:gravity="center"
+                  android:layout_weight="1">
+
+                  <TextView
+                      android:id="@+id/candeo_user_inspired_icon"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="INSPIRE"
+                      android:textSize="20sp"/>
+
+                  <TextView
+                      android:id="@+id/candeo_user_inspired_count"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="2.4K"
+                      android:textSize="25sp"/>
+
+
+
+              </LinearLayout>
+
+          </LinearLayout>
+
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center"
+              android:layout_marginTop="10dp"
+              android:layout_marginBottom="10dp"
+              >
+
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:textStyle="italic"
+                  android:text="Music is my soul"
+                  android:textColor="@color/abc_secondary_text_material_dark"/>
+
+          </LinearLayout>
+
+          <com.candeo.app.ui.SlidingTabLayout
+              android:id="@+id/candeo_user_sliding_tabs"
+              android:layout_marginTop="30dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"/>
+
+      </LinearLayout>
+
+
+
+    <LinearLayout
+        android:background="@color/background_floating_material_light"
         android:layout_width="match_parent"
-        android:minHeight="300dp"
-        android:maxHeight="300dp"
-        android:layout_marginBottom="10dp"
         android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/candeo_user_avatar_bg"
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/candeo_user_content_pager"
+            android:background="@color/background_floating_material_light"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            />
 
-            <ImageView
-                android:id="@+id/candeo_user_avatar"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_centerInParent="true"
-                android:background="@drawable/roundedbutton"/>
-
-            <LinearLayout
-                android:id="@+id/candeo_user_name"
-                android:layout_below="@id/candeo_user_avatar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/candeo_user_name_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Partho Ghosh"
-                    android:textSize="18sp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/candeo_user_stats"
-                android:layout_below="@id/candeo_user_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:weightSum="3">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="5dp"
-                    android:gravity="center"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:id="@+id/candeo_user_appreciate_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="CLAP"
-                        android:textSize="20sp"/>
-
-                    <TextView
-                        android:id="@+id/candeo_user_appreciate_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="3.4K"
-                        android:textSize="25sp"/>
+    </LinearLayout>
 
 
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="5dp"
-                    android:gravity="center"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:id="@+id/candeo_user_inspired_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="INSPIRE"
-                        android:textSize="20sp"/>
-
-                    <TextView
-                        android:id="@+id/candeo_user_inspired_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2.4K"
-                        android:textSize="25sp"/>
-
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="5dp"
-                    android:gravity="center"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:id="@+id/candeo_user_highest_rank_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="#"
-                        android:textSize="25sp"/>
-
-                    <TextView
-                        android:id="@+id/candeo_user_highest_rank_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1"
-                        android:textSize="25sp"/>
-
-
-                </LinearLayout>
-
-             </LinearLayout>
-
-        </RelativeLayout>
-    </FrameLayout>
-
-    <com.candeo.app.ui.SlidingTabLayout
-        android:id="@+id/candeo_user_sliding_tabs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-
-   <android.support.v4.view.ViewPager
-       android:id="@+id/candeo_user_content_pager"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       />
 </LinearLayout>

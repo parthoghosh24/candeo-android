@@ -9,34 +9,36 @@ import com.candeo.app.home.HomeFragment;
 import com.candeo.app.user.UserFragment;
 
 /**
- * Created by dholu on 16/11/14.
+ * Created by Partho on 16/11/14.
  */
 public class TabPagerAdapter extends FragmentStatePagerAdapter {
 
     private static final int TAB_COUNT=3;
+    private HomeFragment homeFragment;
+    private LeaderBoardFragment leaderBoardFragment;
+    private UserFragment userFragment;
 
-    public TabPagerAdapter(FragmentManager fragmentManager)
+    public TabPagerAdapter(FragmentManager fragmentManager, HomeFragment homeFragment, LeaderBoardFragment leaderBoardFragment, UserFragment userFragment)
     {
         super(fragmentManager);
+        this.homeFragment = homeFragment;
+        this.leaderBoardFragment = leaderBoardFragment;
+        this.userFragment = userFragment;
     }
 
     @Override
     public Fragment getItem(int index) {
 
-        Fragment fragment=null;
         switch (index)
         {
             case 0:
-                fragment = new LeaderBoardFragment();
-                break;
+                return leaderBoardFragment;
             case 1:
-                fragment = new HomeFragment();
-                break;
+                return homeFragment;
             case 2:
-                fragment = new UserFragment();
-                break;
+                return userFragment;
         }
-        return fragment;
+        return  new Fragment();
     }
 
     @Override

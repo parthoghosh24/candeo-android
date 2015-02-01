@@ -15,17 +15,21 @@ import android.widget.Toast;
 import com.candeo.app.R;
 import com.candeo.app.SplashActivity;
 import com.candeo.app.adapters.TabPagerAdapter;
+import com.candeo.app.leaderboard.LeaderBoardFragment;
 import com.candeo.app.user.LoginActivity;
+import com.candeo.app.user.UserFragment;
 import com.candeo.app.util.Preferences;
 
 
 public class HomeActivity extends ActionBarActivity{
 
 
-    Toolbar toolbar;
-    ViewPager homePager;
-    TabPagerAdapter tabPagerAdapter;
-
+    private Toolbar toolbar;
+    private ViewPager homePager;
+    private TabPagerAdapter tabPagerAdapter;
+    private HomeFragment homeFragment;
+    private LeaderBoardFragment leaderBoardFragment;
+    private UserFragment userFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +42,16 @@ public class HomeActivity extends ActionBarActivity{
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager());
+        homeFragment = new HomeFragment();
+        leaderBoardFragment = new LeaderBoardFragment();
+        userFragment = new UserFragment();
+        tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), homeFragment, leaderBoardFragment, userFragment);
         homePager = (ViewPager)findViewById(R.id.home_pager);
         toolbar = (Toolbar)findViewById(R.id.candeo_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         homePager.setAdapter(tabPagerAdapter);
+        homePager.setOffscreenPageLimit(3);
         String fromVerify = getIntent().getStringExtra("fromVerify");
         if(!TextUtils.isEmpty(fromVerify) && "verified".equalsIgnoreCase(fromVerify))
         {
@@ -93,11 +101,11 @@ public class HomeActivity extends ActionBarActivity{
     public void onBackPressed() {
         if(homePager.getCurrentItem() == 1)
         {
-            finish();
+            super.onBackPressed();
         }
         else
         {
-            homePager.setCurrentItem(1);
+            homePager.setCurrentItem(1,true);
 
         }
     }

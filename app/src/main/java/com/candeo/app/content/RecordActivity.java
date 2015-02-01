@@ -68,7 +68,7 @@ public class RecordActivity extends Activity {
                     recorder.start();
                     stop.setVisibility(View.VISIBLE);
                     controls.setVisibility(View.GONE);
-                    countDownTimer = new CountDownTimer(180 * 1000, 1000) {
+                    countDownTimer = new CountDownTimer(360 * 1000, 1000) {
                         @Override
                         public void onTick(long millisUntilFinished) {
                             recordTimer.setText(String.format("%d:%d", TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished), TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));

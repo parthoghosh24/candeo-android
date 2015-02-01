@@ -17,6 +17,7 @@ import com.candeo.app.adapters.ShowcaseAdapter;
 import com.candeo.app.R;
 import com.candeo.app.content.PostActivity;
 import com.candeo.app.transformers.ShowcaseTransformer;
+import com.candeo.app.ui.NonSwipeablePager;
 import com.candeo.app.user.LoginActivity;
 import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.JSONParser;
@@ -31,7 +32,7 @@ import java.util.HashMap;
 public class HomeFragment extends Fragment {
 
     ViewPager parentHomePager;
-    ViewPager showcasePager;
+    NonSwipeablePager showcasePager;
     Button inspire;
     Button feed;
     Button user;
@@ -44,7 +45,7 @@ public class HomeFragment extends Fragment {
 
             homeView= inflater.inflate(R.layout.fragment_home, container, false);
             parentHomePager=(ViewPager)getActivity().findViewById(R.id.home_pager);
-            showcasePager = (ViewPager)homeView.findViewById(R.id.candeo_showcase_pager);
+            showcasePager = (NonSwipeablePager)homeView.findViewById(R.id.candeo_showcase_pager);
             showcasePager.setAdapter(new ShowcaseAdapter(getActivity(),showcasePager));
             showcasePager.setPageTransformer(true, new ShowcaseTransformer());
             inspire = (Button)homeView.findViewById(R.id.candeo_init_post);

@@ -6,7 +6,7 @@
     android:clipToPadding="false"
     app:cardCornerRadius="4dp"
     app:cardUseCompatPadding="true"
-    app:contentPadding="4dp"
+
     android:layout_margin="3dp"
     app:cardElevation="5dp"
     app:cardBackgroundColor="@color/candeo_primary_dark">
@@ -16,13 +16,16 @@
         android:layout_height="match_parent">
 
         <ImageView
+            android:id="@+id/candeo_showcase_media_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:scaleType="centerCrop"
             />
 
         <RelativeLayout
             android:layout_height="match_parent"
             android:layout_width="match_parent"
+            android:background="@color/candeo_translucent_black"
             android:padding="5dp"
             >
 
@@ -97,11 +100,16 @@
                             android:text="APPRECIATE"
                             android:background="@drawable/roundedbuttontranslucent"
                             android:textSize="25sp"/>
-                        <ImageView
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/candeo_showcase_user_avatar"
                             android:layout_width="100dp"
                             android:layout_height="100dp"
                             android:layout_marginLeft="60dp"
-                            android:background="@drawable/roundedbutton"/>
+                            app:border_width="2dp"
+                            app:border_color="#ffffffff"
+                         />
+
                         <Button
                             android:id="@+id/candeo_showcase_skip_button"
                             android:layout_width="65dp"
@@ -169,4 +177,4 @@
 
     </FrameLayout>
 
-</android.support.v7.widget.CardView><!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/src/main/res/layout/showcase_item.xml -->
+</android.support.v7.widget.CardView><!-- From: file:/home/dholu/projects/Candeo/app/src/main/res/layout/showcase_item.xml -->

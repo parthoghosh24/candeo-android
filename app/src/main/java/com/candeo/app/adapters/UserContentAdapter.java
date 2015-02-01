@@ -1,18 +1,14 @@
 package com.candeo.app.adapters;
 
-import android.app.Activity;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.view.View;
 
+import com.candeo.app.Configuration;
 import com.candeo.app.home.HomeActivity;
 import com.candeo.app.user.AppreciatedFragment;
 import com.candeo.app.user.FeedFragment;
 import com.candeo.app.user.InspirationsFragment;
-import com.candeo.app.user.ShowcasesFragment;
+import com.candeo.app.user.CreatedFragment;
 import com.candeo.app.user.SocialFragment;
 
 /**
@@ -20,11 +16,17 @@ import com.candeo.app.user.SocialFragment;
  */
 public class UserContentAdapter extends FragmentStatePagerAdapter{
     private HomeActivity activity;
+    private CreatedFragment createdFragment;
+    private SocialFragment socialFragment;
+    private static final int MAX_COUNT=2;
 
-    public UserContentAdapter(HomeActivity activity)
+
+    public UserContentAdapter(HomeActivity activity, CreatedFragment createdFragment, SocialFragment socialFragment)
     {
       super(activity.getSupportFragmentManager());
       this.activity = activity;
+      this.createdFragment = createdFragment;
+      this.socialFragment = socialFragment;
     }
 
     @Override
@@ -32,15 +34,9 @@ public class UserContentAdapter extends FragmentStatePagerAdapter{
         switch (position)
         {
             case 0:
-                  return new FeedFragment();
+                  return createdFragment;
             case 1:
-                  return new ShowcasesFragment();
-            case 2:
-                  return new InspirationsFragment();
-            case 3:
-                  return new SocialFragment();
-            case 4:
-                  return new AppreciatedFragment();
+                  return socialFragment;
         }
         return new Fragment();
     }
@@ -48,7 +44,7 @@ public class UserContentAdapter extends FragmentStatePagerAdapter{
 
     @Override
     public int getCount() {
-        return 5;
+        return MAX_COUNT;
     }
 
     @Override
@@ -56,15 +52,9 @@ public class UserContentAdapter extends FragmentStatePagerAdapter{
         switch (position)
         {
             case 0:
-                  return "Feed";
+                  return Configuration.FA_MAGIC+" Created";
             case 1:
-                  return "Showcases";
-            case 2:
-                  return "Inspirations";
-            case 3:
-                  return "Social";
-            case 4:
-                  return "Appreciated";
+                  return Configuration.FA_USERS+" Social";
         }
         return "";
     }

@@ -1,7 +1,9 @@
 package com.candeo.app.user;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -22,11 +24,12 @@ import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.NetworkUtil;
 import com.candeo.app.util.Preferences;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class UserFragment extends Fragment {
 
 
     private ImageView userAvatar;
-    private ImageView userAvatarBg;
     private TextView userName;
 
     //stats
@@ -36,11 +39,11 @@ public class UserFragment extends Fragment {
     private TextView inspireIcon;
     private TextView inspireCount;
 
-    private TextView rankIcon;
-    private TextView rankCount;
     private SlidingTabLayout slidingTabs;
 
     private ViewPager userContentPager;
+    private CreatedFragment createdFragment;
+    private SocialFragment socialFragment;
     private UserContentAdapter contentAdapter;
     private View notLoggedIn;
 
@@ -61,32 +64,46 @@ public class UserFragment extends Fragment {
             Log.e(TAG,"User Full Name is "+ Preferences.getUserName(getActivity()));
             Log.e(TAG,"User Email is "+ Preferences.getUserEmail(getActivity()));
             Log.e(TAG,"User Server Db row Id is "+ Preferences.getUserRowId(getActivity()));
-            initWidgets();
 
 
-        return root;
+
+            return root;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        initWidgets();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
     }
 
     private void initWidgets()
     {
-        userAvatar = (ImageView)root.findViewById(R.id.candeo_user_avatar);
-        userAvatarBg = (ImageView)root.findViewById(R.id.candeo_user_avatar_bg);
+        userAvatar = (CircleImageView)root.findViewById(R.id.candeo_user_avatar);
+        userAvatar.setImageURI(Uri.parse(Preferences.getUserAvatarPath(getActivity())));
         userName = (TextView)root.findViewById(R.id.candeo_user_name_text);
         appreciateIcon = (TextView)root.findViewById(R.id.candeo_user_appreciate_icon);
-        appreciateIcon.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/applause.ttf"));
+        appreciateIcon.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/applause.ttf"));
         appreciateIcon.setText(Configuration.FA_APPRECIATE);
         appreciateCount=(TextView)root.findViewById(R.id.candeo_user_appreciate_count);
         inspireIcon=(TextView)root.findViewById(R.id.candeo_user_inspired_icon);
-        inspireIcon.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/response.ttf"));
+        inspireIcon.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/response.ttf"));
         inspireIcon.setText(Configuration.FA_INSPIRE);
         inspireCount=(TextView)root.findViewById(R.id.candeo_user_inspired_count);
-        rankIcon =(TextView)root.findViewById(R.id.candeo_user_highest_rank_icon);
-        rankCount=(TextView)root.findViewById(R.id.candeo_user_highest_rank_count);
         slidingTabs = (SlidingTabLayout)root.findViewById(R.id.candeo_user_sliding_tabs);
         userContentPager=(ViewPager)root.findViewById(R.id.candeo_user_content_pager);
-        contentAdapter = new UserContentAdapter((HomeActivity)getActivity());
+        createdFragment = new CreatedFragment();
+        socialFragment = new SocialFragment();
+        contentAdapter = new UserContentAdapter((HomeActivity)getActivity(), createdFragment,socialFragment);
         userContentPager.setAdapter(contentAdapter);
         slidingTabs.setViewPager(userContentPager);
+        userContentPager.setCurrentItem(0);
+        Log.e(TAG,"page current item is "+userContentPager.getCurrentItem());
         notLoggedIn = root.findViewById(R.id.candeo_user_not_logged_in);
         ((TextView)notLoggedIn.findViewById(R.id.candeo_no_content_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/fa.ttf"));
         ((TextView)notLoggedIn.findViewById(R.id.candeo_no_content_icon)).setText(Configuration.FA_USER);

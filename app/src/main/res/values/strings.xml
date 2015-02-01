@@ -14,6 +14,6 @@
     <string name="title_activity_get_inspired">GetInspiredActivity</string>
     <string name="title_activity_appreciate">AppreciateActivity</string>
     <string name="title_activity_book_render">BookRenderActivity</string>
-    <string name="title_activity_user_verify">UserVerifyActivity</string>
+    <string name="title_activity_user_verify">Open in Candeo</string>
 
 </resources>

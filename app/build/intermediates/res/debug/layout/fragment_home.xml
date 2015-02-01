@@ -8,12 +8,12 @@
     android:orientation="vertical"
     android:layout_weight="1"
     >
-    <android.support.v4.view.ViewPager
+    <com.candeo.app.ui.NonSwipeablePager
         android:id="@+id/candeo_showcase_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        />
+        android:layout_weight="1"/>
+
     <LinearLayout
         android:id="@+id/candeo_buttons"
         android:layout_width="match_parent"
@@ -59,4 +59,4 @@
 
 </LinearLayout>
 
-<!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/src/main/res/layout/fragment_home.xml -->
+<!-- From: file:/home/dholu/projects/Candeo/app/src/main/res/layout/fragment_home.xml -->

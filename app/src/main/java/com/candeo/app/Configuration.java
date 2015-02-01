@@ -24,6 +24,7 @@ public class Configuration {
     public static final String FA_BOOK="\uf02d";
     public static final String FA_MAGIC="\uf0d0";
     public static final String FA_USER="\uf007";
+    public static final String FA_USERS="\uf0c0";
     public static final String FA_STATS="\uf0ac";
     public static final String FA_INSPIRE="\ue800";
     public static final String FA_APPRECIATE="\ue600";

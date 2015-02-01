@@ -87,10 +87,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
                         />
+                    <TextView
+                        android:id="@+id/candeo_showcase_media_chooser_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/candeo_showcase_media_chooser"
+                        android:text="(Swipe sideways to select category)"
+                        android:textColor="@color/candeo_translucent_white"
+                        android:layout_marginTop="10dp"/>
 
                     <LinearLayout
                         android:id="@+id/candeo_post_content_preview"
-                        android:layout_below="@id/candeo_showcase_media_chooser"
+                        android:layout_below="@id/candeo_showcase_media_chooser_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">

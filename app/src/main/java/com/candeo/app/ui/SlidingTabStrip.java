@@ -154,16 +154,16 @@ class SlidingTabStrip extends LinearLayout {
         }
 
         // Thin underline along the entire bottom edge
-        canvas.drawRect(0, height - mBottomBorderThickness, getWidth(), height, mBottomBorderPaint);
+//        canvas.drawRect(0, height - mBottomBorderThickness, getWidth(), height, mBottomBorderPaint);
 
         // Vertical separators between the titles
         int separatorTop = (height - dividerHeightPx) / 2;
-        for (int i = 0; i < childCount - 1; i++) {
-            View child = getChildAt(i);
-            mDividerPaint.setColor(tabColorizer.getDividerColor(i));
-            canvas.drawLine(child.getRight(), separatorTop, child.getRight(),
-                    separatorTop + dividerHeightPx, mDividerPaint);
-        }
+//        for (int i = 0; i < childCount - 1; i++) {
+//            View child = getChildAt(i);
+//            mDividerPaint.setColor(tabColorizer.getDividerColor(i));
+//            canvas.drawLine(child.getRight(), separatorTop, child.getRight(),
+//                    separatorTop + dividerHeightPx, mDividerPaint);
+//        }
     }
 
     /**

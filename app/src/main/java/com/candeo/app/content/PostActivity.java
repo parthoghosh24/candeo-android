@@ -77,6 +77,7 @@ public class PostActivity extends ActionBarActivity {
     private String mimeType;
     private String fileName;
     private ViewPager mediaChooser;
+    private TextView mediaChooserText;
     private LinearLayout mediaButtonsForInspire;
     private int mediaType;
     private byte[] dataArray;
@@ -113,6 +114,7 @@ public class PostActivity extends ActionBarActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mediaChooser = (ViewPager)findViewById(R.id.candeo_showcase_media_chooser);
+        mediaChooserText =(TextView)findViewById(R.id.candeo_showcase_media_chooser_text);
         mediaButtonsForInspire = (LinearLayout)findViewById(R.id.candeo_post_top_buttons);
         audioPreview = (Button)findViewById(R.id.candeo_audio_preview);
         audioPreview.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
@@ -292,6 +294,7 @@ public class PostActivity extends ActionBarActivity {
             showcaseTitleText.setVisibility(View.VISIBLE);
             mediaChooser.setVisibility(View.VISIBLE);
             mediaChooser.setAdapter(new ShowcaseMediaChooserAdapter(PostActivity.this));
+            mediaChooserText.setVisibility(View.VISIBLE);
             description.setVisibility(View.GONE);
             mediaButtonsForInspire.setVisibility(View.GONE);
             setTitle("Showcase your talent");
@@ -305,6 +308,7 @@ public class PostActivity extends ActionBarActivity {
             mediaChooser.setVisibility(View.GONE);
             description.setVisibility(View.VISIBLE);
             mediaButtonsForInspire.setVisibility(View.VISIBLE);
+            mediaChooserText.setVisibility(View.GONE);
             setTitle("Inspire the world");
         }
 
@@ -832,13 +836,8 @@ public class PostActivity extends ActionBarActivity {
             container.addView(view);
             TextView content=(TextView)view.findViewById(R.id.candeo_showcase_media_chooser_text);
             TextView icon =(TextView)view.findViewById(R.id.candeo_showcase_media_chooser_icon);
-            TextView chevron = (TextView)view.findViewById(R.id.candeo_showcase_media_chooser_chevron);
             icon.setTypeface(CandeoUtil.loadFont(activity.getAssets(), "fonts/fa.ttf"));
             icon.setTextSize(TypedValue.COMPLEX_UNIT_SP,80);
-
-            chevron.setTypeface(CandeoUtil.loadFont(activity.getAssets(), "fonts/fa.ttf"));
-            chevron.setTextSize(TypedValue.COMPLEX_UNIT_SP,40);
-            chevron.setText(Configuration.FA_CHEVRON);
 
             content.setTypeface(CandeoUtil.loadFont(activity.getAssets(), "fonts/pt_sans.ttf"));
             content.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
@@ -847,8 +846,7 @@ public class PostActivity extends ActionBarActivity {
                 case 0:
 
                     icon.setText(Configuration.FA_AUDIO);
-                    chevron.setVisibility(View.VISIBLE);
-                    content.setText("Flex Your talent for music");
+                    content.setText("Showcase your talent for music");
                     view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -892,7 +890,6 @@ public class PostActivity extends ActionBarActivity {
 
                 case 1:
                     icon.setText(Configuration.FA_IMAGE);
-                    chevron.setVisibility(View.GONE);
                     content.setText("Bring out the artist in you");
                     view.setOnClickListener(new View.OnClickListener() {
                         @Override
