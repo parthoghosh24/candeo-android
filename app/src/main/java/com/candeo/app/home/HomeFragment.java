@@ -11,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.adapters.ShowcaseAdapter;
@@ -27,16 +30,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class HomeFragment extends Fragment {
 
-    ViewPager parentHomePager;
-    NonSwipeablePager showcasePager;
-    Button inspire;
-    Button feed;
-    Button user;
-    private String feedsURL = CandeoApplication.BASE_URL +"/api/v1/contents";
+    private ViewPager parentHomePager;
+    private NonSwipeablePager showcasePager;
+    private Button inspire;
+    private Button feed;
+    private Button user;
+    private String limelightUrl = Configuration.BASE_URL +"/api/v1/contents/limelight/";
+    private String lastTimestamp =null;
+    private ArrayList<LimelightFragment> showcases = new ArrayList<>();
     View homeView=null;
 
     @Override
@@ -106,51 +112,41 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private class LoadFeeds extends AsyncTask<String, String, JSONObject> {
+    private class FetchLimelight extends JsonObjectRequest
+    {
+        public FetchLimelight(String url)
+        {
+            super(
+                url,
+                null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
 
-        private ProgressDialog pDialog;
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Fetching Inspiritions...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
-        }
+                            lastTimestamp = response.getString("last_timestamp");
+                            JSONArray list =response.getJSONArray("list");
 
-        @Override
-        protected JSONObject doInBackground(String... urls) {
-            return JSONParser.parseGET(urls[0]);
-        }
 
-        @Override
-        protected void onPostExecute(JSONObject jsonObject) {
-            pDialog.dismiss();
-            if(jsonObject!=null)
-            {
-                try {
-                    JSONArray array = jsonObject.getJSONArray("contents");
-                    for(int index=0; index< array.length(); ++index)
-                    {
-                        JSONObject content = array.getJSONObject(index);
-                        HashMap<String, String> feedMap = new HashMap<>();
-                        feedMap.put("id", content.optString("id"));
-                        feedMap.put("desc", content.optString("desc"));
-                        feedMap.put("name", content.optString("name"));
-                        feedMap.put("timestamp", content.optString("time"));
-                        feedMap.put("media_type", content.optString("media_type"));
-
+                        }
+                        catch (JSONException jse)
+                        {
+                            jse.printStackTrace();
+                        }
 
                     }
-                }catch (JSONException je)
-                {
-                    je.printStackTrace();
-                }
-            }
+                },
+               new Response.ErrorListener() {
+                   @Override
+                   public void onErrorResponse(VolleyError error) {
 
+                   }
+               }
+            );
         }
     }
+
+
 
 
 

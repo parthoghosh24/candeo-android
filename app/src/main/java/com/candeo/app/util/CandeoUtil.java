@@ -8,8 +8,12 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.AssetManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
@@ -22,6 +26,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -111,5 +117,34 @@ public class CandeoUtil {
                     dialog.cancel();
             }
         }).create().show();
+    }
+
+    public static Uri getImageUri(Context context, Bitmap bitmap, String title)
+    {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,100,baos);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(),bitmap,title,null);
+        return Uri.parse(path);
+    }
+
+    public static String getRealPathFromUri(Uri uri, ContentResolver contentResolver)
+    {
+        Cursor cursor = contentResolver.query(uri,null,null,null,null);
+        cursor.moveToFirst();
+        int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return cursor.getString(index);
+    }
+    public static Bitmap getBitmapFromUrl(String url)
+    {
+        Bitmap bitmap = null;
+        try {
+            URL imageUrl = new URL(url);
+            bitmap = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
+        }
+        catch (IOException ioe)
+        {
+            ioe.printStackTrace();
+        }
+        return bitmap;
     }
 }

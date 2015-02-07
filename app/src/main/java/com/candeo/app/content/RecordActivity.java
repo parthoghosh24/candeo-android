@@ -44,7 +44,7 @@ public class RecordActivity extends Activity {
         setFinishOnTouchOutside(false);
         controls=(LinearLayout)findViewById(R.id.candeo_record_controls);
         recordTimer=(TextView)findViewById(R.id.candeo_record_timer);
-        recordTimer.setText("3:00");
+        recordTimer.setText("6:00");
         recordTimer.setTextSize(TypedValue.COMPLEX_UNIT_SP, 80);
         recorder= new MediaRecorder();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -53,7 +53,7 @@ public class RecordActivity extends Activity {
         outputFile = Environment.getExternalStorageDirectory().getAbsolutePath()+"/candeo/audios/candeorecord.aac";
         recorder.setOutputFile(outputFile);
         recorder.setAudioChannels(2);
-        recorder.setMaxDuration(180 * 1000);
+        recorder.setMaxDuration(360 * 1000);
         ok=(Button)findViewById(R.id.candeo_record_ok);
         cancel=(Button)findViewById(R.id.candeo_record_cancel);
         stop =(Button)findViewById(R.id.candeo_stop_record);

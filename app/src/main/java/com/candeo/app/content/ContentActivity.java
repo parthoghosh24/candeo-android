@@ -23,6 +23,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.candeo.app.CandeoApplication;
+import com.candeo.app.Configuration;
 import com.candeo.app.R;
 import com.candeo.app.response.AppreciateActivity;
 import com.candeo.app.response.GetInspiredActivity;
@@ -45,7 +46,7 @@ public class ContentActivity extends ActionBarActivity{
     private Button getInspired=null;
     private Button appreciate=null;
     private Button launchBook=null; //temporary
-    private String contentURL = CandeoApplication.BASE_URL +"/api/v1/contents";
+    private String contentURL = Configuration.BASE_URL +"/api/v1/contents";
     private Button play = null;
     private int stopPosition=0;
     private MediaPlayer mediaPlayer;
@@ -151,7 +152,7 @@ public class ContentActivity extends ActionBarActivity{
                 contentViewer.setTag(type);
                 if(type>0)
                 {
-                    final String mediaUrl=CandeoApplication.BASE_URL +jsonObject.optString("media");
+                    final String mediaUrl=Configuration.BASE_URL +jsonObject.optString("media");
                     switch (type)
                     {
                         case 1: //audio

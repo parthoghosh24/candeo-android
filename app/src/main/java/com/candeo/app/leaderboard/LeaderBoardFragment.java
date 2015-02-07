@@ -45,8 +45,8 @@ public class LeaderBoardFragment extends Fragment {
     //No Content
     private View noContent  = null;
 
-    private static String getPerformanceApi = CandeoApplication.BASE_URL+"/api/v1/contents/performances/show";
-    private static String getPerformanceMoreListApi = CandeoApplication.BASE_URL+"/api/v1/contents/performances/list/";
+    private static String getPerformanceApi = Configuration.BASE_URL+"/api/v1/contents/performances/show";
+    private static String getPerformanceMoreListApi = Configuration.BASE_URL+"/api/v1/contents/performances/list/";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -37,13 +37,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
 
 import com.candeo.app.network.CandeoHttpClient;
+import com.candeo.app.network.UploadMediaListener;
+import com.candeo.app.network.UploadMediaTask;
 import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.Preferences;
 
@@ -53,9 +59,11 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
-public class PostActivity extends ActionBarActivity {
+public class PostActivity extends ActionBarActivity implements UploadMediaListener {
 
     private static final String TAG="Candeo - Post Activity";
     private Button audio;
@@ -66,7 +74,6 @@ public class PostActivity extends ActionBarActivity {
 //    Button book; //Next version. Currently running into multiple issues. Need to research alot more to find the right solution. Webview or custom viewer???
     private Button postIt;
     private TextView copyrightText;
-    private EditText showcaseTitleText;
     private EditText description;
     private EditText showcaseTitle;
     private Button audioPreview;
@@ -79,7 +86,8 @@ public class PostActivity extends ActionBarActivity {
     private ViewPager mediaChooser;
     private TextView mediaChooserText;
     private LinearLayout mediaButtonsForInspire;
-    private int mediaType;
+    private boolean hasMedia;
+    private String mediaId;
     private byte[] dataArray;
     private boolean isPlaying=false;
     private int stopPosition=0;
@@ -102,7 +110,35 @@ public class PostActivity extends ActionBarActivity {
 
     private int contentType=INSPIRATION;
     private String type="";
+    private static final String API_POST_CREATE_URL=Configuration.BASE_URL +"/api/v1/contents/create ";
 
+    @Override
+    public void onSuccess(String response) {
+
+        if(!TextUtils.isEmpty(response))
+        {
+            try {
+                JSONObject json = new JSONObject(response);
+                mediaId = json.getString("id");
+                hasMedia=true;
+                Log.e(TAG,"Media id is "+mediaId);
+            }
+            catch (JSONException jsonex)
+            {
+                jsonex.printStackTrace();
+            }
+
+        }
+    }
+
+    @Override
+    public void onFailure(String response) {
+
+        if(!TextUtils.isEmpty(response))
+        {
+            Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -278,20 +314,55 @@ public class PostActivity extends ActionBarActivity {
         postIt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new PostContentTask().execute();
+                if(SHOWCASE == contentType)
+                {
+                  if(!hasMedia || TextUtils.isEmpty(showcaseTitle.getText()))
+                  {
+                      Toast.makeText(getApplicationContext(),"Media and Title mandatory for showcase",Toast.LENGTH_LONG).show();
+                  }
+                  else
+                  {
+                      Map<String, String> payload = new HashMap<>();
+                      payload.put("type",Integer.toString(SHOWCASE));
+                      payload.put("media_id",mediaId);
+                      payload.put("user_id",Preferences.getUserRowId(getApplicationContext()));
+                      payload.put("title",showcaseTitle.getText().toString());
+                      CandeoApplication.getInstance().getAppRequestQueue().add(new PostContentRequest(payload));
+                  }
+                }
+                else
+                {
+                    if(hasMedia || !TextUtils.isEmpty(description.getText()))
+                    {
+                        Map<String, String> payload = new HashMap<>();
+                        payload.put("type",Integer.toString(INSPIRATION));
+                        if(hasMedia)
+                        {
+                            payload.put("media_id",mediaId);
+                        }
+                        payload.put("user_id",Preferences.getUserRowId(getApplicationContext()));
+                        payload.put("description",description.getText().toString());
+                        CandeoApplication.getInstance().getAppRequestQueue().add(new PostContentRequest(payload));
+
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(),"Media and Title mandatory for showcase",Toast.LENGTH_LONG).show();
+                    }
+                }
+
             }
         });
 
         copyrightText=(TextView)findViewById(R.id.candeo_copyright_text);
-        showcaseTitleText=(EditText)findViewById(R.id.candeo_post_title);
 
-        if("showcase".equalsIgnoreCase(type))
+        if("showcase".equalsIgnoreCase(type))                                                               
         {
             contentType=SHOWCASE;
             copyrightText.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
             copyrightText.setText(Configuration.FA_COPYRIGHT + " " + Preferences.getUserName(getApplicationContext()));
             copyrightText.setVisibility(View.VISIBLE);
-            showcaseTitleText.setVisibility(View.VISIBLE);
+            showcaseTitle.setVisibility(View.VISIBLE);
             mediaChooser.setVisibility(View.VISIBLE);
             mediaChooser.setAdapter(new ShowcaseMediaChooserAdapter(PostActivity.this));
             mediaChooserText.setVisibility(View.VISIBLE);
@@ -304,7 +375,7 @@ public class PostActivity extends ActionBarActivity {
         {
             contentType=INSPIRATION;
             copyrightText.setVisibility(View.GONE);
-            showcaseTitleText.setVisibility(View.GONE);
+            showcaseTitle.setVisibility(View.GONE);
             mediaChooser.setVisibility(View.GONE);
             description.setVisibility(View.VISIBLE);
             mediaButtonsForInspire.setVisibility(View.VISIBLE);
@@ -314,98 +385,39 @@ public class PostActivity extends ActionBarActivity {
 
     }
 
-    private class PostContentTask extends AsyncTask<Void, Void, Void>
+
+    class PostContentRequest extends JsonObjectRequest
     {
-        private ProgressDialog pDialog=new ProgressDialog(PostActivity.this);
-        private String result="";
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            try {
-                pDialog.setMessage("Creating Magic...");
-                pDialog.setIndeterminate(true);
-                pDialog.setCancelable(false);
-                pDialog.show();
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+        public PostContentRequest(final Map<String,String> payload)
+        {
+            super(Method.POST,
+                    API_POST_CREATE_URL,
+                    new JSONObject(payload),
+                    new Response.Listener<JSONObject>(){
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try
+                            {
+                                String id = response.getString("id");
+                                Log.e(PostActivity.class.getName(),"AND THE ID IS "+id);
+                                Intent contentIntent = new Intent(PostActivity.this,ContentActivity.class);
+                                contentIntent.putExtra("contentId",id);
+                                finish();
+                                startActivity(contentIntent);
+                            }
+                            catch (JSONException je)
+                            {
+                                je.printStackTrace();
+                            }
 
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try
-            {
-                String url =CandeoApplication.BASE_URL +"/api/v1/contents/create ";
-                Log.e(TAG,"URL Is "+url);
-                result="";
-                if(mediaType >0 && dataArray != null) //Data Array can't be empty for media files. In Showcase, media types are mandatory
-                {
-                    CandeoHttpClient client = new CandeoHttpClient(url);
-                    client.connectForMultipart();
-                    client.addFormPart("type", Integer.toString(contentType)); //showcase or inspiration
-                    client.addFormPart("description",description.getText().toString());
-                    if(SHOWCASE == contentType)
-                    {
-                      client.addFormPart("title",showcaseTitle.getText().toString());
-                    }
-                    client.addFormPart("user_id","1");
-                    client.addFormPart("tag","inspire");
-                    System.out.println("FILE is " + fileName);
-                    client.addFormPart("media_type",Integer.toString(mediaType));
-                    client.addFilePart("media",fileName,dataArray, mimeType);
-                    client.finishMultipart();
-                    result=client.getResponse();
-                }
-
-
-                System.out.println("Response is "+result);
-            }
-            catch (IOException ie)
-            {
-                System.out.println("IN HERE");
-
-                ie.printStackTrace();
-            }
-            Log.e(PostActivity.class.getName(),"RESPONSE RETURNED IS "+result);
-            return null;
-
-        }
-
-
-
-        @Override
-        protected void onPostExecute(Void response) {
-            if(pDialog!=null)
-            {
-                pDialog.dismiss();
-            }
-            try
-            {
-                System.out.println("Respnse"+result+"finish");
-                if(TextUtils.isEmpty(result))
-                {
-                    CandeoUtil.appAlertDialog(PostActivity.this, "Posting Failed. Please Try Again! Sorry for the inconvenience");
-                }
-                else
-                {
-                    JSONObject json = new JSONObject(result);
-                    String id = json.getString("id");
-                    Log.e(PostActivity.class.getName(),"AND THE ID IS "+id);
-                    Intent contentIntent = new Intent(PostActivity.this,ContentActivity.class);
-                    contentIntent.putExtra("contentId",id);
-                    finish();
-                    startActivity(contentIntent);
-                }
-
-            }
-            catch (JSONException jse)
-            {
-                jse.printStackTrace();
-            }
-
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            System.out.println("Something went wrong");
+                        }
+                    });
         }
     }
 
@@ -426,8 +438,7 @@ public class PostActivity extends ActionBarActivity {
             switch (requestCode)
             {
                 case REQUEST_IMAGE_CAMERA:
-                    mediaType=IMAGE;
-                    filePath = getRealPathFromUri(imageUri);
+                    filePath = CandeoUtil.getRealPathFromUri(imageUri,getContentResolver());
                     file = new File(filePath);
                     Log.e(TAG,"Capture image path is "+filePath);
                     fileName = file.getName();
@@ -451,9 +462,8 @@ public class PostActivity extends ActionBarActivity {
                     break;
 
                 case PICK_IMAGE_FILE:
-                    mediaType=IMAGE;
                     uri = data.getData();
-                    filePath = getRealPathFromUri(uri);
+                    filePath = CandeoUtil.getRealPathFromUri(uri,getContentResolver());
                     file = new File(filePath);
                     Log.e(TAG,"Picked image path is "+filePath);
                     mimeType=CandeoUtil.getMimeType(uri, PostActivity.this);
@@ -481,7 +491,6 @@ public class PostActivity extends ActionBarActivity {
                                 .getExternalStorageDirectory(), "candeo/videos/candeovideo.mp4");
                         mimeType=CandeoUtil.getMimeType(uri, PostActivity.this);
                         fileName = file.getName();
-                        mediaType=VIDEO;
                         dataArray = CandeoUtil.fileToByteArray(file);
                         if(dataArray == null)
                         {
@@ -490,6 +499,11 @@ public class PostActivity extends ActionBarActivity {
                         else
                         {
                             playVideo(uri);
+                            new UploadMediaTask(PostActivity.this,
+                                    Configuration.VIDEO,
+                                    dataArray,
+                                    fileName,
+                                    mimeType).execute(Configuration.MEDIA_UPLOAD_URL);
                         }
 
                     }
@@ -509,7 +523,6 @@ public class PostActivity extends ActionBarActivity {
                     file = new File(filePath);
                     mimeType=CandeoUtil.getMimeType(uri, PostActivity.this);
                     fileName = file.getName();
-                    mediaType=VIDEO;
                     dataArray = CandeoUtil.fileToByteArray(file);
                     if(dataArray == null)
                     {
@@ -518,6 +531,11 @@ public class PostActivity extends ActionBarActivity {
                     else
                     {
                         playVideo(uri);
+                        new UploadMediaTask(PostActivity.this,
+                                Configuration.VIDEO,
+                                dataArray,
+                                fileName,
+                                mimeType).execute(Configuration.MEDIA_UPLOAD_URL);
                     }
                     break;
                 case REQUEST_AUDIO_RECORD:
@@ -526,11 +544,16 @@ public class PostActivity extends ActionBarActivity {
                     file = new File(filePath);
                     mimeType=CandeoUtil.getMimeType(Uri.fromFile(file),PostActivity.this);
                     fileName = file.getName();
-                    mediaType=AUDIO;
                     dataArray = CandeoUtil.fileToByteArray(file);
                     System.out.println("FILE IS "+fileName);
                     playAudio(filePath);
+                    new UploadMediaTask(PostActivity.this,
+                            Configuration.AUDIO,
+                            dataArray,
+                            fileName,
+                            mimeType).execute(Configuration.MEDIA_UPLOAD_URL);
                     break;
+
                 case PICK_AUDIO_FILE:
                     uri = data.getData();
                     cursor = getContentResolver().query(uri, new String[]{MediaStore.Audio.Media.DATA},null,null,null);
@@ -541,9 +564,13 @@ public class PostActivity extends ActionBarActivity {
                     mimeType=CandeoUtil.getMimeType(uri, PostActivity.this);
                     fileName = file.getName();
                     dataArray = CandeoUtil.fileToByteArray(file);
-                    mediaType=AUDIO;
                     System.out.println("Path is "+ uri.getPath());
                     playAudio(uri);
+                    new UploadMediaTask(PostActivity.this,
+                            Configuration.AUDIO,
+                            dataArray,
+                            fileName,
+                            mimeType).execute(Configuration.MEDIA_UPLOAD_URL);
                     break;
 //                case PICK_EPUB_FILE:
 //                    break;
@@ -723,6 +750,11 @@ public class PostActivity extends ActionBarActivity {
                     videoPreviewPlay.setVisibility(View.GONE);
                     audioPreview.setVisibility(View.GONE);
 
+                    new UploadMediaTask(PostActivity.this,
+                            Configuration.IMAGE,
+                            bos.toByteArray(),
+                            fileName,
+                            mimeType).execute(Configuration.MEDIA_UPLOAD_URL);
                 }
             }
         }
@@ -778,21 +810,7 @@ public class PostActivity extends ActionBarActivity {
 
     }
 
-    private Uri getImageUri(Context context, Bitmap bitmap, String title)
-    {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,100,baos);
-        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(),bitmap,title,null);
-        return Uri.parse(path);
-    }
 
-    private String getRealPathFromUri(Uri uri)
-    {
-        Cursor cursor = getContentResolver().query(uri,null,null,null,null);
-        cursor.moveToFirst();
-        int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-        return cursor.getString(index);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

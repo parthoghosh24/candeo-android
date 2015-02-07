@@ -1,7 +1,11 @@
 package com.candeo.app.user;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,6 +27,9 @@ import com.candeo.app.ui.SlidingTabLayout;
 import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.NetworkUtil;
 import com.candeo.app.util.Preferences;
+
+import java.io.IOException;
+import java.net.URL;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -85,7 +92,16 @@ public class UserFragment extends Fragment {
     private void initWidgets()
     {
         userAvatar = (CircleImageView)root.findViewById(R.id.candeo_user_avatar);
-        userAvatar.setImageURI(Uri.parse(Preferences.getUserAvatarPath(getActivity())));
+        if(Preferences.getUserAvatarPath(getActivity()).contains("http"))
+        {
+
+
+            new LoadImageTask().execute(Preferences.getUserAvatarPath(getActivity()));
+        }
+        else
+        {
+            userAvatar.setImageURI(Uri.parse(Preferences.getUserAvatarPath(getActivity())));
+        }
         userName = (TextView)root.findViewById(R.id.candeo_user_name_text);
         appreciateIcon = (TextView)root.findViewById(R.id.candeo_user_appreciate_icon);
         appreciateIcon.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/applause.ttf"));
@@ -123,6 +139,31 @@ public class UserFragment extends Fragment {
         }
 
 
+    }
+
+    private class LoadImageTask extends AsyncTask<String, String, Bitmap> {
+
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            Bitmap bitmap = null;
+            try {
+                URL imageUrl= new URL(params[0]);
+                bitmap = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if(bitmap!=null)
+            {
+                userAvatar.setImageBitmap(bitmap);
+            }
+        }
     }
 
 }

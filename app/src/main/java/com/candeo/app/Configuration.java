@@ -8,6 +8,12 @@ import java.io.File;
  * Created by Partho on 21/12/14.
  */
 public class Configuration {
+
+    //Base url
+    //    public static final String BASE_URL ="http://192.168.0.105:3000";
+    public static final String BASE_URL="http://192.168.43.239:3000";
+    //    public static final String BASE_URL="http://10.0.3.116:3000";
+
     public static final String BOOKSROOT= Environment.getExternalStorageDirectory().getAbsolutePath()+ File.separator+"Books";
     public static final String CANDEO_BOOKSROOT= Environment.getExternalStorageDirectory()+"/candeo/books";
     public static final String INTENTBOOK="book";
@@ -34,4 +40,17 @@ public class Configuration {
     public static final String FA_PLAY="\uf04b";
     public static final String FA_PAUSE="\uf04c";
 
+
+    //Media types
+    public static final int AUDIO=1;
+    public static final int VIDEO=2;
+    public static final int IMAGE=3;
+    public static final int BOOK=4;
+
+    //Types of Post
+    public static final int SHOWCASE=1;
+    public static final int INSPIRATION=2;
+
+    //Common API Urls
+    public static final String MEDIA_UPLOAD_URL=BASE_URL+"/api/v1/media/create";
 }

@@ -10,6 +10,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.candeo.app.CandeoApplication;
+import com.candeo.app.Configuration;
 import com.candeo.app.R;
 import com.candeo.app.home.HomeActivity;
 import com.candeo.app.util.CandeoUtil;
@@ -24,7 +25,7 @@ import java.util.Map;
 public class UserVerifyActivity extends ActionBarActivity {
 
 
-    private static final String API_USER_VERIFY_URL= CandeoApplication.BASE_URL +"/api/v1/users/verify";
+    private static final String API_USER_VERIFY_URL= Configuration.BASE_URL +"/api/v1/users/verify";
     private static final String TAG="Candeo - User Verify Activity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class UserVerifyActivity extends ActionBarActivity {
                                    Preferences.setUserName(getApplicationContext(), user.getString("name"));
                                    Preferences.setUserAbout(getApplicationContext(),user.getString("about"));
                                    Preferences.setUserApiKey(getApplicationContext(), user.getString("auth_token"));
+                                   Preferences.setUserAvatarPath(getApplicationContext(), Configuration.BASE_URL+user.getString("avatar_path"));
                                    Preferences.setUserLoggedIn(getApplicationContext(),true);
                                    finish();
                                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
