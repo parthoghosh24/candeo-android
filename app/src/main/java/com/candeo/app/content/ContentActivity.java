@@ -75,37 +75,16 @@ public class ContentActivity extends ActionBarActivity{
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         contentViewer=(LinearLayout)findViewById(R.id.candeo_content_viewer);
 
-        String id = getIntent().getStringExtra("contentId");
+        String id = getIntent().getStringExtra("id");
+        int type = getIntent().getIntExtra("type",Configuration.SHOWCASE);
         System.out.println("ID is :"+id);
         if(id!=null)
         {
-            contentURL=contentURL+"/"+id;
+            contentURL=contentURL+"/"+id+"/"+type;
             new LoadContent().execute(contentURL);
         }
 
-        getInspired = (Button)findViewById(R.id.get_inspired);
-        getInspired.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/response.ttf"));
-        getInspired.setText("\ue800");
-        getInspired.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(ContentActivity.this, "I got inspired", Toast.LENGTH_LONG).show();
-                //getInspired.setEnabled(false);
-                startActivity(new Intent(ContentActivity.this, GetInspiredActivity.class));
-            }
-        });
 
-        appreciate=(Button)findViewById(R.id.appreciate);
-        appreciate.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/applause.ttf"));
-        appreciate.setText("\ue600");
-        appreciate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(ContentActivity.this, "I appreciated", Toast.LENGTH_LONG).show();
-                //appreciate.setEnabled(false);
-                startActivity(new Intent(ContentActivity.this, AppreciateActivity.class));
-            }
-        });
 
 
 
@@ -115,16 +94,16 @@ public class ContentActivity extends ActionBarActivity{
     @Override
     protected void onStop() {
         super.onStop();
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         if(mediaPlayer!=null)
         {
             mediaPlayer.release();
         }
-
     }
-
-
-
 
     private class LoadContent extends AsyncTask<String, String, JSONObject> {
 
@@ -152,7 +131,7 @@ public class ContentActivity extends ActionBarActivity{
                 contentViewer.setTag(type);
                 if(type>0)
                 {
-                    final String mediaUrl=Configuration.BASE_URL +jsonObject.optString("media");
+                    final String mediaUrl=Configuration.BASE_URL +jsonObject.optString("media_url");
                     switch (type)
                     {
                         case 1: //audio
@@ -220,7 +199,7 @@ public class ContentActivity extends ActionBarActivity{
                 description = (TextView)findViewById(R.id.description);
                 username = (TextView)findViewById(R.id.username);
                 description.setText(jsonObject.optString("desc"));
-                username.setText(jsonObject.optString("user"));
+                username.setText(jsonObject.optString("user_name"));
 
         }
     }

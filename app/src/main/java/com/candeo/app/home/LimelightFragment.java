@@ -1,30 +1,232 @@
 package com.candeo.app.home;
 
-import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Fragment;
+
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.candeo.app.CandeoApplication;
+import com.candeo.app.Configuration;
 import com.candeo.app.R;
+import com.candeo.app.content.ContentActivity;
+import com.candeo.app.response.ResponseListener;
+import com.candeo.app.util.CandeoUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.URL;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class LimelightFragment extends Fragment {
+public class LimelightFragment extends Fragment{
 
+    private String id="";
+    private static final String TAG="Candeo- Limelight";
+    private final static String GET_LIMELIGHT_API = Configuration.BASE_URL +"/api/v1/contents/limelight/%s";
+    private CircleImageView avatar;
+    private ImageView mediaBg;
+    private TextView name;
+    private TextView title;
+    private RelativeLayout showcaseHolder;
+    private TextView appreciateCount;
+    private TextView copyRightView;
+    private TextView appreciateIconView;
+    private TextView mediaIconView;
+    private Button appreciateButtonView;
+    private Button skipButtonView;
+    private View root;
+    private ResponseListener responseListener=null;
+    private int position=0;
 
-    public LimelightFragment() {
-        // Required empty public constructor
+    public LimelightFragment()
+    {
+
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_limelight, container, false);
+
+        root = inflater.inflate(R.layout.fragment_limelight, container, false);
+        Log.e(TAG,"IN Lime light fragment");
+        initWidgets();
+        return root;
     }
 
 
+    private void initWidgets()
+    {
+        showcaseHolder= (RelativeLayout)root.findViewById(R.id.candeo_showcase_holder);
+        name=(TextView)root.findViewById(R.id.candeo_user_name);
+        title =(TextView)root.findViewById(R.id.candeo_showcase_title);
+        appreciateCount=(TextView)root.findViewById(R.id.candeo_appreciate_count);
+        copyRightView = (TextView)root.findViewById(R.id.candeo_copyright_icon);
+        appreciateIconView = (TextView)root.findViewById(R.id.candeo_appreciate_icon);
+        mediaIconView = (TextView)root.findViewById(R.id.candeo_showcase_media_icon);
+        appreciateButtonView = (Button)root.findViewById(R.id.candeo_showcase_appreciate_button);
+        skipButtonView = (Button)root.findViewById(R.id.candeo_showcase_skip_button);
+        avatar = (CircleImageView)root.findViewById(R.id.candeo_showcase_user_avatar);
+        Log.e(TAG,"Avatar is "+avatar);
+        avatar.setImageURI(Uri.parse("android.resource://" + getActivity().getPackageName() + "/" + R.raw.default_avatar));
+        mediaBg = (ImageView)root.findViewById(R.id.candeo_showcase_media_bg);
+        mediaBg.setImageURI(Uri.parse("android.resource://" + getActivity().getPackageName() + "/"+ R.raw.default_avatar));
+        appreciateButtonView.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/applause.ttf"));
+
+        appreciateButtonView.setText(Configuration.FA_APPRECIATE);
+        appreciateButtonView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog appreciateDialog = new AlertDialog.Builder(getActivity()).setTitle("How do you appreciate?")
+                                                    .setPositiveButton("Appreciate", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            responseListener.onResponseClick(position);
+                                                        }
+                                                    }).setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //
+                            }
+                        }).create();
+               appreciateDialog.show();
+
+            }
+        });
+        skipButtonView.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
+        skipButtonView.setText(Configuration.FA_SKIP);
+        skipButtonView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                responseListener.onResponseClick(position);
+            }
+        });
+        mediaIconView.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
+        mediaIconView.setText(Configuration.FA_AUDIO);
+        copyRightView.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
+        copyRightView.setText(Configuration.FA_COPYRIGHT);
+        appreciateIconView.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/applause.ttf"));
+        appreciateIconView.setText(Configuration.FA_APPRECIATE);
+        id=getArguments().getString("id");
+        responseListener = (ResponseListener)getArguments().getParcelable("adapter");
+        position=getArguments().getInt("position");
+        Log.e(TAG,"id is "+id);
+        if(!TextUtils.isEmpty(id))
+        {
+            CandeoApplication.getInstance().getAppRequestQueue().add(new FetchLimelight(id));
+        }
+        showcaseHolder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e(TAG,"Showcase tag is "+showcaseHolder.getTag().toString());
+                if(!TextUtils.isEmpty(showcaseHolder.getTag().toString()))
+                {
+                    Intent contentIntent= new Intent(getActivity(), ContentActivity.class);
+                    contentIntent.putExtra("id",showcaseHolder.getTag().toString());
+                    contentIntent.putExtra("type",Configuration.SHOWCASE);
+                    getActivity().startActivity(contentIntent);
+                }
+
+            }
+        });
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+    }
+
+    private class FetchLimelight extends JsonObjectRequest
+    {
+        public FetchLimelight(final String id)
+        {
+            super(Method.GET,
+                    String.format(GET_LIMELIGHT_API,id),
+                    null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            Log.e(TAG, "Fetched limelight");
+                            Log.e(TAG,"id fetched is "+id);
+
+                            try {
+                                JSONObject limelight = response.getJSONObject("limelight");
+                                showcaseHolder.setTag(Integer.toString(limelight.getInt("showcase_id")));
+                                name.setText(limelight.getString("name"));
+                                title.setText(limelight.getString("title"));
+                                appreciateCount.setText(""+limelight.getInt("total_appreciations"));
+                                new LoadImageTask(avatar).execute(Configuration.BASE_URL+limelight.getString("user_avatar_url"));
+                                new LoadImageTask(mediaBg).execute(Configuration.BASE_URL+limelight.getString("bg_url"));
+                            }
+                            catch (JSONException jse)
+                            {
+                                jse.printStackTrace();
+                            }
+
+
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                        }
+                    }
+            );
+        }
+    }
+
+    private class LoadImageTask extends AsyncTask<String, String, Bitmap> {
+
+        private ImageView image;
+
+        public LoadImageTask(ImageView image)
+        {
+            this.image=image;
+        }
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            Bitmap bitmap = null;
+            try {
+                URL imageUrl= new URL(params[0]);
+                bitmap = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if(bitmap!=null)
+            {
+                image.setImageBitmap(bitmap);
+            }
+        }
+    }
 
 }

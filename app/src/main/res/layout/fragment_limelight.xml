@@ -23,6 +23,9 @@
             />
 
         <RelativeLayout
+
+            android:id="@+id/candeo_showcase_holder"
+            android:descendantFocusability="blocksDescendants"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:background="@color/candeo_translucent_black"
@@ -98,6 +101,7 @@
                             android:layout_width="65dp"
                             android:layout_height="65dp"
                             android:text="APPRECIATE"
+                            android:focusableInTouchMode="true"
                             android:background="@drawable/roundedbuttontranslucent"
                             android:textSize="25sp"/>
 
@@ -106,6 +110,7 @@
                             android:layout_width="100dp"
                             android:layout_height="100dp"
                             android:layout_marginLeft="60dp"
+                            android:focusableInTouchMode="true"
                             app:border_width="2dp"
                             app:border_color="#ffffffff"
                             />
@@ -116,6 +121,7 @@
                             android:layout_height="65dp"
                             android:layout_marginLeft="60dp"
                             android:text="Skip"
+                            android:focusableInTouchMode="true"
                             android:background="@drawable/roundedbuttontranslucent"
                             android:textSize="20sp"/>
 
@@ -156,6 +162,7 @@
 
 
                         <TextView
+                            android:id="@+id/candeo_showcase_title"
                             android:text="My Awesome Creation My Awesome Creation My Awesome Creation "
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

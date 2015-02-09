@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+
+    android:id="@+id/candeo_progress_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+   <ProgressBar
+       android:id="@+id/candeo_progress_bar"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:padding="10dp"/>
+
+   <TextView
+       android:id="@+id/candeo_progress_icon"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:textSize="15sp"/>
+
+    <TextView
+        android:id="@+id/candeo_progress_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"/>
+
+</LinearLayout>

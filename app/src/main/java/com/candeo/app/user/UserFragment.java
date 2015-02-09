@@ -1,5 +1,6 @@
 package com.candeo.app.user;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,7 +19,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
 import com.candeo.app.adapters.UserContentAdapter;
@@ -27,6 +33,9 @@ import com.candeo.app.ui.SlidingTabLayout;
 import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.NetworkUtil;
 import com.candeo.app.util.Preferences;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
@@ -66,21 +75,22 @@ public class UserFragment extends Fragment {
 
 
 
-            Log.e(TAG,"User API KEY is "+ Preferences.getUserApiKey(getActivity()));
-            Log.e(TAG,"User username is "+ Preferences.getUserUsername(getActivity()));
-            Log.e(TAG,"User Full Name is "+ Preferences.getUserName(getActivity()));
-            Log.e(TAG,"User Email is "+ Preferences.getUserEmail(getActivity()));
-            Log.e(TAG,"User Server Db row Id is "+ Preferences.getUserRowId(getActivity()));
-
-
-
+            if(Configuration.DEBUG)
+            {
+                Log.e(TAG,"User API KEY is "+ Preferences.getUserApiKey(getActivity()));
+                Log.e(TAG,"User username is "+ Preferences.getUserUsername(getActivity()));
+                Log.e(TAG,"User Full Name is "+ Preferences.getUserName(getActivity()));
+                Log.e(TAG,"User Email is "+ Preferences.getUserEmail(getActivity()));
+                Log.e(TAG,"User Server Db row Id is "+ Preferences.getUserRowId(getActivity()));
+            }
+            initWidgets();
             return root;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initWidgets();
+
     }
 
     @Override
@@ -89,19 +99,42 @@ public class UserFragment extends Fragment {
 
     }
 
+    public void onGetUserComplete(JSONObject response)
+    {
+        if(response!=null)
+        {
+            if(Configuration.DEBUG)
+            {
+                Log.e(TAG,"I am called");
+            }
+            if(response.length()>0)
+            {
+                try {
+                    JSONObject user =response.getJSONObject("user");
+                    userName.setText(user.getString("name"));
+                    appreciateCount.setText(""+user.getInt("total_appreciations"));
+                    inspireCount.setText(""+user.getInt("total_inspires"));
+                    new LoadImageTask().execute(Configuration.BASE_URL+user.getString("avatar_path"));
+
+                }
+                catch (JSONException je)
+                {
+                    je.printStackTrace();
+                }
+
+            }
+            else
+            {
+                Toast.makeText(getActivity(),"Failed to fetch user! Try again",Toast.LENGTH_SHORT).show();
+            }
+        }
+
+    }
+
     private void initWidgets()
     {
         userAvatar = (CircleImageView)root.findViewById(R.id.candeo_user_avatar);
-        if(Preferences.getUserAvatarPath(getActivity()).contains("http"))
-        {
-
-
-            new LoadImageTask().execute(Preferences.getUserAvatarPath(getActivity()));
-        }
-        else
-        {
-            userAvatar.setImageURI(Uri.parse(Preferences.getUserAvatarPath(getActivity())));
-        }
+        userAvatar.setImageURI(Uri.parse("android.resource://" + getActivity().getPackageName() + "/"+ R.raw.default_avatar));
         userName = (TextView)root.findViewById(R.id.candeo_user_name_text);
         appreciateIcon = (TextView)root.findViewById(R.id.candeo_user_appreciate_icon);
         appreciateIcon.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/applause.ttf"));
@@ -137,9 +170,9 @@ public class UserFragment extends Fragment {
         {
             notLoggedIn.setVisibility(View.VISIBLE);
         }
-
-
     }
+
+
 
     private class LoadImageTask extends AsyncTask<String, String, Bitmap> {
 

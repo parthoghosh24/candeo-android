@@ -51,6 +51,7 @@ import java.util.UUID;
 public class LoginActivity extends Activity implements UploadMediaListener {
 
     private Spinner emailSelector;
+    private EditText debugEmail;
     private EditText name;
     private Button signup;
     private Button signin;
@@ -77,6 +78,8 @@ public class LoginActivity extends Activity implements UploadMediaListener {
         isSignup=true;
         hasImage=false;
         mediaId="";
+        debugEmail= (EditText)findViewById(R.id.candeo_login_email_debug);
+        debugEmail.setVisibility(View.VISIBLE);
         emails= CandeoUtil.emailAddresses(this);
         ArrayAdapter<String> emailSelectorAdapter = new ArrayAdapter<>(this, R.layout.candeo_email_spinner_item,emails.toArray(new String[emails.size()]));
         emailSelectorAdapter.setDropDownViewResource(R.layout.candeo_spinner_dropdown_item);
@@ -86,13 +89,42 @@ public class LoginActivity extends Activity implements UploadMediaListener {
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               isSignup=true;
-               registerUser(name.getText().toString(), emailSelector.getSelectedItem().toString());
+                String email = !TextUtils.isEmpty(debugEmail.getText()) ? debugEmail.getText().toString() : emailSelector.getSelectedItem().toString();
+                Log.e(TAG,"And the email is "+email);
+               if(isSignup)
+               {
+                   registerUser(name.getText().toString(), email);
+               }
+               else
+               {
+                   loginUser(email);
+               }
+
 
             }
         });
         signin=(Button)findViewById(R.id.candeo_user_sign_in);
-
+        signin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isSignup)
+                {
+                    isSignup=false;
+                    name.setVisibility(View.GONE);
+                    userProfile.setVisibility(View.GONE);
+                    signup.setText("SIGN IN");
+                    signin.setText("SIGN IN");
+                }
+                else
+                {
+                    isSignup=true;
+                    name.setVisibility(View.VISIBLE);
+                    userProfile.setVisibility(View.VISIBLE);
+                    signup.setText("SIGN UP");
+                    signin.setText("SIGN UP");
+                }
+            }
+        });
         userProfile=(ImageView)findViewById(R.id.candeo_user_profile_image);
         userProfile.setImageURI(Uri.parse(Preferences.getUserAvatarPath(getApplicationContext())));
         userProfile.setOnClickListener(new View.OnClickListener() {
@@ -251,6 +283,14 @@ public class LoginActivity extends Activity implements UploadMediaListener {
             Toast.makeText(getApplicationContext(),"Please upload a suitable image with Full Name",Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    private void loginUser(final String email)
+    {
+        Map<String, String> loginParams = new HashMap<>();
+        loginParams.put("id",Preferences.getUserRowId(getApplicationContext()));
+        loginParams.put("email",email);
+        CandeoApplication.getInstance().getAppRequestQueue().add(new LoginUserRequest(loginParams));
     }
 
     class RegisterUserRequest extends JsonObjectRequest

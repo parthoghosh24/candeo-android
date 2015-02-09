@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/candeo_response_holder"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:theme="@style/Base.Theme.AppCompat.Light"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/candeo_response_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="I find this"
+        android:textSize="20sp"/>
+
+    <NumberPicker
+        android:id="@+id/candeo_response_chooser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+    </NumberPicker>
+
+    <EditText
+        android:id="@+id/candeo_response_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="More Words (Optional -upto 100 chars)"
+        android:maxLength="100"
+        />
+
+
+
+
+
+</LinearLayout>

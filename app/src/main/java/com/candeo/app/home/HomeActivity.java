@@ -8,10 +8,16 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.candeo.app.CandeoApplication;
+import com.candeo.app.Configuration;
 import com.candeo.app.R;
 import com.candeo.app.SplashActivity;
 import com.candeo.app.adapters.TabPagerAdapter;
@@ -19,6 +25,10 @@ import com.candeo.app.leaderboard.LeaderBoardFragment;
 import com.candeo.app.user.LoginActivity;
 import com.candeo.app.user.UserFragment;
 import com.candeo.app.util.Preferences;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class HomeActivity extends ActionBarActivity{
@@ -30,6 +40,9 @@ public class HomeActivity extends ActionBarActivity{
     private HomeFragment homeFragment;
     private LeaderBoardFragment leaderBoardFragment;
     private UserFragment userFragment;
+    private static final String TAG="Candeo - Home";
+    private final static String GET_USER_API = Configuration.BASE_URL+"/api/v1/users/%s";
+    private final static String GET_LIMELIGHT_LIST_API = Configuration.BASE_URL +"/api/v1/contents/limelight/list/%s";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,15 +64,21 @@ public class HomeActivity extends ActionBarActivity{
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         homePager.setAdapter(tabPagerAdapter);
-        homePager.setOffscreenPageLimit(3);
+        homePager.setOffscreenPageLimit(2);
         String fromVerify = getIntent().getStringExtra("fromVerify");
         if(!TextUtils.isEmpty(fromVerify) && "verified".equalsIgnoreCase(fromVerify))
         {
             homePager.setCurrentItem(2);
+            GetUserRequest userRequest = new GetUserRequest(Preferences.getUserRowId(getApplicationContext()));
+            userRequest.setShouldCache(false);
+            CandeoApplication.getInstance().getAppRequestQueue().add(userRequest);
         }
         else
         {
             homePager.setCurrentItem(1);
+            FetchLimelightList fetchLimelightListRequest = new FetchLimelightList(Preferences.getUserRowId(getApplicationContext()));
+            fetchLimelightListRequest.setShouldCache(false);
+            CandeoApplication.getInstance().getAppRequestQueue().add(fetchLimelightListRequest);
         }
 
         getSupportActionBar().hide();
@@ -80,13 +99,17 @@ public class HomeActivity extends ActionBarActivity{
                         break;
                     case 1:
                         getSupportActionBar().hide();
+                        FetchLimelightList fetchLimelightListRequest = new FetchLimelightList(Preferences.getUserRowId(getApplicationContext()));
+                        fetchLimelightListRequest.setShouldCache(false);
+                        CandeoApplication.getInstance().getAppRequestQueue().add(fetchLimelightListRequest);
                         break;
                     case 2:
                          getSupportActionBar().show();
                          getSupportActionBar().setTitle("My Profile");
-
-
-                        break;
+                         GetUserRequest userRequest = new GetUserRequest(Preferences.getUserRowId(getApplicationContext()));
+                         userRequest.setShouldCache(false);
+                         CandeoApplication.getInstance().getAppRequestQueue().add(userRequest);
+                         break;
                 }
             }
 
@@ -130,6 +153,54 @@ public class HomeActivity extends ActionBarActivity{
                 break;
         }
         return true;
+    }
+
+
+    private class GetUserRequest extends JsonObjectRequest
+    {
+        public GetUserRequest(String id)
+        {
+            super(Method.GET,
+                    String.format(GET_USER_API,id),
+                    null,
+                    new Response.Listener<JSONObject>(){
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            userFragment.onGetUserComplete(response);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e(TAG, "error is " + error.getLocalizedMessage());
+                        }
+                    });
+        }
+    }
+
+    private class FetchLimelightList extends JsonObjectRequest
+    {
+        public FetchLimelightList(String id)
+        {
+            super(Method.GET,
+                    String.format(GET_LIMELIGHT_LIST_API,id),
+                    null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            homeFragment.onGetLimelightComplete(response);
+
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                        }
+                    }
+            );
+        }
     }
 
 

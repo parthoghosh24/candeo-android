@@ -9,9 +9,11 @@ import java.io.File;
  */
 public class Configuration {
 
+//    public static final boolean DEBUG=false;
+    public static final boolean DEBUG=true;
     //Base url
-    //    public static final String BASE_URL ="http://192.168.0.105:3000";
-    public static final String BASE_URL="http://192.168.43.239:3000";
+      public static final String BASE_URL ="http://192.168.0.105:3000";
+//    public static final String BASE_URL="http://192.168.43.239:3000";
     //    public static final String BASE_URL="http://10.0.3.116:3000";
 
     public static final String BOOKSROOT= Environment.getExternalStorageDirectory().getAbsolutePath()+ File.separator+"Books";
@@ -20,8 +22,7 @@ public class Configuration {
     public static final String INTENTCHAPTERLIST="chapterList";
     public static final String INTENTBASEURL="BASE_URL";
     public static final String CONTAINERFOLDER="/META-INF/container.xml";
-//    public static final boolean DEBUG=true;
-    public static final boolean DEBUG=false;
+
 
 
     public static final String FA_VIDEO="\uf008";

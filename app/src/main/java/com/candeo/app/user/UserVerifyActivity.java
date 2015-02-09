@@ -26,7 +26,7 @@ public class UserVerifyActivity extends ActionBarActivity {
 
 
     private static final String API_USER_VERIFY_URL= Configuration.BASE_URL +"/api/v1/users/verify";
-    private static final String TAG="Candeo - User Verify Activity";
+    private static final String TAG="Candeo - User Verify";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
