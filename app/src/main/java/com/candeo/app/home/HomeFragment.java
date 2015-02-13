@@ -44,7 +44,6 @@ public class HomeFragment extends Fragment {
     private Button feed;
     private Button user;
     private ArrayList<HashMap<String, String>> showcases = new ArrayList<>();
-//    private ShowcaseAdapter pagerAdapter;
     private LimelightAdapter pagerAdapter;
     View homeView=null;
     private static final String TAG="Candeo - HomeFrag";

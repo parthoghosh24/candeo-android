@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:theme="@style/Base.Theme.AppCompat.Light"
     android:gravity="center">
 
     <TextView
@@ -13,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="I find this"
         android:textSize="20sp"/>
 
     <NumberPicker
@@ -35,4 +33,4 @@
 
 
 
-</LinearLayout><!-- From: file:/home/dholu/projects/candeo-android/app/src/main/res/layout/response_layout.xml -->
+</LinearLayout><!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/src/main/res/layout/response_layout.xml -->

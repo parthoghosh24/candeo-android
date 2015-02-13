@@ -42,7 +42,7 @@ public class HomeActivity extends ActionBarActivity{
     private UserFragment userFragment;
     private static final String TAG="Candeo - Home";
     private final static String GET_USER_API = Configuration.BASE_URL+"/api/v1/users/%s";
-    private final static String GET_LIMELIGHT_LIST_API = Configuration.BASE_URL +"/api/v1/contents/limelight/list/%s";
+    private final static String GET_LIMELIGHT_LIST_API = Configuration.BASE_URL +"/api/v1/contents/limelights/list/%s";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +76,13 @@ public class HomeActivity extends ActionBarActivity{
         else
         {
             homePager.setCurrentItem(1);
-            FetchLimelightList fetchLimelightListRequest = new FetchLimelightList(Preferences.getUserRowId(getApplicationContext()));
+            String id = Preferences.getUserRowId(getApplicationContext());
+            if(TextUtils.isEmpty(id))
+            {
+                id=null;
+            }
+
+            FetchLimelightList fetchLimelightListRequest = new FetchLimelightList(id);
             fetchLimelightListRequest.setShouldCache(false);
             CandeoApplication.getInstance().getAppRequestQueue().add(fetchLimelightListRequest);
         }
@@ -99,6 +105,7 @@ public class HomeActivity extends ActionBarActivity{
                         break;
                     case 1:
                         getSupportActionBar().hide();
+                        if(Configuration.DEBUG)Log.e(TAG,"Limelight request fetched");
                         FetchLimelightList fetchLimelightListRequest = new FetchLimelightList(Preferences.getUserRowId(getApplicationContext()));
                         fetchLimelightListRequest.setShouldCache(false);
                         CandeoApplication.getInstance().getAppRequestQueue().add(fetchLimelightListRequest);
@@ -196,7 +203,7 @@ public class HomeActivity extends ActionBarActivity{
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-
+                            Log.e(TAG,"Error occured");
                         }
                     }
             );

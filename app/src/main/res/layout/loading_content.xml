@@ -18,12 +18,14 @@
        android:id="@+id/candeo_progress_icon"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
-       android:textSize="15sp"/>
+       android:gravity="center"
+       android:textSize="70sp"/>
 
     <TextView
         android:id="@+id/candeo_progress_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"/>
+        android:gravity="center"
+        android:textSize="30sp"/>
 
 </LinearLayout>

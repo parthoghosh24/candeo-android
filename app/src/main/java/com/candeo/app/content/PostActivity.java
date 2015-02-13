@@ -105,10 +105,9 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
     private static final int IMAGE=3;
 //    private static final int BOOK=4;
 
-    private static final int INSPIRATION=1;
-    private static final int SHOWCASE=2;
 
-    private int contentType=INSPIRATION;
+
+    private int contentType=Configuration.INSPIRATION;
     private String type="";
     private static final String API_POST_CREATE_URL=Configuration.BASE_URL +"/api/v1/contents/create ";
 
@@ -314,7 +313,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
         postIt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(SHOWCASE == contentType)
+                if(Configuration.SHOWCASE == contentType)
                 {
                   if(!hasMedia || TextUtils.isEmpty(showcaseTitle.getText()))
                   {
@@ -323,7 +322,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                   else
                   {
                       Map<String, String> payload = new HashMap<>();
-                      payload.put("type",Integer.toString(SHOWCASE));
+                      payload.put("type",Integer.toString(Configuration.SHOWCASE));
                       payload.put("media_id",mediaId);
                       payload.put("user_id",Preferences.getUserRowId(getApplicationContext()));
                       payload.put("title",showcaseTitle.getText().toString());
@@ -335,7 +334,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                     if(hasMedia || !TextUtils.isEmpty(description.getText()))
                     {
                         Map<String, String> payload = new HashMap<>();
-                        payload.put("type",Integer.toString(INSPIRATION));
+                        payload.put("type",Integer.toString(Configuration.INSPIRATION));
                         if(hasMedia)
                         {
                             payload.put("media_id",mediaId);
@@ -358,7 +357,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
 
         if("showcase".equalsIgnoreCase(type))                                                               
         {
-            contentType=SHOWCASE;
+            contentType=Configuration.SHOWCASE;
             copyrightText.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
             copyrightText.setText(Configuration.FA_COPYRIGHT + " " + Preferences.getUserName(getApplicationContext()));
             copyrightText.setVisibility(View.VISIBLE);
@@ -373,7 +372,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
         }
         else
         {
-            contentType=INSPIRATION;
+            contentType=Configuration.INSPIRATION;
             copyrightText.setVisibility(View.GONE);
             showcaseTitle.setVisibility(View.GONE);
             mediaChooser.setVisibility(View.GONE);
@@ -402,8 +401,9 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                                 Log.e(PostActivity.class.getName(),"AND THE ID IS "+id);
                                 Intent contentIntent = new Intent(PostActivity.this,ContentActivity.class);
                                 contentIntent.putExtra("contentId",id);
-                                finish();
+                                contentIntent.putExtra("type",contentType);
                                 startActivity(contentIntent);
+                                finish();
                             }
                             catch (JSONException je)
                             {

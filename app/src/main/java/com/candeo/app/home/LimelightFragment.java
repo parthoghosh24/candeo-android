@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -30,6 +31,7 @@ import com.candeo.app.Configuration;
 import com.candeo.app.R;
 import com.candeo.app.content.ContentActivity;
 import com.candeo.app.response.ResponseListener;
+import com.candeo.app.ui.ResponseFragment;
 import com.candeo.app.util.CandeoUtil;
 
 import org.json.JSONException;
@@ -58,6 +60,8 @@ public class LimelightFragment extends Fragment{
     private Button appreciateButtonView;
     private Button skipButtonView;
     private View root;
+    private View loadingContent = null;
+    private View noContent =null;
     private ResponseListener responseListener=null;
     private int position=0;
 
@@ -78,6 +82,16 @@ public class LimelightFragment extends Fragment{
 
     private void initWidgets()
     {
+        loadingContent = root.findViewById(R.id.candeo_data_loading);
+        noContent = root.findViewById(R.id.candeo_no_content);
+        ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/applause.ttf"));
+        ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setText(Configuration.FA_APPRECIATE);
+        ((TextView)loadingContent.findViewById(R.id.candeo_progress_text)).setText("Fetching Showcases...");
+        ((TextView)noContent.findViewById(R.id.candeo_no_content_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/applause.ttf"));
+        ((TextView)noContent.findViewById(R.id.candeo_no_content_icon)).setText(Configuration.FA_APPRECIATE);
+        ((TextView)noContent.findViewById(R.id.candeo_no_content_text)).setText("No More Showcases to fetch right now");
+        toggleLoading(true);
+        toggleNoContent(false);
         showcaseHolder= (RelativeLayout)root.findViewById(R.id.candeo_showcase_holder);
         name=(TextView)root.findViewById(R.id.candeo_user_name);
         title =(TextView)root.findViewById(R.id.candeo_showcase_title);
@@ -98,19 +112,19 @@ public class LimelightFragment extends Fragment{
         appreciateButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog appreciateDialog = new AlertDialog.Builder(getActivity()).setTitle("How do you appreciate?")
-                                                    .setPositiveButton("Appreciate", new DialogInterface.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(DialogInterface dialog, int which) {
-                                                            responseListener.onResponseClick(position);
-                                                        }
-                                                    }).setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //
-                            }
-                        }).create();
-               appreciateDialog.show();
+                ResponseFragment response = new ResponseFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("introText", "I find this");
+                String[] choices = new String[]{"Good", "Wow", "Superb", "Excellent", "Mesmerizing"};
+                bundle.putStringArray("choices", choices);
+                bundle.putString("title", "Appreciate Showcase");
+                bundle.putString("positiveText", "Appreciate");
+                bundle.putInt("position",position);
+                bundle.putParcelable("adapter",getArguments().getParcelable("adapter"));
+                response.setArguments(bundle);
+                response.setStyle(DialogFragment.STYLE_NO_FRAME,R.style.Base_Theme_AppCompat_Light);
+                response.show(getActivity().getSupportFragmentManager(), "Appreciate");
+
 
             }
         });
@@ -119,7 +133,18 @@ public class LimelightFragment extends Fragment{
         skipButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                responseListener.onResponseClick(position);
+                ResponseFragment response = new ResponseFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("introText", "");
+                String[] choices = new String[]{"Didn't Like", "Offensive", "Plagiarized"};
+                bundle.putStringArray("choices", choices);
+                bundle.putString("title", "Skip Showcase");
+                bundle.putString("positiveText", "Skip");
+                bundle.putInt("position",position);
+                bundle.putParcelable("adapter",getArguments().getParcelable("adapter"));
+                response.setArguments(bundle);
+                response.setStyle(DialogFragment.STYLE_NO_FRAME,android.R.style.Theme_Holo);
+                response.show(getActivity().getSupportFragmentManager(), "Skip");
             }
         });
         mediaIconView.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
@@ -139,8 +164,7 @@ public class LimelightFragment extends Fragment{
         showcaseHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e(TAG,"Showcase tag is "+showcaseHolder.getTag().toString());
-                if(!TextUtils.isEmpty(showcaseHolder.getTag().toString()))
+                if(showcaseHolder.getTag()!=null && !TextUtils.isEmpty(showcaseHolder.getTag().toString()) && !"-1".equalsIgnoreCase(showcaseHolder.getTag().toString()) )
                 {
                     Intent contentIntent= new Intent(getActivity(), ContentActivity.class);
                     contentIntent.putExtra("id",showcaseHolder.getTag().toString());
@@ -180,10 +204,13 @@ public class LimelightFragment extends Fragment{
                                 appreciateCount.setText(""+limelight.getInt("total_appreciations"));
                                 new LoadImageTask(avatar).execute(Configuration.BASE_URL+limelight.getString("user_avatar_url"));
                                 new LoadImageTask(mediaBg).execute(Configuration.BASE_URL+limelight.getString("bg_url"));
+                                toggleLoading(false);
+                                toggleNoContent(false);
                             }
                             catch (JSONException jse)
                             {
                                 jse.printStackTrace();
+                                toggleNoContent(true);
                             }
 
 
@@ -192,7 +219,8 @@ public class LimelightFragment extends Fragment{
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-
+                            toggleLoading(false);
+                            toggleNoContent(true);
                         }
                     }
             );
@@ -227,6 +255,17 @@ public class LimelightFragment extends Fragment{
                 image.setImageBitmap(bitmap);
             }
         }
+    }
+
+
+    private void toggleLoading(boolean show)
+    {
+        loadingContent.setVisibility(show?View.VISIBLE:View.GONE);
+    }
+
+    private void toggleNoContent(boolean show)
+    {
+        noContent.setVisibility(show?View.VISIBLE:View.GONE);
     }
 
 }
