@@ -47,6 +47,7 @@ public class HomeActivity extends ActionBarActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         if(Preferences.isFirstRun(getApplicationContext()))
         {
@@ -55,7 +56,7 @@ public class HomeActivity extends ActionBarActivity{
         }
         else
         {
-            super.onCreate(savedInstanceState);
+
             setContentView(R.layout.activity_home);
             homeFragment = new HomeFragment();
             leaderBoardFragment = new LeaderBoardFragment();
