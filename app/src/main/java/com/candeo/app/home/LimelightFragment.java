@@ -32,7 +32,9 @@ import com.candeo.app.R;
 import com.candeo.app.content.ContentActivity;
 import com.candeo.app.response.ResponseListener;
 import com.candeo.app.ui.ResponseFragment;
+import com.candeo.app.user.LoginActivity;
 import com.candeo.app.util.CandeoUtil;
+import com.candeo.app.util.Preferences;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -112,18 +114,29 @@ public class LimelightFragment extends Fragment{
         appreciateButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ResponseFragment response = new ResponseFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("introText", "I find this");
-                String[] choices = new String[]{"Good", "Wow", "Superb", "Excellent", "Mesmerizing"};
-                bundle.putStringArray("choices", choices);
-                bundle.putString("title", "Appreciate Showcase");
-                bundle.putString("positiveText", "Appreciate");
-                bundle.putInt("position",position);
-                bundle.putParcelable("adapter",getArguments().getParcelable("adapter"));
-                response.setArguments(bundle);
-                response.setStyle(DialogFragment.STYLE_NO_FRAME,R.style.Base_Theme_AppCompat_Light);
-                response.show(getActivity().getSupportFragmentManager(), "Appreciate");
+
+                if(!Preferences.isUserLoggedIn(getActivity()))
+                {
+
+
+                    startActivity(new Intent(getActivity(),LoginActivity.class));
+                }
+                else
+                {
+
+                    ResponseFragment response = new ResponseFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("introText", "I find this");
+                    String[] choices = new String[]{"Good", "Wow", "Superb", "Excellent", "Mesmerizing"};
+                    bundle.putStringArray("choices", choices);
+                    bundle.putString("title", "Appreciate Showcase");
+                    bundle.putString("positiveText", "Appreciate");
+                    bundle.putString("showcaseId",showcaseHolder.getTag().toString());
+                    bundle.putInt("position",position);
+                    bundle.putParcelable("adapter",getArguments().getParcelable("adapter"));
+                    response.setArguments(bundle);
+                    response.show(getActivity().getSupportFragmentManager(), "Appreciate");
+                }
 
 
             }
@@ -133,18 +146,28 @@ public class LimelightFragment extends Fragment{
         skipButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ResponseFragment response = new ResponseFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("introText", "");
-                String[] choices = new String[]{"Didn't Like", "Offensive", "Plagiarized"};
-                bundle.putStringArray("choices", choices);
-                bundle.putString("title", "Skip Showcase");
-                bundle.putString("positiveText", "Skip");
-                bundle.putInt("position",position);
-                bundle.putParcelable("adapter",getArguments().getParcelable("adapter"));
-                response.setArguments(bundle);
-                response.setStyle(DialogFragment.STYLE_NO_FRAME,android.R.style.Theme_Holo);
-                response.show(getActivity().getSupportFragmentManager(), "Skip");
+                if(!Preferences.isUserLoggedIn(getActivity()))
+                {
+
+
+                    startActivity(new Intent(getActivity(),LoginActivity.class));
+                }
+                else
+                {
+
+                    ResponseFragment response = new ResponseFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("introText", "");
+                    String[] choices = new String[]{"Didn't Like", "Offensive", "Plagiarized"};
+                    bundle.putStringArray("choices", choices);
+                    bundle.putString("title", "Skip Showcase");
+                    bundle.putString("positiveText", "Skip");
+                    bundle.putString("showcaseId",showcaseHolder.getTag().toString());
+                    bundle.putInt("position",position);
+                    bundle.putParcelable("adapter",getArguments().getParcelable("adapter"));
+                    response.setArguments(bundle);
+                    response.show(getActivity().getSupportFragmentManager(), "Skip");
+                }
             }
         });
         mediaIconView.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));

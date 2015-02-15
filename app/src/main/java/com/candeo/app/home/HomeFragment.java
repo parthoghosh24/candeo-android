@@ -140,6 +140,7 @@ public class HomeFragment extends Fragment {
             showcases.add(limelightMap);
             if(showcases!=null && showcases.size()>0)
             {
+                Log.e(TAG,"fm "+getActivity());
                pagerAdapter = new LimelightAdapter(showcasePager,getActivity().getSupportFragmentManager(),showcases);
                 showcasePager.setAdapter(pagerAdapter);
 //               pagerAdapter.notifyDataSetChanged();

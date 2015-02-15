@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -76,12 +77,7 @@ public class HomeActivity extends ActionBarActivity{
         else
         {
             homePager.setCurrentItem(1);
-            String id = Preferences.getUserRowId(getApplicationContext());
-            if(TextUtils.isEmpty(id))
-            {
-                id=null;
-            }
-
+            String id = TextUtils.isEmpty(Preferences.getUserRowId(getApplicationContext())) ? "0":Preferences.getUserRowId(getApplicationContext());
             FetchLimelightList fetchLimelightListRequest = new FetchLimelightList(id);
             fetchLimelightListRequest.setShouldCache(false);
             CandeoApplication.getInstance().getAppRequestQueue().add(fetchLimelightListRequest);
@@ -106,7 +102,8 @@ public class HomeActivity extends ActionBarActivity{
                     case 1:
                         getSupportActionBar().hide();
                         if(Configuration.DEBUG)Log.e(TAG,"Limelight request fetched");
-                        FetchLimelightList fetchLimelightListRequest = new FetchLimelightList(Preferences.getUserRowId(getApplicationContext()));
+                        String id = TextUtils.isEmpty(Preferences.getUserRowId(getApplicationContext())) ? "0":Preferences.getUserRowId(getApplicationContext());
+                        FetchLimelightList fetchLimelightListRequest = new FetchLimelightList(id);
                         fetchLimelightListRequest.setShouldCache(false);
                         CandeoApplication.getInstance().getAppRequestQueue().add(fetchLimelightListRequest);
                         break;
@@ -203,7 +200,15 @@ public class HomeActivity extends ActionBarActivity{
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+
                             Log.e(TAG,"Error occured");
+                            Log.e(TAG, "localized error while fetching is limelight " + error.getLocalizedMessage());
+                            NetworkResponse response = error.networkResponse;
+                            if(response!=null)
+                            {
+                                Log.e(TAG,"Actual error while fetching limelight is "+new String(response.data));
+                            }
+
                         }
                     }
             );
