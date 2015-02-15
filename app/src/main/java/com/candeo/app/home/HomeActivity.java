@@ -53,75 +53,80 @@ public class HomeActivity extends ActionBarActivity{
             finish();
             startActivity(new Intent(getApplicationContext(), SplashActivity.class));
         }
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-        homeFragment = new HomeFragment();
-        leaderBoardFragment = new LeaderBoardFragment();
-        userFragment = new UserFragment();
-        tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), homeFragment, leaderBoardFragment, userFragment);
-        homePager = (ViewPager)findViewById(R.id.home_pager);
-        toolbar = (Toolbar)findViewById(R.id.candeo_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        homePager.setAdapter(tabPagerAdapter);
-        homePager.setOffscreenPageLimit(2);
-        String fromVerify = getIntent().getStringExtra("fromVerify");
-        if(!TextUtils.isEmpty(fromVerify) && "verified".equalsIgnoreCase(fromVerify))
-        {
-            homePager.setCurrentItem(2);
-            GetUserRequest userRequest = new GetUserRequest(Preferences.getUserRowId(getApplicationContext()));
-            userRequest.setShouldCache(false);
-            CandeoApplication.getInstance().getAppRequestQueue().add(userRequest);
-        }
         else
         {
-            homePager.setCurrentItem(1);
-            String id = TextUtils.isEmpty(Preferences.getUserRowId(getApplicationContext())) ? "0":Preferences.getUserRowId(getApplicationContext());
-            FetchLimelightList fetchLimelightListRequest = new FetchLimelightList(id);
-            fetchLimelightListRequest.setShouldCache(false);
-            CandeoApplication.getInstance().getAppRequestQueue().add(fetchLimelightListRequest);
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_home);
+            homeFragment = new HomeFragment();
+            leaderBoardFragment = new LeaderBoardFragment();
+            userFragment = new UserFragment();
+            tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), homeFragment, leaderBoardFragment, userFragment);
+            homePager = (ViewPager)findViewById(R.id.home_pager);
+            toolbar = (Toolbar)findViewById(R.id.candeo_toolbar);
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            homePager.setAdapter(tabPagerAdapter);
+            homePager.setOffscreenPageLimit(2);
+            String fromVerify = getIntent().getStringExtra("fromVerify");
+            if(!TextUtils.isEmpty(fromVerify) && "verified".equalsIgnoreCase(fromVerify))
+            {
+                homePager.setCurrentItem(2);
+                GetUserRequest userRequest = new GetUserRequest(Preferences.getUserRowId(getApplicationContext()));
+                userRequest.setShouldCache(false);
+                CandeoApplication.getInstance().getAppRequestQueue().add(userRequest);
+            }
+            else
+            {
+                homePager.setCurrentItem(1);
+                String id = TextUtils.isEmpty(Preferences.getUserRowId(getApplicationContext())) ? "0":Preferences.getUserRowId(getApplicationContext());
+                FetchLimelightList fetchLimelightListRequest = new FetchLimelightList(id);
+                fetchLimelightListRequest.setShouldCache(false);
+                CandeoApplication.getInstance().getAppRequestQueue().add(fetchLimelightListRequest);
+            }
+
+            getSupportActionBar().hide();
+            homePager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+
+                    switch (position)
+                    {
+                        case 0:
+                            getSupportActionBar().show();
+                            getSupportActionBar().setTitle("Performances");
+                            break;
+                        case 1:
+                            getSupportActionBar().hide();
+                            if(Configuration.DEBUG)Log.e(TAG,"Limelight request fetched");
+                            String id = TextUtils.isEmpty(Preferences.getUserRowId(getApplicationContext())) ? "0":Preferences.getUserRowId(getApplicationContext());
+                            FetchLimelightList fetchLimelightListRequest = new FetchLimelightList(id);
+                            fetchLimelightListRequest.setShouldCache(false);
+                            CandeoApplication.getInstance().getAppRequestQueue().add(fetchLimelightListRequest);
+                            break;
+                        case 2:
+                            getSupportActionBar().show();
+                            getSupportActionBar().setTitle("My Profile");
+                            GetUserRequest userRequest = new GetUserRequest(Preferences.getUserRowId(getApplicationContext()));
+                            userRequest.setShouldCache(false);
+                            CandeoApplication.getInstance().getAppRequestQueue().add(userRequest);
+                            break;
+                    }
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
+
         }
 
-        getSupportActionBar().hide();
-        homePager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-                switch (position)
-                {
-                    case 0:
-                        getSupportActionBar().show();
-                        getSupportActionBar().setTitle("Performances");
-                        break;
-                    case 1:
-                        getSupportActionBar().hide();
-                        if(Configuration.DEBUG)Log.e(TAG,"Limelight request fetched");
-                        String id = TextUtils.isEmpty(Preferences.getUserRowId(getApplicationContext())) ? "0":Preferences.getUserRowId(getApplicationContext());
-                        FetchLimelightList fetchLimelightListRequest = new FetchLimelightList(id);
-                        fetchLimelightListRequest.setShouldCache(false);
-                        CandeoApplication.getInstance().getAppRequestQueue().add(fetchLimelightListRequest);
-                        break;
-                    case 2:
-                         getSupportActionBar().show();
-                         getSupportActionBar().setTitle("My Profile");
-                         GetUserRequest userRequest = new GetUserRequest(Preferences.getUserRowId(getApplicationContext()));
-                         userRequest.setShouldCache(false);
-                         CandeoApplication.getInstance().getAppRequestQueue().add(userRequest);
-                         break;
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
     }
 
     @Override
