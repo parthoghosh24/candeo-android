@@ -226,7 +226,17 @@ public class LimelightFragment extends Fragment{
                                 title.setText(limelight.getString("title"));
                                 appreciateCount.setText(""+limelight.getInt("total_appreciations"));
                                 new LoadImageTask(avatar).execute(Configuration.BASE_URL+limelight.getString("user_avatar_url"));
-                                new LoadImageTask(mediaBg).execute(Configuration.BASE_URL+limelight.getString("bg_url"));
+                                Log.e(TAG,"is bg url empty "+TextUtils.isEmpty(limelight.getString("bg_url")));
+                                if(TextUtils.isEmpty(limelight.getString("bg_url")) ||"null".equalsIgnoreCase(limelight.getString("bg_url")) )
+                                {
+                                    Log.e(TAG,"Media url is "+limelight.getString("media_url"));
+                                    new LoadImageTask(mediaBg).execute(Configuration.BASE_URL+limelight.getString("media_url"));
+                                }
+                                else
+                                {
+                                    new LoadImageTask(mediaBg).execute(Configuration.BASE_URL+limelight.getString("bg_url"));
+                                }
+
                                 toggleLoading(false);
                                 toggleNoContent(false);
                             }

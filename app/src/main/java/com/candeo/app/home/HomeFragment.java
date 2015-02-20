@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -45,7 +46,9 @@ public class HomeFragment extends Fragment {
     private Button user;
     private ArrayList<HashMap<String, String>> showcases = new ArrayList<>();
     private LimelightAdapter pagerAdapter;
-    View homeView=null;
+    private View homeView=null;
+    private View loadingContent = null;
+    private View noContent =null;
     private static final String TAG="Candeo - HomeFrag";
 
     @Override
@@ -53,10 +56,19 @@ public class HomeFragment extends Fragment {
                              final Bundle savedInstanceState) {
 
             homeView= inflater.inflate(R.layout.fragment_home, container, false);
+            loadingContent = homeView.findViewById(R.id.candeo_data_loading);
+            noContent = homeView.findViewById(R.id.candeo_no_content);
+            ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/applause.ttf"));
+            ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setText(Configuration.FA_APPRECIATE);
+            ((TextView)loadingContent.findViewById(R.id.candeo_progress_text)).setText("Fetching Showcases...");
+            ((TextView)noContent.findViewById(R.id.candeo_no_content_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/applause.ttf"));
+            ((TextView)noContent.findViewById(R.id.candeo_no_content_icon)).setText(Configuration.FA_APPRECIATE);
+            ((TextView)noContent.findViewById(R.id.candeo_no_content_text)).setText("No More Showcases to fetch right now");
+            toggleLoading(true);
+            toggleNoContent(false);
             parentHomePager=(ViewPager)getActivity().findViewById(R.id.home_pager);
             showcasePager = (NonSwipeablePager)homeView.findViewById(R.id.candeo_showcase_pager);
             showcasePager.setPageTransformer(true, new ShowcaseTransformer());
-
             inspire = (Button)homeView.findViewById(R.id.candeo_init_post);
             feed=(Button)homeView.findViewById(R.id.candeo_feed);
             user=(Button)homeView.findViewById(R.id.candeo_user);
@@ -144,11 +156,15 @@ public class HomeFragment extends Fragment {
                pagerAdapter = new LimelightAdapter(showcasePager,getActivity().getSupportFragmentManager(),showcases);
                 showcasePager.setAdapter(pagerAdapter);
 //               pagerAdapter.notifyDataSetChanged();
+                toggleLoading(false);
+                toggleNoContent(false);
             }
         }
         catch (JSONException jse)
         {
             jse.printStackTrace();
+            toggleLoading(false);
+            toggleNoContent(true);
         }
 
 
@@ -163,6 +179,15 @@ public class HomeFragment extends Fragment {
 
     }
 
+    private void toggleLoading(boolean show)
+    {
+        loadingContent.setVisibility(show?View.VISIBLE:View.GONE);
+    }
+
+    private void toggleNoContent(boolean show)
+    {
+        noContent.setVisibility(show?View.VISIBLE:View.GONE);
+    }
 
 
 

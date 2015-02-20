@@ -34,7 +34,8 @@
             android:name="com.candeo.app.home.HomeActivity"
             android:configChanges="keyboard|orientation|screenSize"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -56,14 +57,16 @@
             android:name="com.candeo.app.content.RespondActivity"
             android:configChanges="keyboard|orientation|screenSize"
             android:label="@string/title_activity_respond"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
             android:name="com.candeo.app.content.PostActivity"
             android:configChanges="keyboard|orientation|screenSize"
             android:label="@string/title_activity_post"
             android:parentActivityName="com.candeo.app.home.HomeActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".home.HomeActivity" />
@@ -81,20 +84,6 @@
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
-        <activity
-            android:name="com.candeo.app.response.GetInspiredActivity"
-            android:configChanges="keyboard|orientation|screenSize"
-            android:label="@string/title_activity_get_inspired"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.Dialog" >
-        </activity>
-        <activity
-            android:name="com.candeo.app.response.AppreciateActivity"
-            android:configChanges="keyboard|orientation|screenSize"
-            android:label="@string/title_activity_appreciate"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.Dialog" >
         </activity>
         <activity
             android:name="com.candeo.app.book.BookRenderActivity"

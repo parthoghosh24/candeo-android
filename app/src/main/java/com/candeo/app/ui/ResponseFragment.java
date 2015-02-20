@@ -75,6 +75,7 @@ public class ResponseFragment extends DialogFragment {
                 String url = APPRECIATE_URL;
                 responseScore=""+(picker.getValue()+1);
                 responseText=((TextView)dialog.findViewById(R.id.candeo_response_body)).getText().toString();
+                Log.e(TAG,"is skip "+ isSkip);
                 if (isSkip) {
                     url = SKIP_URL;
                 }

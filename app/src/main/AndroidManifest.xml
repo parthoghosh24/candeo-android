@@ -28,6 +28,7 @@
             android:name=".home.HomeActivity"
             android:configChanges="keyboard|orientation|screenSize"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/app_name" >
 
             <intent-filter>
@@ -52,6 +53,7 @@
             android:name=".content.RespondActivity"
             android:configChanges="keyboard|orientation|screenSize"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/title_activity_respond" >
         </activity>
         <activity
@@ -59,6 +61,7 @@
             android:configChanges="keyboard|orientation|screenSize"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_post"
+            android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".home.HomeActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -77,20 +80,6 @@
             android:screenOrientation="portrait"
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
-        <activity
-            android:name=".response.GetInspiredActivity"
-            android:configChanges="keyboard|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_get_inspired"
-            android:theme="@style/Theme.AppCompat.Light.Dialog" >
-        </activity>
-        <activity
-            android:name=".response.AppreciateActivity"
-            android:configChanges="keyboard|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_appreciate"
-            android:theme="@style/Theme.AppCompat.Light.Dialog" >
         </activity>
         <activity
             android:name=".book.BookRenderActivity"

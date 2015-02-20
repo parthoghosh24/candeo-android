@@ -36,15 +36,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class ContentActivity extends ActionBarActivity{
 
     private static final String TAG="Candeo-Content Activity";
-    private TextView description = null;
     private Toolbar toolbar;
-    private TextView username = null;
-    private Button getInspired=null;
-    private Button appreciate=null;
     private Button launchBook=null; //temporary
     private String contentURL = Configuration.BASE_URL +"/api/v1/contents";
     private Button play = null;
@@ -54,6 +52,17 @@ public class ContentActivity extends ActionBarActivity{
     private VideoView  videoView;
     private ImageView imageView;
     private LinearLayout contentViewer;
+    private ImageView bgImageView;
+    private CircleImageView userAvatar;
+    private TextView userName;
+    private TextView title;
+    private TextView appreciateIcon;
+    private TextView appreciateCount;
+    private TextView skipIcon;
+    private TextView skipCount;
+    private TextView inspiredIcon;
+    private TextView inspiredCount;
+
 //    private Book book;
 //    private TableOfContents bookToc;
 //    private EpubCore epubCore;
@@ -74,7 +83,19 @@ public class ContentActivity extends ActionBarActivity{
         setTitle("Candeo");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         contentViewer=(LinearLayout)findViewById(R.id.candeo_content_viewer);
-
+        bgImageView=(ImageView)findViewById(R.id.candeo_content_bg_image);
+        userAvatar=(CircleImageView)findViewById(R.id.candeo_content_owner_avatar);
+        userName =(TextView)findViewById(R.id.candeo_content_owner_name);
+        title=(TextView)findViewById((R.id.candeo_content_title_text));
+        appreciateIcon=(TextView)findViewById(R.id.candeo_content_appreciate_icon);
+        appreciateIcon.setTypeface(CandeoUtil.loadFont(getAssets(),"fonts/applause.ttf"));
+        appreciateIcon.setText(Configuration.FA_APPRECIATE);
+        skipIcon=(TextView)findViewById(R.id.candeo_content_skip_icon);
+        skipIcon.setTypeface(CandeoUtil.loadFont(getAssets(),"fonts/fa.ttf"));
+        skipIcon.setText(Configuration.FA_SKIP);
+        inspiredIcon=(TextView)findViewById(R.id.candeo_content_inspired_icon);
+        inspiredIcon.setTypeface(CandeoUtil.loadFont(getAssets(),"fonts/response.ttf"));
+        inspiredIcon.setText(Configuration.FA_INSPIRE);
         String id = getIntent().getStringExtra("id");
         int type = getIntent().getIntExtra("type",Configuration.SHOWCASE);
         System.out.println("ID is :"+id);
@@ -127,17 +148,19 @@ public class ContentActivity extends ActionBarActivity{
         protected void onPostExecute(JSONObject jsonObject) {
                 pDialog.dismiss();
                 int type = jsonObject.optInt("media_type");
-                System.out.println("AND THE CONTENT IS: "+jsonObject.toString());
+                Log.e(TAG,"AND THE CONTENT IS: "+jsonObject.toString());
                 contentViewer.setTag(type);
                 if(type>0)
                 {
                     final String mediaUrl=Configuration.BASE_URL +jsonObject.optString("media_url");
+                    final String bgUrl =Configuration.BASE_URL +jsonObject.optString("bg_url");
                     switch (type)
                     {
                         case 1: //audio
-                            videoHolder.setVisibility(View.GONE);
+                            videoHolder.setVisibility(View.VISIBLE);
                             imageView.setVisibility(View.GONE);
                             launchBook.setVisibility(View.GONE);
+                            new LoadImageTask(bgUrl,bgImageView).execute();
                             try
                             {
                                 mediaPlayer= new MediaPlayer();
@@ -175,7 +198,7 @@ public class ContentActivity extends ActionBarActivity{
                             play.setVisibility(View.GONE);
                             imageView.setVisibility(View.VISIBLE);
                             launchBook.setVisibility(View.GONE);
-                            System.out.println("MEDIA URL is : "+mediaUrl);
+                            Log.e(TAG, "MEDIA URL is : "+mediaUrl);
                             new LoadImageTask(mediaUrl,imageView).execute();
                             break;
 
@@ -196,10 +219,9 @@ public class ContentActivity extends ActionBarActivity{
 
                     }
                 }
-                description = (TextView)findViewById(R.id.description);
-                username = (TextView)findViewById(R.id.username);
-                description.setText(jsonObject.optString("desc"));
-                username.setText(jsonObject.optString("user_name"));
+                new LoadImageTask(Configuration.BASE_URL +jsonObject.optString("user_avatar_url"),userAvatar).execute();
+                userName.setText(jsonObject.optString("user_name"));
+                title.setText(jsonObject.optString("title"));
 
         }
     }
