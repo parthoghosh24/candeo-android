@@ -11,6 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <include layout="@layout/loading_content"
+        android:id="@+id/candeo_loading_content"
+        />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -35,23 +39,33 @@
                     <ImageView
                         android:id="@+id/candeo_content_bg_image"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:scaleType="centerCrop"/>
                     <VideoView
                         android:id="@+id/candeo_video_viewer"
                         android:layout_width="match_parent"
-                        android:layout_height="240dp"
+                        android:layout_height="300dp"
                         android:layout_gravity="center"
                         android:visibility="gone"/>
-                    <Button
-                        android:id="@+id/candeo_media_play"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left|bottom"
-                        android:textSize="15sp"
-                        android:textColor="@android:color/white"
-                        android:visibility="gone"
-                        android:background="@color/candeo_primary"/>
+                    <RelativeLayout
+                        android:id="@+id/candeo_content_media_control"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:descendantFocusability="blocksDescendants">
+
+                        <TextView
+                            android:id="@+id/candeo_media_play"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:visibility="gone"
+                            android:textSize="95sp"
+                            android:textColor="@android:color/white"
+                            android:background="@android:color/transparent"/>
+
+                     </RelativeLayout>
+
+
 
                 </FrameLayout>
                 <ImageView
@@ -85,49 +99,68 @@
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_weight="2">
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/candeo_content_owner_avatar"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             app:border_width="2dp"
                             app:border_color="@color/candeo_translucent_black"/>
 
                     </LinearLayout>
-                    <TextView
-                        android:id="@+id/candeo_content_owner_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="6"
-                        android:text="Name"/>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2">
-                        <Button
-                            android:id="@+id/candeo_content_inspire_button"
+                        android:layout_weight="6"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/candeo_content_owner_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="Name"/>
+
+                        <TextView
+                            android:id="@+id/candeo_content_title_text"
+                            android:layout_width="wrap_content"
+                            android:maxWidth="250dp"
+                            android:layout_height="wrap_content"
+                            android:singleLine="false"
+                            android:lines="2"
+                            android:text="Title"
+                            android:textStyle="bold"
+                            android:textSize="15sp"/>
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:gravity="right">
+                        <Button
+                            android:id="@+id/candeo_content_inspire_button"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:textColor="@color/abc_secondary_text_material_dark"
+                            android:background="@drawable/roundedbuttontranslucentblack"
                             android:text="INSPIRED"/>
                      </LinearLayout>
 
 
 
                  </LinearLayout>
-                <TextView
-                    android:id="@+id/candeo_content_title_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Title"
-                    android:textSize="15sp"/>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:layout_marginTop="25dp"
                     android:weightSum="10">
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -139,11 +172,13 @@
                             android:id="@+id/candeo_content_appreciate_icon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textSize="20sp"
                             android:text="Appreciated"/>
                         <TextView
                             android:id="@+id/candeo_content_appreciate_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textSize="16sp"
                             android:text="10"/>
 
                      </LinearLayout>
@@ -157,11 +192,13 @@
                             android:id="@+id/candeo_content_skip_icon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textSize="20sp"
                             android:text="Skip"/>
                         <TextView
                             android:id="@+id/candeo_content_skip_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textSize="16sp"
                             android:text="10"/>
 
                     </LinearLayout>
@@ -174,11 +211,13 @@
                             android:id="@+id/candeo_content_inspired_icon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Skip"/>
+                            android:textSize="20sp"
+                            android:text="Inspired"/>
                         <TextView
                             android:id="@+id/candeo_content_inspired_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textSize="16sp"
                             android:text="10"/>
 
                     </LinearLayout>
@@ -190,16 +229,14 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/candeo_content_created_at_icon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Created At"/>
-
-                        <TextView
                             android:id="@+id/candeo_content_created_at"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/candeo_light_gray"
+                            android:textSize="16sp"
                             android:text="02/14/2015"/>
+
+
 
                     </LinearLayout>
 
@@ -207,15 +244,7 @@
                 </LinearLayout>
 
             </LinearLayout>
-            <TextView
-                android:id="@+id/description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
 
-            <TextView
-                android:id="@+id/username"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
 
 
 

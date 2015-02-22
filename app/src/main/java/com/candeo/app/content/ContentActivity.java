@@ -14,10 +14,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -25,8 +28,7 @@ import android.widget.VideoView;
 import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
-import com.candeo.app.response.AppreciateActivity;
-import com.candeo.app.response.GetInspiredActivity;
+import com.candeo.app.home.HomeActivity;
 import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.JSONParser;
 
@@ -45,10 +47,10 @@ public class ContentActivity extends ActionBarActivity{
     private Toolbar toolbar;
     private Button launchBook=null; //temporary
     private String contentURL = Configuration.BASE_URL +"/api/v1/contents";
-    private Button play = null;
+    private TextView play = null;
     private int stopPosition=0;
     private MediaPlayer mediaPlayer;
-    private FrameLayout videoHolder;
+    private FrameLayout candeoContentHolder;
     private VideoView  videoView;
     private ImageView imageView;
     private LinearLayout contentViewer;
@@ -62,6 +64,10 @@ public class ContentActivity extends ActionBarActivity{
     private TextView skipCount;
     private TextView inspiredIcon;
     private TextView inspiredCount;
+    private Button getInspiredButton;
+    private TextView createdAt;
+    private View loadingContent;
+    private RelativeLayout candeoMediaControl;
 
 //    private Book book;
 //    private TableOfContents bookToc;
@@ -72,11 +78,16 @@ public class ContentActivity extends ActionBarActivity{
         setContentView(R.layout.activity_content);
 //        epubCore = new EpubCore();
         toolbar = (Toolbar)findViewById(R.id.candeo_content_toolbar);
-        videoHolder=(FrameLayout)findViewById(R.id.candeo_content_viewer_holder);
+        loadingContent = findViewById(R.id.candeo_loading_content);
+        candeoMediaControl = (RelativeLayout)findViewById(R.id.candeo_content_media_control);
+        ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(getAssets(),"fonts/fa.ttf"));
+        ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setText(Configuration.FA_MAGIC);
+        ((TextView)loadingContent.findViewById(R.id.candeo_progress_text)).setText("Loading Content...");
+        candeoContentHolder =(FrameLayout)findViewById(R.id.candeo_content_viewer_holder);
         videoView =(VideoView)findViewById(R.id.candeo_video_viewer);
-        play = (Button)findViewById(R.id.candeo_media_play);
+        play = (TextView)findViewById(R.id.candeo_media_play);
         play.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
-        play.setText("\uf04b");
+        play.setText(Configuration.FA_PLAY_ROUND);
         imageView = (ImageView)findViewById(R.id.candeo_image_viewer);
         launchBook = (Button)findViewById(R.id.candeo_book_launcher);
         setSupportActionBar(toolbar);
@@ -96,20 +107,37 @@ public class ContentActivity extends ActionBarActivity{
         inspiredIcon=(TextView)findViewById(R.id.candeo_content_inspired_icon);
         inspiredIcon.setTypeface(CandeoUtil.loadFont(getAssets(),"fonts/response.ttf"));
         inspiredIcon.setText(Configuration.FA_INSPIRE);
+        getInspiredButton=(Button)findViewById(R.id.candeo_content_inspire_button);
+        getInspiredButton.setTypeface(CandeoUtil.loadFont(getAssets(),"fonts/response.ttf"));
+        getInspiredButton.setText(Configuration.FA_INSPIRE);
+        getInspiredButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),"I got inspired",Toast.LENGTH_LONG).show();
+            }
+        });
         String id = getIntent().getStringExtra("id");
         int type = getIntent().getIntExtra("type",Configuration.SHOWCASE);
-        System.out.println("ID is :"+id);
+        Log.e(TAG,"ID is :"+id);
+        Log.e(TAG,"Type is :"+type);
         if(id!=null)
         {
             contentURL=contentURL+"/"+id+"/"+type;
             new LoadContent().execute(contentURL);
         }
+        createdAt=(TextView)findViewById(R.id.candeo_content_created_at);
+        appreciateCount=(TextView)findViewById(R.id.candeo_content_appreciate_count);
+        skipCount=(TextView)findViewById(R.id.candeo_content_skip_count);
+        inspiredCount=(TextView)findViewById(R.id.candeo_content_inspired_count);
+    }
 
-
-
-
-
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        Intent intent = new Intent(ContentActivity.this, HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @Override
@@ -128,16 +156,6 @@ public class ContentActivity extends ActionBarActivity{
 
     private class LoadContent extends AsyncTask<String, String, JSONObject> {
 
-        private ProgressDialog pDialog;
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(ContentActivity.this);
-            pDialog.setMessage("Loading Content...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
-        }
 
         @Override
         protected JSONObject doInBackground(String... urls) {
@@ -146,7 +164,7 @@ public class ContentActivity extends ActionBarActivity{
 
         @Override
         protected void onPostExecute(JSONObject jsonObject) {
-                pDialog.dismiss();
+                loadingContent.setVisibility(View.GONE);
                 int type = jsonObject.optInt("media_type");
                 Log.e(TAG,"AND THE CONTENT IS: "+jsonObject.toString());
                 contentViewer.setTag(type);
@@ -157,32 +175,14 @@ public class ContentActivity extends ActionBarActivity{
                     switch (type)
                     {
                         case 1: //audio
-                            videoHolder.setVisibility(View.VISIBLE);
+                            candeoContentHolder.setVisibility(View.VISIBLE);
                             imageView.setVisibility(View.GONE);
                             launchBook.setVisibility(View.GONE);
                             new LoadImageTask(bgUrl,bgImageView).execute();
-                            try
-                            {
-                                mediaPlayer= new MediaPlayer();
-                                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                                mediaPlayer.setDataSource(mediaUrl);
-                                mediaPlayer.prepareAsync();
-                                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                                    @Override
-                                    public void onPrepared(MediaPlayer mp) {
-                                        mediaPlayer.start();
-                                    }
-                                });
-
-                            }
-                            catch(Exception e)
-                            {
-                                e.printStackTrace();
-                            }
-
+                            playAudio(mediaUrl);
                             break;
                         case 2: //video
-                            videoHolder.setVisibility(View.VISIBLE);
+                            candeoContentHolder.setVisibility(View.VISIBLE);
                             videoView.setVisibility(View.VISIBLE);
                             play.setVisibility(View.VISIBLE);
                             play.setText("\uf04c");
@@ -194,7 +194,7 @@ public class ContentActivity extends ActionBarActivity{
 
                         case 3:
                             //Image
-                            videoHolder.setVisibility(View.GONE);
+                            candeoContentHolder.setVisibility(View.GONE);
                             play.setVisibility(View.GONE);
                             imageView.setVisibility(View.VISIBLE);
                             launchBook.setVisibility(View.GONE);
@@ -204,7 +204,7 @@ public class ContentActivity extends ActionBarActivity{
 
 //                        case 4:
 //                            //Book
-//                            videoHolder.setVisibility(View.GONE);
+//                            candeoContentHolder.setVisibility(View.GONE);
 //                            imageView.setVisibility(View.GONE);
 //                            launchBook.setVisibility(View.VISIBLE);
 //
@@ -222,6 +222,10 @@ public class ContentActivity extends ActionBarActivity{
                 new LoadImageTask(Configuration.BASE_URL +jsonObject.optString("user_avatar_url"),userAvatar).execute();
                 userName.setText(jsonObject.optString("user_name"));
                 title.setText(jsonObject.optString("title"));
+                appreciateCount.setText(jsonObject.optString("appreciate_count"));
+                skipCount.setText(jsonObject.optString("skip_count"));
+                inspiredCount.setText(jsonObject.optString("inspired_count"));
+                createdAt.setText(jsonObject.optString("created_at"));
 
         }
     }
@@ -347,7 +351,7 @@ public class ContentActivity extends ActionBarActivity{
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(ContentActivity.this);
-            pDialog.setMessage("Loading Content...");
+            pDialog.setMessage("Loading Image...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
@@ -391,6 +395,8 @@ public class ContentActivity extends ActionBarActivity{
                 }
 
                 Log.e(TAG,"Calculated width is "+ screenWidth+" and height is "+calculatedHeight);
+                Animation in = AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in);
+                imageView.startAnimation(in);
                 imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap,screenWidth,calculatedHeight,false));
             }
             pDialog.dismiss();
@@ -412,6 +418,54 @@ public class ContentActivity extends ActionBarActivity{
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         return super.onOptionsItemSelected(item);
+    }
+
+    private void playAudio(String mediaUrl)
+    {
+
+
+        try
+        {
+            mediaPlayer= new MediaPlayer();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.setDataSource(mediaUrl);
+            mediaPlayer.prepareAsync();
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mediaPlayer.start();
+                }
+            });
+
+            candeoMediaControl.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.e(TAG,"Media control clicked");
+                    if(play.getVisibility() == View.VISIBLE)
+                    {
+                        mediaPlayer.start();
+                        Animation out = AnimationUtils.makeOutAnimation(getApplicationContext(), true);
+                        candeoMediaControl.startAnimation(out);
+                        candeoMediaControl.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                        play.setVisibility(View.GONE);
+                    }
+                    else
+                    {
+                        mediaPlayer.pause();
+                        Animation in = AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in);
+                        candeoMediaControl.startAnimation(in);
+                        candeoMediaControl.setBackgroundColor(getResources().getColor(R.color.candeo_translucent_black));
+                        play.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
 }

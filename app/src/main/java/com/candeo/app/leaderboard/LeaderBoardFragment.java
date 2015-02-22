@@ -44,8 +44,6 @@ public class LeaderBoardFragment extends Fragment {
     private static final String TAG="Candeo - Leaderboard";
     //No Content
     private View noContent  = null;
-
-    private static String getPerformanceApi = Configuration.BASE_URL+"/api/v1/contents/performances/show";
     private static String getPerformanceMoreListApi = Configuration.BASE_URL+"/api/v1/contents/performances/list/";
 
     @Override
@@ -54,8 +52,6 @@ public class LeaderBoardFragment extends Fragment {
 
         root = inflater.inflate(R.layout.fragment_leader_board, container, false);
         initWidgets();
-        CandeoApplication.getInstance().getAppRequestQueue().add(new GetPerformanceRequest());
-
         return root;
     }
 
@@ -69,38 +65,20 @@ public class LeaderBoardFragment extends Fragment {
 
     }
 
-    private class GetPerformanceRequest extends JsonObjectRequest
+    public void onGetLeaderBoardComplete(JSONObject response)
     {
-        public GetPerformanceRequest()
+        if(response!=null)
         {
-            super(Method.GET,
-                  getPerformanceApi,
-                  null,
-                  new Response.Listener<JSONObject>(){
-                      @Override
-                      public void onResponse(JSONObject response) {
-                          if(response!=null)
-                          {
-                              if(response.length()>0)
-                              {
-                                    noContent.setVisibility(View.GONE);
-                              }
-                              else
-                              {
-                                  noContent.setVisibility(View.VISIBLE);
-                              }
-                          }
-
-                      }
-                  },
-                  new Response.ErrorListener() {
-                      @Override
-                      public void onErrorResponse(VolleyError error) {
-                          Log.e(TAG,"error is "+error.getLocalizedMessage());
-                          noContent.setVisibility(View.VISIBLE);
-                      }
-                  });
+            if(response.length()>0)
+            {
+                noContent.setVisibility(View.GONE);
+            }
+            else
+            {
+                noContent.setVisibility(View.VISIBLE);
+            }
         }
+
     }
 
 

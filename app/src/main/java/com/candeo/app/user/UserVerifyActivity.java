@@ -67,6 +67,7 @@ public class UserVerifyActivity extends ActionBarActivity {
                                    Preferences.setUserLoggedIn(getApplicationContext(),true);
                                    finish();
                                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                                   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                    intent.putExtra("fromVerify","verified");
                                    startActivity(intent);
 

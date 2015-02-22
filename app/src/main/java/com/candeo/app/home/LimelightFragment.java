@@ -17,6 +17,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -285,6 +287,8 @@ public class LimelightFragment extends Fragment{
         protected void onPostExecute(Bitmap bitmap) {
             if(bitmap!=null)
             {
+                Animation in = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in);
+                image.startAnimation(in);
                 image.setImageBitmap(bitmap);
             }
         }

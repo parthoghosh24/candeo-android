@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
@@ -44,7 +45,7 @@ public class HomeActivity extends ActionBarActivity{
     private static final String TAG="Candeo - Home";
     private final static String GET_USER_API = Configuration.BASE_URL+"/api/v1/users/%s";
     private final static String GET_LIMELIGHT_LIST_API = Configuration.BASE_URL +"/api/v1/contents/limelights/list/%s";
-
+    private final static String GET_PERFORMANCES_API = Configuration.BASE_URL+"/api/v1/contents/performances/show";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +101,9 @@ public class HomeActivity extends ActionBarActivity{
                         case 0:
                             getSupportActionBar().show();
                             getSupportActionBar().setTitle("Performances");
+                            GetPerformanceRequest performanceRequest = new GetPerformanceRequest();
+                            performanceRequest.setShouldCache(false);
+                            CandeoApplication.getInstance().getAppRequestQueue().add(performanceRequest);
                             break;
                         case 1:
                             getSupportActionBar().hide();
@@ -125,8 +129,15 @@ public class HomeActivity extends ActionBarActivity{
                 }
             });
 
+
         }
 
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
     }
 
@@ -220,6 +231,34 @@ public class HomeActivity extends ActionBarActivity{
                         }
                     }
             );
+        }
+    }
+
+    private class GetPerformanceRequest extends JsonObjectRequest
+    {
+        public GetPerformanceRequest()
+        {
+            super(Method.GET,
+                    GET_PERFORMANCES_API,
+                    null,
+                    new Response.Listener<JSONObject>(){
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            leaderBoardFragment.onGetLeaderBoardComplete(response);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e(TAG,"Error occured");
+                            Log.e(TAG, "localized error while fetching is leaderboard " + error.getLocalizedMessage());
+                            NetworkResponse response = error.networkResponse;
+                            if(response!=null)
+                            {
+                                Log.e(TAG,"Actual error while fetching leaderboard is "+new String(response.data));
+                            }
+                        }
+                    });
         }
     }
 

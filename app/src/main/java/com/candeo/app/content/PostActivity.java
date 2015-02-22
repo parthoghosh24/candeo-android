@@ -400,7 +400,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                                 String id = response.getString("id");
                                 Log.e(PostActivity.class.getName(),"AND THE ID IS "+id);
                                 Intent contentIntent = new Intent(PostActivity.this,ContentActivity.class);
-                                contentIntent.putExtra("contentId",id);
+                                contentIntent.putExtra("id",id);
                                 contentIntent.putExtra("type",contentType);
                                 startActivity(contentIntent);
                                 finish();

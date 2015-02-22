@@ -1,8 +1,6 @@
 package com.candeo.app.home;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,20 +12,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.adapters.LimelightAdapter;
-import com.candeo.app.adapters.ShowcaseAdapter;
 import com.candeo.app.R;
 import com.candeo.app.content.PostActivity;
 import com.candeo.app.transformers.ShowcaseTransformer;
 import com.candeo.app.ui.NonSwipeablePager;
 import com.candeo.app.user.LoginActivity;
 import com.candeo.app.util.CandeoUtil;
-import com.candeo.app.util.JSONParser;
 import com.candeo.app.util.Preferences;
 
 import org.json.JSONArray;
@@ -163,6 +155,7 @@ public class HomeFragment extends Fragment {
         catch (JSONException jse)
         {
             jse.printStackTrace();
+            Log.e(TAG,"Error is "+jse.getLocalizedMessage());
             toggleLoading(false);
             toggleNoContent(true);
         }

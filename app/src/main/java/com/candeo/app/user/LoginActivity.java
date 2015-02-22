@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -64,6 +65,7 @@ public class LoginActivity extends Activity implements UploadMediaListener {
     private static final int PICK_IMAGE_FILE=200;
     private Uri imageUri;
     private Bitmap bitmap;
+    private View noContent =null;
     ArrayList<String> emails;
 
     private static final String API_REGISTER_URL = Configuration.BASE_URL +"/api/v1/users/register";
@@ -134,6 +136,11 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                 initImageSelection();
             }
         });
+        noContent=findViewById(R.id.candeo_no_content);
+        ((TextView)noContent.findViewById(R.id.candeo_no_content_icon)).setTypeface(CandeoUtil.loadFont(getAssets(),"fonts/fa.ttf"));
+        ((TextView)noContent.findViewById(R.id.candeo_no_content_icon)).setText(Configuration.FA_MAIL);
+        ((TextView)noContent.findViewById(R.id.candeo_no_content_text)).setText("You Must Have Received an email. Please check to continue login.");
+        noContent.setVisibility(View.GONE);
 
     }
 
@@ -339,13 +346,14 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                         @Override
                         public void onResponse(JSONObject response) {
                             Log.e(TAG, "Response is "+response);
-                            CandeoUtil.appAlertDialog(LoginActivity.this, "You Must Have Received an email. Please check to continue login.");
+                            noContent.setVisibility(View.VISIBLE);
                         }
                   },
                   new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             System.out.println("Something went wrong");
+                            noContent.setVisibility(View.GONE);
                         }
                   });
         }

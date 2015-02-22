@@ -12,8 +12,8 @@ public class Configuration {
 //    public static final boolean DEBUG=false;
     public static final boolean DEBUG=true;
     //Base url
-//      public static final String BASE_URL ="http://192.168.0.105:3000";
-    public static final String BASE_URL="http://192.168.43.239:3000";
+      public static final String BASE_URL ="http://192.168.0.103:3000";
+//    public static final String BASE_URL="http://192.168.43.239:3000";
     //    public static final String BASE_URL="http://10.0.3.116:3000";
 
     public static final String BOOKSROOT= Environment.getExternalStorageDirectory().getAbsolutePath()+ File.separator+"Books";
@@ -39,7 +39,10 @@ public class Configuration {
     public static final String FA_COPYRIGHT="\uf1f9";
     public static final String FA_CHEVRON="\uf054";
     public static final String FA_PLAY="\uf04b";
+    public static final String FA_PLAY_ROUND="\uf01d";
     public static final String FA_PAUSE="\uf04c";
+    public static final String FA_CLOCK="\uf017";
+    public static final String FA_MAIL="\uf0e0";
 
 
     //Media types
