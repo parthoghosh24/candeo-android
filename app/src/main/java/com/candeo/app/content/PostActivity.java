@@ -733,7 +733,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                 {
                     ByteArrayOutputStream bos = new ByteArrayOutputStream();
                     bitmap=result;
-                    bitmap.compress(Bitmap.CompressFormat.JPEG,100,bos);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG,70,bos);
                     dataArray = bos.toByteArray();
                     System.out.println("Bitmap is " + bitmap);
                     if(bitmap.getWidth() > bitmap.getHeight())

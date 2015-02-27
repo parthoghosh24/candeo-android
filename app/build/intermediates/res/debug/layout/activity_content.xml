@@ -40,6 +40,7 @@
                         android:id="@+id/candeo_content_bg_image"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:maxHeight="300dp"
                         android:scaleType="centerCrop"/>
                     <VideoView
                         android:id="@+id/candeo_video_viewer"
@@ -256,4 +257,4 @@
 
 
 </LinearLayout>
-<!-- From: file:/home/dholu/projects/candeo-android/app/src/main/res/layout/activity_content.xml -->
+<!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/src/main/res/layout/activity_content.xml -->

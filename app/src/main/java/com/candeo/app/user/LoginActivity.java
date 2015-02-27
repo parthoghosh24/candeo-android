@@ -115,7 +115,7 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                     name.setVisibility(View.GONE);
                     userProfile.setVisibility(View.GONE);
                     signup.setText("SIGN IN");
-                    signin.setText("SIGN IN");
+                    signin.setText("SIGN UP");
                 }
                 else
                 {
@@ -123,7 +123,7 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                     name.setVisibility(View.VISIBLE);
                     userProfile.setVisibility(View.VISIBLE);
                     signup.setText("SIGN UP");
-                    signin.setText("SIGN UP");
+                    signin.setText("SIGN IN");
                 }
             }
         });

@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import com.candeo.app.Configuration;
 import com.candeo.app.home.HomeActivity;
 import com.candeo.app.user.AppreciatedFragment;
+import com.candeo.app.user.DiscoveryFragment;
 import com.candeo.app.user.FeedFragment;
 import com.candeo.app.user.InspirationsFragment;
 import com.candeo.app.user.CreatedFragment;
@@ -18,15 +19,19 @@ public class UserContentAdapter extends FragmentStatePagerAdapter{
     private HomeActivity activity;
     private CreatedFragment createdFragment;
     private SocialFragment socialFragment;
-    private static final int MAX_COUNT=2;
+    private InspirationsFragment inspirationsFragment;
+    private DiscoveryFragment discoveryFragment;
+    private static final int MAX_COUNT=3;
 
 
-    public UserContentAdapter(HomeActivity activity, CreatedFragment createdFragment, SocialFragment socialFragment)
+    public UserContentAdapter(HomeActivity activity, CreatedFragment createdFragment, SocialFragment socialFragment, InspirationsFragment inspirationsFragment, DiscoveryFragment discoveryFragment)
     {
       super(activity.getSupportFragmentManager());
       this.activity = activity;
       this.createdFragment = createdFragment;
       this.socialFragment = socialFragment;
+      this.inspirationsFragment = inspirationsFragment;
+      this.discoveryFragment = discoveryFragment;
     }
 
     @Override
@@ -37,6 +42,8 @@ public class UserContentAdapter extends FragmentStatePagerAdapter{
                   return createdFragment;
             case 1:
                   return socialFragment;
+            case 2:
+                  return discoveryFragment;
         }
         return new Fragment();
     }
@@ -55,6 +62,8 @@ public class UserContentAdapter extends FragmentStatePagerAdapter{
                   return Configuration.FA_MAGIC+" Created";
             case 1:
                   return Configuration.FA_USERS+" Social";
+            case 2:
+                  return Configuration.FA_EYE+" Discoveries";
         }
         return "";
     }

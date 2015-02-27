@@ -60,6 +60,7 @@ public class UserFragment extends Fragment {
     private ViewPager userContentPager;
     private CreatedFragment createdFragment;
     private SocialFragment socialFragment;
+    private DiscoveryFragment discoveryFragment;
     private UserContentAdapter contentAdapter;
     private View notLoggedIn;
 
@@ -148,7 +149,8 @@ public class UserFragment extends Fragment {
         userContentPager=(ViewPager)root.findViewById(R.id.candeo_user_content_pager);
         createdFragment = new CreatedFragment();
         socialFragment = new SocialFragment();
-        contentAdapter = new UserContentAdapter((HomeActivity)getActivity(), createdFragment,socialFragment);
+        discoveryFragment = new DiscoveryFragment();
+        contentAdapter = new UserContentAdapter((HomeActivity)getActivity(), createdFragment,socialFragment,null,discoveryFragment);
         userContentPager.setAdapter(contentAdapter);
         slidingTabs.setViewPager(userContentPager);
         userContentPager.setCurrentItem(0);
