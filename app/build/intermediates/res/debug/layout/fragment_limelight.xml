@@ -19,7 +19,6 @@
         android:clipToPadding="false"
         app:cardCornerRadius="4dp"
         app:cardUseCompatPadding="true"
-
         android:layout_margin="3dp"
         app:cardElevation="5dp"
         app:cardBackgroundColor="@color/candeo_primary_dark">
@@ -60,18 +59,20 @@
                         android:gravity="left">
 
                         <TextView
+                            android:id="@+id/candeo_appreciate_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="APPRECIATE"
+                            android:textSize="25sp"/>
+
+                        <TextView
                             android:id="@+id/candeo_appreciate_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="3.4K"
                             android:textSize="25sp"/>
 
-                        <TextView
-                            android:id="@+id/candeo_appreciate_icon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="APPRECIATE"
-                            android:textSize="25sp"/>
+
 
                     </LinearLayout>
 
@@ -201,4 +202,4 @@
     </android.support.v7.widget.CardView>
 
 </LinearLayout>
-<!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/src/main/res/layout/fragment_limelight.xml -->
+<!-- From: file:/home/dholu/projects/candeo-android/app/src/main/res/layout/fragment_limelight.xml -->

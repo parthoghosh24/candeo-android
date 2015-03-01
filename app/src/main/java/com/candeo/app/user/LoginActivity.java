@@ -139,7 +139,7 @@ public class LoginActivity extends Activity implements UploadMediaListener {
         noContent=findViewById(R.id.candeo_no_content);
         ((TextView)noContent.findViewById(R.id.candeo_no_content_icon)).setTypeface(CandeoUtil.loadFont(getAssets(),"fonts/fa.ttf"));
         ((TextView)noContent.findViewById(R.id.candeo_no_content_icon)).setText(Configuration.FA_MAIL);
-        ((TextView)noContent.findViewById(R.id.candeo_no_content_text)).setText("You Must Have Received an email. Please check to continue login.");
+        ((TextView)noContent.findViewById(R.id.candeo_no_content_text)).setText("You Must Have received an email. Please check to continue login.");
         noContent.setVisibility(View.GONE);
 
     }

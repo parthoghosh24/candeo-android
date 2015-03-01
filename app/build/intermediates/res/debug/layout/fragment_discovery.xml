@@ -1,38 +1,63 @@
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.candeo.app.user.CreatedFragment">
-
-    <include layout="@layout/no_content"
-        android:id="@+id/candeo_user_no_discovered_content"/>
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="450dp"
+        android:orientation="vertical"
+        tools:context="com.candeo.app.user.CreatedFragment">
 
-        <TextView
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="SHOWCASES"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"/>-->
+            <TextView
+                android:id="@+id/candeo_user_discoveries_appreciations_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/candeo_primary_dark"
+                android:layout_marginLeft="10dp"
+                android:text="My Appreciations"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="INSPIRATIONS"/>
+            <include layout="@layout/candeo_no_content_single_line"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:id="@+id/candeo_user_discoveries_no_appreciations"/>
 
-        <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"/>-->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/candeo_user_discoveries_appreciations"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/candeo_user_discoveries_inspirations_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/candeo_primary_dark"
+                android:layout_marginLeft="10dp"
+                android:text="My Inspirations"/>
+
+            <include layout="@layout/candeo_no_content_single_line"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:id="@+id/candeo_user_discoveries_no_inspirations"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/candeo_user_discoveries_inspirations"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:visibility="gone"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
-<!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/src/main/res/layout/fragment_discovery.xml -->
+</ScrollView>
+
+<!-- From: file:/home/dholu/projects/candeo-android/app/src/main/res/layout/fragment_discovery.xml -->

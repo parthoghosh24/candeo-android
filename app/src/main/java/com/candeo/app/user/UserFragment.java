@@ -63,8 +63,9 @@ public class UserFragment extends Fragment {
     private DiscoveryFragment discoveryFragment;
     private UserContentAdapter contentAdapter;
     private View notLoggedIn;
-
+    private View loadingContent = null;
     private View root;
+    private String userId="";
 
     private final static String TAG="Candeo - User Fragment";
 
@@ -112,16 +113,31 @@ public class UserFragment extends Fragment {
             {
                 try {
                     JSONObject user =response.getJSONObject("user");
+                    userId = user.getString("id");
                     userName.setText(user.getString("name"));
                     appreciateCount.setText(""+user.getInt("total_appreciations"));
                     inspireCount.setText(""+user.getInt("total_inspires"));
                     new LoadImageTask().execute(Configuration.BASE_URL+user.getString("avatar_path"));
+                    Bundle bundle = new Bundle();
+                    bundle.putString("userId",userId);
+                    createdFragment = new CreatedFragment();
+                    createdFragment.setArguments(bundle);
+                    socialFragment = new SocialFragment();
+                    socialFragment.setArguments(bundle);
+                    discoveryFragment = new DiscoveryFragment();
+                    discoveryFragment.setArguments(bundle);
+                    contentAdapter = new UserContentAdapter((HomeActivity)getActivity(), createdFragment,socialFragment,null,discoveryFragment);
+                    userContentPager.setAdapter(contentAdapter);
+                    slidingTabs.setViewPager(userContentPager);
+                    userContentPager.setCurrentItem(0);
+                    Log.e(TAG,"page current item is "+userContentPager.getCurrentItem());
 
                 }
                 catch (JSONException je)
                 {
                     je.printStackTrace();
                 }
+                toggleLoading(false);
 
             }
             else
@@ -134,6 +150,11 @@ public class UserFragment extends Fragment {
 
     private void initWidgets()
     {
+        loadingContent = root.findViewById(R.id.candeo_data_loading);
+        ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/fa.ttf"));
+        ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setText(Configuration.FA_USER);
+        ((TextView)loadingContent.findViewById(R.id.candeo_progress_text)).setText("Loading User...");
+        toggleLoading(true);
         userAvatar = (CircleImageView)root.findViewById(R.id.candeo_user_avatar);
         userAvatar.setImageURI(Uri.parse("android.resource://" + getActivity().getPackageName() + "/"+ R.raw.default_avatar));
         userName = (TextView)root.findViewById(R.id.candeo_user_name_text);
@@ -147,14 +168,7 @@ public class UserFragment extends Fragment {
         inspireCount=(TextView)root.findViewById(R.id.candeo_user_inspired_count);
         slidingTabs = (SlidingTabLayout)root.findViewById(R.id.candeo_user_sliding_tabs);
         userContentPager=(ViewPager)root.findViewById(R.id.candeo_user_content_pager);
-        createdFragment = new CreatedFragment();
-        socialFragment = new SocialFragment();
-        discoveryFragment = new DiscoveryFragment();
-        contentAdapter = new UserContentAdapter((HomeActivity)getActivity(), createdFragment,socialFragment,null,discoveryFragment);
-        userContentPager.setAdapter(contentAdapter);
-        slidingTabs.setViewPager(userContentPager);
-        userContentPager.setCurrentItem(0);
-        Log.e(TAG,"page current item is "+userContentPager.getCurrentItem());
+
         notLoggedIn = root.findViewById(R.id.candeo_user_not_logged_in);
         ((TextView)notLoggedIn.findViewById(R.id.candeo_no_content_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/fa.ttf"));
         ((TextView)notLoggedIn.findViewById(R.id.candeo_no_content_icon)).setText(Configuration.FA_USER);
@@ -199,6 +213,11 @@ public class UserFragment extends Fragment {
                 userAvatar.setImageBitmap(bitmap);
             }
         }
+    }
+
+    private void toggleLoading(boolean show)
+    {
+        loadingContent.setVisibility(show?View.VISIBLE:View.GONE);
     }
 
 }

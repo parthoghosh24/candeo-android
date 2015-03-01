@@ -14,23 +14,11 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/candeo_user_creations"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="SHOWCASES"/>
-
-        <!--<android.support.v7.widget.RecyclerView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"/>-->
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="INSPIRATIONS"/>
-
-        <!--<android.support.v7.widget.RecyclerView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"/>-->
+            android:visibility="gone"/>
 
     </LinearLayout>
 

@@ -238,7 +238,15 @@ public class LimelightFragment extends Fragment{
                                 {
                                     new LoadImageTask(mediaBg).execute(Configuration.BASE_URL+limelight.getString("bg_url"));
                                 }
-
+                                int mediaType = Integer.parseInt(limelight.getString("media_type"));
+                                if(Configuration.AUDIO == mediaType)
+                                {
+                                    mediaIconView.setText(Configuration.FA_AUDIO);
+                                }
+                                else if(Configuration.IMAGE == mediaType)
+                                {
+                                    mediaIconView.setText(Configuration.FA_IMAGE);
+                                }
                                 toggleLoading(false);
                                 toggleNoContent(false);
                             }
@@ -287,8 +295,15 @@ public class LimelightFragment extends Fragment{
         protected void onPostExecute(Bitmap bitmap) {
             if(bitmap!=null)
             {
-                Animation in = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in);
-                image.startAnimation(in);
+                try
+                {
+                    Animation in = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in);
+                    image.startAnimation(in);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
                 image.setImageBitmap(bitmap);
             }
         }

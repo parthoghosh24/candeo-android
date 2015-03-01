@@ -9,11 +9,14 @@
         android:id="@+id/candeo_user_not_logged_in"
         android:visibility="gone"/>
 
+    <include layout="@layout/loading_content"
+        android:id="@+id/candeo_data_loading"/>
+
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:orientation="vertical"
-          android:paddingTop="10dp">
+          android:padding="10dp">
 
 
           <LinearLayout
@@ -21,7 +24,7 @@
               android:layout_height="wrap_content"
               android:orientation="horizontal"
               android:weightSum="3"
-              android:paddingTop="25dp">
+              android:paddingTop="2dp">
 
               <!--Appreciations-->
               <LinearLayout
@@ -29,7 +32,7 @@
                   android:layout_height="wrap_content"
                   android:orientation="vertical"
                   android:padding="5dp"
-                  android:gravity="center"
+                  android:gravity="left"
                   android:layout_weight="1">
 
                   <TextView
@@ -44,7 +47,7 @@
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:text="3.4K"
-                      android:textSize="25sp"/>
+                      android:textSize="16sp"/>
 
 
 
@@ -103,7 +106,7 @@
                   android:layout_height="wrap_content"
                   android:orientation="vertical"
                   android:padding="5dp"
-                  android:gravity="center"
+                  android:gravity="right"
                   android:layout_weight="1">
 
                   <TextView
@@ -118,7 +121,7 @@
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:text="2.4K"
-                      android:textSize="25sp"/>
+                      android:textSize="16sp"/>
 
 
 
@@ -143,13 +146,80 @@
 
           </LinearLayout>
 
-          <com.candeo.app.ui.SlidingTabLayout
-              android:id="@+id/candeo_user_sliding_tabs"
-              android:layout_marginTop="30dp"
+          <LinearLayout
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"/>
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:weightSum="2"
+              android:paddingTop="5dp">
+
+              <!--Current Rank-->
+              <LinearLayout
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:padding="5dp"
+                  android:gravity="left"
+                  android:layout_weight="1">
+
+                  <TextView
+                      android:id="@+id/candeo_user_current_rank_icon"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="CURRENT #"
+                      android:textSize="16sp"/>
+
+                  <TextView
+                      android:id="@+id/candeo_user_current_rank_value"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="Not Ranked"
+                      android:textSize="16sp"/>
+
+
+
+              </LinearLayout>
+
+
+
+
+              <!--Highest Rank-->
+              <LinearLayout
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:padding="5dp"
+                  android:gravity="right"
+                  android:layout_weight="1">
+
+                  <TextView
+                      android:id="@+id/candeo_user_highest_rank_icon"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="HIGHEST #"
+                      android:textSize="16sp"/>
+
+                  <TextView
+                      android:id="@+id/candeo_user_highest_rank_value"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="Not Ranked"
+                      android:textSize="16sp"/>
+
+
+
+              </LinearLayout>
+
+          </LinearLayout>
+
+
 
       </LinearLayout>
+    <com.candeo.app.ui.SlidingTabLayout
+        android:id="@+id/candeo_user_sliding_tabs"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 
 
@@ -169,4 +239,4 @@
 
 
 </LinearLayout>
-<!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/src/main/res/layout/fragment_user.xml -->
+<!-- From: file:/home/dholu/projects/candeo-android/app/src/main/res/layout/fragment_user.xml -->
