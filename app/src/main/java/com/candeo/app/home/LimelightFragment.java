@@ -283,7 +283,9 @@ public class LimelightFragment extends Fragment{
             Bitmap bitmap = null;
             try {
                 URL imageUrl= new URL(params[0]);
-                bitmap = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPreferredConfig = Bitmap.Config.RGB_565;
+                bitmap = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream(),null,options);
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }

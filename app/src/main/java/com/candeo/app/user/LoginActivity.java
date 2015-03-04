@@ -463,8 +463,17 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                     return bitmap;
 
             }
-            Bitmap bitmapRotated = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
-            return bitmapRotated;
+//            Bitmap bitmapRotated = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
+            Bitmap bitmapRotated;
+            if(bitmap.getWidth()>=bitmap.getHeight())
+            {
+                bitmapRotated = Bitmap.createBitmap(bitmap,bitmap.getWidth()/2-bitmap.getHeight()/2,0,bitmap.getHeight(),bitmap.getHeight(),matrix,false);
+            }
+            else
+            {
+                bitmapRotated = Bitmap.createBitmap(bitmap,bitmap.getHeight()/2-bitmap.getWidth()/2,0,bitmap.getWidth(),bitmap.getWidth(),matrix,false);
+            }
+            return Bitmap.createScaledBitmap(bitmapRotated,200,200,false);
 
         }
         catch (OutOfMemoryError ome)
