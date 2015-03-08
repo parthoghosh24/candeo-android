@@ -29,6 +29,10 @@ public class SplashActivity extends Activity {
     ViewPager tutorialPager;
     VideoView splashView;
     Button button;
+    TextView indicator1;
+    TextView indicator2;
+    TextView indicator3;
+    TextView indicator4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +44,66 @@ public class SplashActivity extends Activity {
                 + R.raw.bg));
         textView=(TextView)findViewById(R.id.test);
         tutorialPager=(ViewPager)findViewById(R.id.tutorial);
-        tutorialPager.setAdapter(new TutorialPagerAdapter(this,getAssets()));
+        tutorialPager.setAdapter(new TutorialPagerAdapter(this));
+        indicator1=(TextView)findViewById(R.id.candeo_pager_indicator_1);
+        indicator2=(TextView)findViewById(R.id.candeo_pager_indicator_2);
+        indicator3=(TextView)findViewById(R.id.candeo_pager_indicator_3);
+        indicator4=(TextView)findViewById(R.id.candeo_pager_indicator_4);
+
+        indicator1.setTypeface(CandeoUtil.loadFont(getAssets(),"fonts/fa.ttf"));
+        indicator1.setText(Configuration.FA_CIRCLE);
+        indicator2.setTypeface(CandeoUtil.loadFont(getAssets(),"fonts/fa.ttf"));
+        indicator2.setText(Configuration.FA_CIRCLE_O);
+        indicator3.setTypeface(CandeoUtil.loadFont(getAssets(),"fonts/fa.ttf"));
+        indicator3.setText(Configuration.FA_CIRCLE_O);
+        indicator4.setTypeface(CandeoUtil.loadFont(getAssets(),"fonts/fa.ttf"));
+        indicator4.setText(Configuration.FA_CIRCLE_O);
+
+        tutorialPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position == 0)
+                {
+                    indicator1.setText(Configuration.FA_CIRCLE);
+                    indicator2.setText(Configuration.FA_CIRCLE_O);
+                    indicator3.setText(Configuration.FA_CIRCLE_O);
+                    indicator3.setText(Configuration.FA_CIRCLE_O);
+                }
+                if(position == 1)
+                {
+                    indicator1.setText(Configuration.FA_CIRCLE_O);
+                    indicator2.setText(Configuration.FA_CIRCLE);
+                    indicator3.setText(Configuration.FA_CIRCLE_O);
+                    indicator3.setText(Configuration.FA_CIRCLE_O);
+                }
+                if(position == 2)
+                {
+                    indicator1.setText(Configuration.FA_CIRCLE_O);
+                    indicator2.setText(Configuration.FA_CIRCLE_O);
+                    indicator3.setText(Configuration.FA_CIRCLE);
+                    indicator4.setText(Configuration.FA_CIRCLE_O);
+                }
+                if(position == 3)
+                {
+                    indicator1.setText(Configuration.FA_CIRCLE_O);
+                    indicator2.setText(Configuration.FA_CIRCLE_O);
+                    indicator3.setText(Configuration.FA_CIRCLE_O);
+                    indicator4.setText(Configuration.FA_CIRCLE);
+
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
         textView.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/freebooter.ttf"),Typeface.BOLD);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 100);
         textView.setText("Candeo");

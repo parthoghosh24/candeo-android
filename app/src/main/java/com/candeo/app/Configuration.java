@@ -14,9 +14,10 @@ public class Configuration {
 //    public static final boolean DEBUG=false;
     public static final boolean DEBUG=true;
     //Base url
+    public static final String BASE_URL ="http://192.168.0.104:3000";
 //      public static final String BASE_URL ="http://192.168.0.103:3000";
 //      public static final String BASE_URL ="http://192.168.0.102:3000";
-    public static final String BASE_URL="http://192.168.43.239:3000";
+//    public static final String BASE_URL="http://192.168.43.239:3000";
     //    public static final String BASE_URL="http://10.0.3.116:3000";
 
     public static final String BOOKSROOT= Environment.getExternalStorageDirectory().getAbsolutePath()+ File.separator+"Books";
@@ -47,6 +48,8 @@ public class Configuration {
     public static final String FA_CLOCK="\uf017";
     public static final String FA_MAIL="\uf0e0";
     public static final String FA_EYE="\uf06e";
+    public static final String FA_CIRCLE="\uf111";
+    public static final String FA_CIRCLE_O="\uf10c";
 
 
     //Media types
@@ -62,5 +65,15 @@ public class Configuration {
     //Common API Urls
     public static final String MEDIA_UPLOAD_URL=BASE_URL+"/api/v1/media/create";
 
+
+    //Response Lists
+    public static final String[] SKIP_LIST ={"Didn't Like", "Repeated", "Offensive", "Plagiarized"};
+    public static final String[] APPRECIATE_LIST={"Good", "Wow", "Superb", "Excellent", "Mesmerizing"};
+    public static final String[] INSPIRE_LIST={"Good", "Wow", "Superb", "Excellent", "Mesmerizing"};
+
+    //Response States
+    public static final int APPRECIATE=1;
+    public static final int SKIP=2;
+    public static final int INSPIRE=3;
 
 }

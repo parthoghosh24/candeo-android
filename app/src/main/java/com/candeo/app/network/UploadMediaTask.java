@@ -1,7 +1,11 @@
 package com.candeo.app.network;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+
+import com.candeo.app.Configuration;
+import com.candeo.app.util.CandeoUtil;
 
 import java.io.IOException;
 
@@ -14,19 +18,30 @@ public class UploadMediaTask extends AsyncTask<String, Void, String> {
     private byte[] dataArray=null;
     private String fileName = "";
     private String mimeType="";
+    private Activity mContext;
 
-    public UploadMediaTask(UploadMediaListener uploadMediaListener, int mediaType, byte[] dataArray, String fileName, String mimeType)
+    public UploadMediaTask(UploadMediaListener uploadMediaListener, int mediaType, byte[] dataArray, String fileName, String mimeType, Activity mContext)
     {
         this.uploadMediaListener=uploadMediaListener;
         this.mediaType=mediaType;
         this.dataArray=dataArray;
         this.fileName = fileName;
         this.mimeType=mimeType;
+        this.mContext=mContext;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        if(mediaType == Configuration.AUDIO)
+        {
+            CandeoUtil.showProgress(mContext,"Processing! Please wait...", Configuration.FA_AUDIO);
+        }
+        else if(mediaType == Configuration.IMAGE)
+        {
+            CandeoUtil.showProgress(mContext,"Processing! Please wait...", Configuration.FA_IMAGE);
+        }
+
     }
 
     @Override
@@ -56,6 +71,7 @@ public class UploadMediaTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String response) {
+        CandeoUtil.hideProgress();
         if(!TextUtils.isEmpty(response))
         {
             uploadMediaListener.onSuccess(response);

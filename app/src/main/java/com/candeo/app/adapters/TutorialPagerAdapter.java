@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.candeo.app.Configuration;
 import com.candeo.app.R;
 import com.candeo.app.util.CandeoUtil;
 
@@ -18,12 +19,10 @@ import com.candeo.app.util.CandeoUtil;
 public class TutorialPagerAdapter extends PagerAdapter
 {
     Activity activity;
-    AssetManager assets; //For Fonts
 
-    public TutorialPagerAdapter (Activity activity, AssetManager assets)
+    public TutorialPagerAdapter (Activity activity)
     {
         this.activity=activity;
-        this.assets = assets;
     }
     @Override
     public boolean isViewFromObject(View view, Object o) {
@@ -32,7 +31,7 @@ public class TutorialPagerAdapter extends PagerAdapter
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -40,28 +39,44 @@ public class TutorialPagerAdapter extends PagerAdapter
         View view = activity.getLayoutInflater().inflate(R.layout.tutorial_pager_item, container, false);
         container.addView(view);
         TextView content=(TextView)view.findViewById(R.id.candeo_tutorial_text);
-        TextView icon =(TextView)view.findViewById(R.id.candeo_tutorial_icon);
-        icon.setTypeface(CandeoUtil.loadFont(assets, "fonts/fa.ttf"));
-        icon.setTextSize(TypedValue.COMPLEX_UNIT_SP,80);
-        content.setTypeface(CandeoUtil.loadFont(assets, "fonts/pt_sans.ttf"));
+        TextView icon1 =(TextView)view.findViewById(R.id.candeo_tutorial_icon_1);
+        TextView icon2 =(TextView)view.findViewById(R.id.candeo_tutorial_icon_2);
+        icon2.setVisibility(View.GONE);
+        icon1.setTypeface(CandeoUtil.loadFont(activity.getAssets(), "fonts/fa.ttf"));
+        icon1.setTextSize(TypedValue.COMPLEX_UNIT_SP,80);
+        content.setTypeface(CandeoUtil.loadFont(activity.getAssets(), "fonts/caviar_bold.ttf"));
         content.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
         switch (position)
         {
             case 0:
 
-                icon.setText("\uf0d0");
-                content.setText("Inspire the world with your creativity or discovery. Make it a better place");
+                icon1.setText(Configuration.FA_MAGIC);
+                icon2.setVisibility(View.GONE);
+                content.setText("Rock the world by that \"one\" performance every week. Bestow this world with your precious talent.");
                 break;
 
             case 1:
-                icon.setTextSize(TypedValue.COMPLEX_UNIT_SP,40);
-                icon.setText("\uf030  \uf001  \uf008");
-                content.setText("Showcase inspirition. It can be your lovely smile, a video message, a song or a lovely quote");
+                icon1.setTextSize(TypedValue.COMPLEX_UNIT_SP,60);
+                icon2.setVisibility(View.GONE);
+                icon1.setText(Configuration.FA_AUDIO+" "+Configuration.FA_IMAGE);
+                content.setText("Choose your favorite medium to showcase your talent and rock out.");
                 break;
 
             case 2:
-                icon.setText("\uf007");
-                content.setText("Be anonymous or choose to be someone's inspirtion.");
+                icon1.setTextSize(TypedValue.COMPLEX_UNIT_SP,60);
+                icon1.setTypeface(CandeoUtil.loadFont(activity.getAssets(),"fonts/applause.ttf"));
+                icon1.setText(Configuration.FA_APPRECIATE);
+                icon2.setVisibility(View.VISIBLE);
+                icon2.setTextSize(TypedValue.COMPLEX_UNIT_SP,60);
+                icon2.setTypeface(CandeoUtil.loadFont(activity.getAssets(),"fonts/response.ttf"));
+                icon2.setText(" "+Configuration.FA_INSPIRE);
+                content.setText("Earn appreciations and get ranked every week. Inspire and make the world a better place.");
+                break;
+
+            case 3:
+                icon1.setText(Configuration.FA_USER);
+                icon2.setVisibility(View.GONE);
+                content.setText("Be a star with your own fanbase or choose to promote the right talent.");
                 break;
         }
         return view;

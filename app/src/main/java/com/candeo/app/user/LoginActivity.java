@@ -229,11 +229,12 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                     filePath = CandeoUtil.getRealPathFromUri(imageUri, getContentResolver());
                     file = new File(filePath);
                     Log.e(TAG,"Capture image path is "+filePath);
-                    options = new BitmapFactory.Options();
-                    options.inJustDecodeBounds = false;
-                    options.inPreferredConfig = Bitmap.Config.RGB_565;
-                    options.inDither = true;
-                    bitmap = BitmapFactory.decodeFile(filePath,options);
+//                    options = new BitmapFactory.Options();
+//                    options.inJustDecodeBounds = false;
+//                    options.inPreferredConfig = Bitmap.Config.RGB_565;
+//                    options.inDither = true;
+//                    bitmap = BitmapFactory.decodeFile(filePath,options);
+                    bitmap = BitmapFactory.decodeFile(filePath);
                     try {
                         exifInterface = new ExifInterface(filePath);
                         int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
@@ -251,11 +252,12 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                     filePath = CandeoUtil.getRealPathFromUri(uri, getContentResolver());
                     file = new File(filePath);
                     Log.e(TAG,"Picked image path is "+filePath);
-                    options = new BitmapFactory.Options();
-                    options.inJustDecodeBounds = false;
-                    options.inPreferredConfig = Bitmap.Config.RGB_565;
-                    options.inDither = true;
-                    bitmap=BitmapFactory.decodeFile(filePath, options);
+//                    options = new BitmapFactory.Options();
+//                    options.inJustDecodeBounds = false;
+//                    options.inPreferredConfig = Bitmap.Config.RGB_565;
+//                    options.inDither = true;
+//                    bitmap=BitmapFactory.decodeFile(filePath, options);
+                    bitmap = BitmapFactory.decodeFile(filePath);
                     try {
                         exifInterface = new ExifInterface(filePath);
                         int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
@@ -418,7 +420,8 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                                         Configuration.IMAGE,
                                         bos.toByteArray(),
                                         fileName,
-                                        mimeType).execute(Configuration.MEDIA_UPLOAD_URL);
+                                        mimeType,
+                            LoginActivity.this).execute(Configuration.MEDIA_UPLOAD_URL);
 
                 }
             }
@@ -429,12 +432,14 @@ public class LoginActivity extends Activity implements UploadMediaListener {
     private Bitmap rotateBitmap(Bitmap bitmap, int orientation)
     {
         Matrix matrix = new Matrix();
+        Log.e(TAG,"WIDTH IS "+bitmap.getWidth());
+        Log.e(TAG,"HEIGHT IS "+bitmap.getHeight());
         try
         {
             switch (orientation)
             {
                 case ExifInterface.ORIENTATION_NORMAL:
-                    return bitmap;
+                    break;
                 case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
                     matrix.setScale(-1,1);
                     break;
@@ -460,7 +465,7 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                     matrix.setRotate(-90);
                     break;
                 default:
-                    return bitmap;
+                    break;
 
             }
 //            Bitmap bitmapRotated = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
@@ -471,9 +476,9 @@ public class LoginActivity extends Activity implements UploadMediaListener {
             }
             else
             {
-                bitmapRotated = Bitmap.createBitmap(bitmap,bitmap.getHeight()/2-bitmap.getWidth()/2,0,bitmap.getWidth(),bitmap.getWidth(),matrix,false);
+                bitmapRotated = Bitmap.createBitmap(bitmap,0,bitmap.getHeight()/2-bitmap.getWidth()/2,bitmap.getWidth(),bitmap.getWidth(),matrix,false);
             }
-            return Bitmap.createScaledBitmap(bitmapRotated,200,200,false);
+            return CandeoUtil.createScaledBitmap(bitmapRotated,400,400);
 
         }
         catch (OutOfMemoryError ome)

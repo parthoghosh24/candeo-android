@@ -11,12 +11,17 @@ import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.TextView;
+
+import com.candeo.app.R;
 
 import org.apache.http.util.ByteArrayBuffer;
 
@@ -147,4 +152,39 @@ public class CandeoUtil {
         }
         return bitmap;
     }
+
+    public static Bitmap createScaledBitmap(Bitmap bitmap, int newHeight, int newWidth)
+    {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        float scaleWidth = ((float)newWidth)/width;
+        float scaleHeight = ((float)newHeight)/height;
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth,scaleHeight);
+        return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, false);
+    }
+
+    private static AlertDialog mProgressDialog;
+
+    public static void showProgress(Activity activity, String message, String icon) {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.cancel();
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        View progressLayout = activity.getLayoutInflater().inflate(R.layout.loading_content, null);
+        ((TextView) progressLayout.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(activity.getAssets(),"fonts/fa.ttf"));
+        ((TextView) progressLayout.findViewById(R.id.candeo_progress_icon)).setText(icon);
+        ((TextView) progressLayout.findViewById(R.id.candeo_progress_text)).setText(message);
+        builder.setView(progressLayout);
+        builder.setCancelable(false);
+        mProgressDialog = builder.show();
+    }
+
+    public static void hideProgress() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.cancel();
+        }
+    }
+
 }

@@ -55,6 +55,9 @@ public class UserFragment extends Fragment {
     private TextView inspireIcon;
     private TextView inspireCount;
 
+    private TextView currentRank;
+    private TextView highestRank;
+
     private SlidingTabLayout slidingTabs;
 
     private ViewPager userContentPager;
@@ -117,6 +120,8 @@ public class UserFragment extends Fragment {
                     userName.setText(user.getString("name"));
                     appreciateCount.setText(""+user.getInt("total_appreciations"));
                     inspireCount.setText(""+user.getInt("total_inspires"));
+                    currentRank.setText(""+user.get("current_rank"));
+                    highestRank.setText(""+user.get("highest_rank"));
                     new LoadImageTask().execute(Configuration.BASE_URL+user.getString("avatar_path"));
                     Bundle bundle = new Bundle();
                     bundle.putString("userId",userId);
@@ -166,6 +171,8 @@ public class UserFragment extends Fragment {
         inspireIcon.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/response.ttf"));
         inspireIcon.setText(Configuration.FA_INSPIRE);
         inspireCount=(TextView)root.findViewById(R.id.candeo_user_inspired_count);
+        currentRank=(TextView)root.findViewById(R.id.candeo_user_current_rank_value);
+        highestRank=(TextView)root.findViewById(R.id.candeo_user_highest_rank_value);
         slidingTabs = (SlidingTabLayout)root.findViewById(R.id.candeo_user_sliding_tabs);
         userContentPager=(ViewPager)root.findViewById(R.id.candeo_user_content_pager);
 

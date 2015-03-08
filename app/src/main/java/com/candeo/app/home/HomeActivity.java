@@ -72,6 +72,8 @@ public class HomeActivity extends ActionBarActivity{
             String fromVerify = getIntent().getStringExtra("fromVerify");
             if(!TextUtils.isEmpty(fromVerify) && "verified".equalsIgnoreCase(fromVerify))
             {
+                getSupportActionBar().show();
+                getSupportActionBar().setTitle("My Profile");
                 homePager.setCurrentItem(2);
                 GetUserRequest userRequest = new GetUserRequest(Preferences.getUserRowId(getApplicationContext()));
                 userRequest.setShouldCache(false);

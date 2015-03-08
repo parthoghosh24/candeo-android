@@ -47,6 +47,7 @@ public class ResponseFragment extends DialogFragment {
     private static final String APPRECIATE_URL = Configuration.BASE_URL +"/api/v1/contents/responses/appreciate";
     private static final String SKIP_URL = Configuration.BASE_URL +"/api/v1/contents/responses/skip";
     private boolean isSkip=false;
+    private int state;
     private String responseScore;
     private String responseText;
     private View dialog;
@@ -61,6 +62,7 @@ public class ResponseFragment extends DialogFragment {
         positiveText = getArguments().getString("positiveText");
         position = getArguments().getInt("position");
         showcaseId=getArguments().getString("showcaseId");
+        state = getArguments().getInt("responseType");
         responseListener = (ResponseListener)getArguments().getParcelable("adapter");
         Log.e(TAG,"responseListener is"+responseListener);
         contextThemeWrapper = new ContextThemeWrapper(getActivity(),R.style.Theme_AppCompat_Light_Dialog);

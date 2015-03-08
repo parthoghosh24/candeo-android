@@ -503,7 +503,8 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                                     Configuration.VIDEO,
                                     dataArray,
                                     fileName,
-                                    mimeType).execute(Configuration.MEDIA_UPLOAD_URL);
+                                    mimeType,
+                                    PostActivity.this).execute(Configuration.MEDIA_UPLOAD_URL);
                         }
 
                     }
@@ -535,7 +536,8 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                                 Configuration.VIDEO,
                                 dataArray,
                                 fileName,
-                                mimeType).execute(Configuration.MEDIA_UPLOAD_URL);
+                                mimeType,
+                                PostActivity.this).execute(Configuration.MEDIA_UPLOAD_URL);
                     }
                     break;
                 case REQUEST_AUDIO_RECORD:
@@ -551,7 +553,8 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                             Configuration.AUDIO,
                             dataArray,
                             fileName,
-                            mimeType).execute(Configuration.MEDIA_UPLOAD_URL);
+                            mimeType,
+                            PostActivity.this).execute(Configuration.MEDIA_UPLOAD_URL);
                     break;
 
                 case PICK_AUDIO_FILE:
@@ -570,7 +573,8 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                             Configuration.AUDIO,
                             dataArray,
                             fileName,
-                            mimeType).execute(Configuration.MEDIA_UPLOAD_URL);
+                            mimeType,
+                            PostActivity.this).execute(Configuration.MEDIA_UPLOAD_URL);
                     break;
 //                case PICK_EPUB_FILE:
 //                    break;
@@ -754,7 +758,8 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                             Configuration.IMAGE,
                             bos.toByteArray(),
                             fileName,
-                            mimeType).execute(Configuration.MEDIA_UPLOAD_URL);
+                            mimeType,
+                            PostActivity.this).execute(Configuration.MEDIA_UPLOAD_URL);
                 }
             }
         }
