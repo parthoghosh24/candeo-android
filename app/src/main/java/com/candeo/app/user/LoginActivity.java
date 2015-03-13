@@ -26,6 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -331,7 +332,12 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            System.out.println("Something went wrong");
+                            Toast.makeText(getApplicationContext(),"Sorry! This email has already been taken",Toast.LENGTH_LONG).show();
+                            NetworkResponse response = error.networkResponse;
+                            if(response!=null)
+                            {
+                                Log.e(TAG,"error is "+new String(response.data));
+                            }
                         }
                     });
         }
@@ -354,7 +360,12 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                   new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            System.out.println("Something went wrong");
+                            Toast.makeText(getApplicationContext(),"Please register first with this email",Toast.LENGTH_LONG).show();
+                            NetworkResponse response = error.networkResponse;
+                            if(response!=null)
+                            {
+                                Log.e(TAG,"error is "+new String(response.data));
+                            }
                             noContent.setVisibility(View.GONE);
                         }
                   });

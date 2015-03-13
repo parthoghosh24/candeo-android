@@ -50,6 +50,15 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
         return new LeaderboardViewHolder(itemLayoutView,viewType);
     }
 
+    public void addAllToMorePerformances(List<HashMap<String,String>> morePerformances, boolean append)
+    {
+        if(!append)
+        {
+            this.morePerformances.clear();
+        }
+        this.morePerformances.addAll(morePerformances);
+    }
+
     @Override
     public int getItemViewType(int position) {
         switch (position)

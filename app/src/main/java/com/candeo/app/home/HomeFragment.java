@@ -1,5 +1,6 @@
 package com.candeo.app.home;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,7 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.adapters.LimelightAdapter;
 import com.candeo.app.R;
@@ -33,7 +39,7 @@ public class HomeFragment extends Fragment {
 
     private ViewPager parentHomePager;
     private NonSwipeablePager showcasePager;
-    private Button inspire;
+    private Button create;
     private Button feed;
     private Button user;
     private ArrayList<HashMap<String, String>> showcases = new ArrayList<>();
@@ -42,6 +48,7 @@ public class HomeFragment extends Fragment {
     private View loadingContent = null;
     private View noContent =null;
     private static final String TAG="Candeo - HomeFrag";
+    private static final String HAS_USER_POSTED_URL=Configuration.BASE_URL+"/api/v1/users/posted/%s";
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -61,26 +68,22 @@ public class HomeFragment extends Fragment {
             parentHomePager=(ViewPager)getActivity().findViewById(R.id.home_pager);
             showcasePager = (NonSwipeablePager)homeView.findViewById(R.id.candeo_showcase_pager);
             showcasePager.setPageTransformer(true, new ShowcaseTransformer());
-            inspire = (Button)homeView.findViewById(R.id.candeo_init_post);
+            create = (Button)homeView.findViewById(R.id.candeo_init_post);
             feed=(Button)homeView.findViewById(R.id.candeo_feed);
             user=(Button)homeView.findViewById(R.id.candeo_user);
-            inspire.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
-            inspire.setText(Configuration.FA_MAGIC);
-            inspire.setOnClickListener(new View.OnClickListener() {
+            create.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
+            create.setText(Configuration.FA_MAGIC);
+            create.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent postIntent=null;
-                    if(Preferences.isUserLoggedIn(getActivity()))
-                    {
-                        postIntent = new Intent(getActivity(),PostActivity.class);
-                        postIntent.putExtra("type","showcase");
+                    if (Preferences.isUserLoggedIn(getActivity())) {
+                        CandeoUtil.showProgress(getActivity(),"Please Wait...",Configuration.FA_MAGIC);
+                        CandeoApplication.getInstance().getAppRequestQueue().add(new CheckUserPostedRequest(Preferences.getUserRowId(getActivity())));
+                    } else {
+                        Intent postIntent = new Intent(getActivity(), LoginActivity.class);
+                        startActivity(postIntent);
+                    }
 
-                    }
-                    else
-                    {
-                        postIntent = new Intent(getActivity(),LoginActivity.class);
-                    }
-                    startActivity(postIntent);
 
                 }
             });
@@ -165,12 +168,51 @@ public class HomeFragment extends Fragment {
 
     }
 
+    class CheckUserPostedRequest extends JsonObjectRequest
+    {
+        public CheckUserPostedRequest(String id)
+        {
+            super(String.format(HAS_USER_POSTED_URL,id),
+                    null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            CandeoUtil.hideProgress();
+                            if(response!=null)
+                            {
+                                try {
+                                    JSONObject hasPosted = response.getJSONObject("response");
+                                    if(hasPosted==null)
+                                    {
+                                        Intent postIntent = new Intent(getActivity(), PostActivity.class);
+                                        postIntent.putExtra("type", "showcase");
+                                        startActivity(postIntent);
+                                    }
+                                    else
+                                    {
+                                        CandeoUtil.appAlertDialog(getActivity(),"Hey there, You have already performed for this week. You will be again able to post next week. Meanwhile, you can check other performances and help the right talent to grow.");
+                                    }
+                                }
+                                catch (JSONException jse)
+                                {
+                                    jse.printStackTrace();
+                                    Toast.makeText(getActivity(),"Please try again",Toast.LENGTH_SHORT).show();;
+                                }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+                            }
 
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            CandeoUtil.hideProgress();
+                            Toast.makeText(getActivity(),"Please try again",Toast.LENGTH_SHORT).show();;
+                        }
+                    });
+        }
     }
+
 
     private void toggleLoading(boolean show)
     {

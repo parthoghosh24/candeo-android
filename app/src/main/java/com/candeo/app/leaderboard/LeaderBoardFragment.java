@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -26,6 +27,8 @@ import com.candeo.app.adapters.LeaderboardAdapter;
 import com.candeo.app.home.HomeActivity;
 import com.candeo.app.util.CandeoUtil;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -50,6 +53,8 @@ public class LeaderBoardFragment extends Fragment {
     private LeaderboardAdapter mLeaderboardAdapter;
     private LinearLayoutManager performanceListLayoutManager;
     private List<HashMap<String,String>> morePerformances = new ArrayList<>();
+    private final static String GET_MORE_PERFORMANCES_API=Configuration.BASE_URL+"/api/v1/contents/performances/list/%s";
+    private final static String FIRST_MORE_PERFORMANCE_RANK="5";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,6 +64,7 @@ public class LeaderBoardFragment extends Fragment {
         initWidgets();
         return root;
     }
+
 
     private void initWidgets()
     {
@@ -80,19 +86,14 @@ public class LeaderBoardFragment extends Fragment {
         performanceListLayoutManager = new LinearLayoutManager(getActivity());
         performanceListLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         performancesList.setLayoutManager(performanceListLayoutManager);
-        if(mLeaderboardAdapter == null)
-        {
-              for(int i=0; i<5;i++) //testing
-              {
-                  morePerformances.add(new HashMap<String, String>());
-              }
-              mLeaderboardAdapter = new LeaderboardAdapter((HomeActivity)getActivity(),null,morePerformances);
-        }
-        else
-        {
-               mLeaderboardAdapter.notifyDataSetChanged();
-        }
-        performancesList.setAdapter(mLeaderboardAdapter);
+
+        performancesList.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                //Here to perform more fetch
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
 
 
     }
@@ -104,6 +105,16 @@ public class LeaderBoardFragment extends Fragment {
             if(response.length()>0)
             {
                 noContent.setVisibility(View.GONE);
+                if(mLeaderboardAdapter == null)
+                {
+                    mLeaderboardAdapter = new LeaderboardAdapter((HomeActivity)getActivity(),null,morePerformances);
+                }
+                else
+                {
+                    mLeaderboardAdapter.notifyDataSetChanged();
+                }
+                performancesList.setAdapter(mLeaderboardAdapter);
+                CandeoApplication.getInstance().getAppRequestQueue().add(new GetMorePerformancesRequest(FIRST_MORE_PERFORMANCE_RANK,false));
             }
             else
             {
@@ -116,6 +127,54 @@ public class LeaderBoardFragment extends Fragment {
     private void toggleView(View view, boolean show)
     {
         view.setVisibility(show?View.VISIBLE:View.GONE);
+    }
+
+    private class GetMorePerformancesRequest extends JsonObjectRequest
+    {
+        public GetMorePerformancesRequest(final String rank, final boolean append)
+        {
+            super(Method.GET,
+                    String.format(GET_MORE_PERFORMANCES_API,rank),
+                    null,
+                    new Response.Listener<JSONObject>(){
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            if(response!=null)
+                            {
+                                try {
+                                    JSONArray list = response.getJSONArray("performances");
+                                    if(list.length()>0)
+                                    {
+                                        for(int index=0; index<list.length(); ++index)
+                                        {
+                                            JSONObject performance = list.getJSONObject(index);
+                                        }
+                                        //Populate morePerformances
+                                        mLeaderboardAdapter.addAllToMorePerformances(morePerformances,append);
+                                        mLeaderboardAdapter.notifyDataSetChanged();
+                                    }
+                                }
+                                catch (JSONException jse)
+                                {
+                                    jse.printStackTrace();
+                                }
+
+                            }
+
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e(TAG,"Error occured");
+                            NetworkResponse response = error.networkResponse;
+                            if(response!=null)
+                            {
+                                Log.e(TAG,"Server errot response while fetching performances "+new String(response.data));
+                            }
+                        }
+                    });
+        }
     }
 
 

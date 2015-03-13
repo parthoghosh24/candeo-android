@@ -14,10 +14,10 @@ public class Configuration {
 //    public static final boolean DEBUG=false;
     public static final boolean DEBUG=true;
     //Base url
-    public static final String BASE_URL ="http://192.168.0.104:3000";
+//    public static final String BASE_URL ="http://192.168.0.104:3000";
 //      public static final String BASE_URL ="http://192.168.0.103:3000";
 //      public static final String BASE_URL ="http://192.168.0.102:3000";
-//    public static final String BASE_URL="http://192.168.43.239:3000";
+    public static final String BASE_URL="http://192.168.43.239:3000";
     //    public static final String BASE_URL="http://10.0.3.116:3000";
 
     public static final String BOOKSROOT= Environment.getExternalStorageDirectory().getAbsolutePath()+ File.separator+"Books";
@@ -69,7 +69,7 @@ public class Configuration {
     //Response Lists
     public static final String[] SKIP_LIST ={"Didn't Like", "Repeated", "Offensive", "Plagiarized"};
     public static final String[] APPRECIATE_LIST={"Good", "Wow", "Superb", "Excellent", "Mesmerizing"};
-    public static final String[] INSPIRE_LIST={"Good", "Wow", "Superb", "Excellent", "Mesmerizing"};
+    public static final String[] INSPIRE_LIST={"Motivated", "Spirited", "Enlightened", "Happy", "Cheered", "Loved", "Blessed", "Funny", "Strong"};
 
     //Response States
     public static final int APPRECIATE=1;

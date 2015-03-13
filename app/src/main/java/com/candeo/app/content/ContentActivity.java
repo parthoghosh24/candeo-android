@@ -29,8 +29,11 @@ import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
 import com.candeo.app.home.HomeActivity;
+import com.candeo.app.ui.ResponseFragment;
+import com.candeo.app.user.LoginActivity;
 import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.JSONParser;
+import com.candeo.app.util.Preferences;
 
 import org.json.JSONObject;
 
@@ -68,6 +71,7 @@ public class ContentActivity extends ActionBarActivity{
     private TextView createdAt;
     private View loadingContent;
     private RelativeLayout candeoMediaControl;
+    private String id;
 
 //    private Book book;
 //    private TableOfContents bookToc;
@@ -76,6 +80,7 @@ public class ContentActivity extends ActionBarActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
+        id = getIntent().getStringExtra("id");
 //        epubCore = new EpubCore();
         toolbar = (Toolbar)findViewById(R.id.candeo_content_toolbar);
         loadingContent = findViewById(R.id.candeo_loading_content);
@@ -113,10 +118,35 @@ public class ContentActivity extends ActionBarActivity{
         getInspiredButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"I got inspired",Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(),"I got inspired",Toast.LENGTH_LONG).show();
+                if(!Preferences.isUserLoggedIn(ContentActivity.this))
+                {
+
+
+                    startActivity(new Intent(ContentActivity.this,LoginActivity.class));
+                }
+                else
+                {
+
+                    ResponseFragment response = new ResponseFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("introText", "I feel");
+                    bundle.putStringArray("choices", Configuration.INSPIRE_LIST);
+                    bundle.putString("title", "Get Inspired");
+                    bundle.putString("positiveText", "Get Inspired");
+                    bundle.putString("showcaseId", id);
+                    bundle.putInt("responseType", Configuration.INSPIRE);
+                    response.setArguments(bundle);
+                    response.show(ContentActivity.this.getSupportFragmentManager(), "Appreciate");
+                }
             }
         });
-        String id = getIntent().getStringExtra("id");
+
+
+        createdAt=(TextView)findViewById(R.id.candeo_content_created_at);
+        appreciateCount=(TextView)findViewById(R.id.candeo_content_appreciate_count);
+        skipCount=(TextView)findViewById(R.id.candeo_content_skip_count);
+        inspiredCount=(TextView)findViewById(R.id.candeo_content_inspired_count);
         int type = getIntent().getIntExtra("type",Configuration.SHOWCASE);
         Log.e(TAG,"ID is :"+id);
         Log.e(TAG,"Type is :"+type);
@@ -125,19 +155,21 @@ public class ContentActivity extends ActionBarActivity{
             contentURL=contentURL+"/"+id+"/"+type;
             new LoadContent().execute(contentURL);
         }
-        createdAt=(TextView)findViewById(R.id.candeo_content_created_at);
-        appreciateCount=(TextView)findViewById(R.id.candeo_content_appreciate_count);
-        skipCount=(TextView)findViewById(R.id.candeo_content_skip_count);
-        inspiredCount=(TextView)findViewById(R.id.candeo_content_inspired_count);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-        Intent intent = new Intent(ContentActivity.this, HomeActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+//        Intent intent = new Intent(ContentActivity.this, HomeActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(intent);
     }
 
     @Override

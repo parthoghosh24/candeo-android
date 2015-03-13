@@ -78,7 +78,7 @@ public class UploadMediaTask extends AsyncTask<String, Void, String> {
         }
         else
         {
-            uploadMediaListener.onFailure("Something went wrong");
+            uploadMediaListener.onFailure("Something wrong with file upload. Please do not upload pirated/ripped files in case of audio.");
         }
     }
 }
