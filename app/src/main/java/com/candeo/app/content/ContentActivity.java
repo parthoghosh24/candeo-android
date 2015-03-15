@@ -49,7 +49,8 @@ public class ContentActivity extends ActionBarActivity{
     private static final String TAG="Candeo-Content Activity";
     private Toolbar toolbar;
     private Button launchBook=null; //temporary
-    private String contentURL = Configuration.BASE_URL +"/api/v1/contents";
+    private final static String CONTENT_RELATIVE_URL="/contents/%s/%s";
+    private final static String CONTENT_URL = Configuration.BASE_URL +"/api/v1"+CONTENT_RELATIVE_URL;
     private TextView play = null;
     private int stopPosition=0;
     private MediaPlayer mediaPlayer;
@@ -152,8 +153,7 @@ public class ContentActivity extends ActionBarActivity{
         Log.e(TAG,"Type is :"+type);
         if(id!=null)
         {
-            contentURL=contentURL+"/"+id+"/"+type;
-            new LoadContent().execute(contentURL);
+            new LoadContent(String.format(CONTENT_RELATIVE_URL,id,type)).execute(String.format(CONTENT_URL,id,type));
         }
     }
 
@@ -189,9 +189,16 @@ public class ContentActivity extends ActionBarActivity{
     private class LoadContent extends AsyncTask<String, String, JSONObject> {
 
 
+        private String relativeUrl;
+
+        public LoadContent(String relativeUrl)
+        {
+            this.relativeUrl=relativeUrl;
+        }
+
         @Override
         protected JSONObject doInBackground(String... urls) {
-            return JSONParser.parseGET(urls[0]);
+            return JSONParser.parseGET(urls[0], getApplicationContext(), relativeUrl);
         }
 
         @Override

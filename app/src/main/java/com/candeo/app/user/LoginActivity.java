@@ -26,6 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -34,6 +35,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
+import com.candeo.app.algorithms.Security;
 import com.candeo.app.network.UploadMediaListener;
 import com.candeo.app.network.UploadMediaTask;
 import com.candeo.app.util.CandeoUtil;
@@ -69,8 +71,10 @@ public class LoginActivity extends Activity implements UploadMediaListener {
     private View noContent =null;
     ArrayList<String> emails;
 
-    private static final String API_REGISTER_URL = Configuration.BASE_URL +"/api/v1/users/register";
-    private static final String API_LOGIN_URL = Configuration.BASE_URL +"/api/v1/users/login";
+    private static final String API_REGISTER_RELATIVE_URL="/users/register";
+    private static final String API_REGISTER_URL = Configuration.BASE_URL +"/api/v1"+API_REGISTER_RELATIVE_URL;
+    private static final String API_LOGIN_RELATIVE_URL="/users/login";
+    private static final String API_LOGIN_URL = Configuration.BASE_URL +"/api/v1"+API_LOGIN_RELATIVE_URL;
 
     private static final String TAG ="Candeo - Login Activity";
     @Override
@@ -341,6 +345,20 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                         }
                     });
         }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            String secret=Configuration.CANDEO_DEFAULT_SECRET;
+            params.put("email", "");
+            String message = API_REGISTER_RELATIVE_URL;
+            params.put("message", message);
+            Log.e(TAG,"secret->"+secret);
+            String hash = Security.generateHmac(secret, message);
+            Log.e(TAG,"hash->"+hash);
+            params.put("Authorization", "Token token=" + hash);
+            return params;
+        }
     }
 
     class LoginUserRequest extends JsonObjectRequest
@@ -369,6 +387,20 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                             noContent.setVisibility(View.GONE);
                         }
                   });
+        }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            String secret=Configuration.CANDEO_DEFAULT_SECRET;
+            params.put("email", "");
+            String message = API_LOGIN_RELATIVE_URL;
+            params.put("message", message);
+            Log.e(TAG,"secret->"+secret);
+            String hash = Security.generateHmac(secret, message);
+            Log.e(TAG,"hash->"+hash);
+            params.put("Authorization", "Token token=" + hash);
+            return params;
         }
     }
 

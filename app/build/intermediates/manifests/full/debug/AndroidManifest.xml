@@ -54,13 +54,6 @@
                 android:value=".home.HomeActivity" />
         </activity>
         <activity
-            android:name="com.candeo.app.content.RespondActivity"
-            android:configChanges="keyboard|orientation|screenSize"
-            android:label="@string/title_activity_respond"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
-        <activity
             android:name="com.candeo.app.content.PostActivity"
             android:configChanges="keyboard|orientation|screenSize"
             android:label="@string/title_activity_post"

@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -23,6 +24,7 @@ import com.candeo.app.Configuration;
 import com.candeo.app.R;
 import com.candeo.app.SplashActivity;
 import com.candeo.app.adapters.TabPagerAdapter;
+import com.candeo.app.algorithms.Security;
 import com.candeo.app.leaderboard.LeaderBoardFragment;
 import com.candeo.app.user.LoginActivity;
 import com.candeo.app.user.UserFragment;
@@ -32,8 +34,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
 
-public class HomeActivity extends ActionBarActivity{
+
+public class HomeActivity extends ActionBarActivity {
 
 
     private Toolbar toolbar;
@@ -42,53 +47,52 @@ public class HomeActivity extends ActionBarActivity{
     private HomeFragment homeFragment;
     private LeaderBoardFragment leaderBoardFragment;
     private UserFragment userFragment;
-    private static final String TAG="Candeo - Home";
-    private final static String GET_USER_API = Configuration.BASE_URL+"/api/v1/users/%s";
-    private final static String GET_LIMELIGHT_LIST_API = Configuration.BASE_URL +"/api/v1/contents/limelights/list/%s";
-    private final static String GET_PERFORMANCES_API = Configuration.BASE_URL+"/api/v1/contents/performances/show";
+    private static final String TAG = "Candeo - Home";
+    private final static String GET_USER_RELATIVE_API = "/users/%s";
+    private final static String GET_USER_API = Configuration.BASE_URL + "/api/v1" + GET_USER_RELATIVE_API;
+    private final static String GET_LIMELIGHT_LIST_RELATIVE_API = "/contents/limelights/list/%s";
+    private final static String GET_LIMELIGHT_LIST_API = Configuration.BASE_URL + "/api/v1" + GET_LIMELIGHT_LIST_RELATIVE_API;
+    private final static String GET_PERFORMANCES_RELATIVE_API = "/contents/performances/show";
+    private final static String GET_PERFORMANCES_API = Configuration.BASE_URL + "/api/v1" + GET_PERFORMANCES_RELATIVE_API;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(Preferences.isFirstRun(getApplicationContext()))
-        {
+        if (Preferences.isFirstRun(getApplicationContext())) {
             finish();
             startActivity(new Intent(getApplicationContext(), SplashActivity.class));
-        }
-        else
-        {
+        } else {
 
             setContentView(R.layout.activity_home);
             homeFragment = new HomeFragment();
             leaderBoardFragment = new LeaderBoardFragment();
             userFragment = new UserFragment();
             tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), homeFragment, leaderBoardFragment, userFragment);
-            homePager = (ViewPager)findViewById(R.id.home_pager);
-            toolbar = (Toolbar)findViewById(R.id.candeo_toolbar);
+            homePager = (ViewPager) findViewById(R.id.home_pager);
+            toolbar = (Toolbar) findViewById(R.id.candeo_toolbar);
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             homePager.setAdapter(tabPagerAdapter);
             homePager.setOffscreenPageLimit(2);
             String fromVerify = getIntent().getStringExtra("fromVerify");
-            if(!TextUtils.isEmpty(fromVerify) && "verified".equalsIgnoreCase(fromVerify))
-            {
+            if (!TextUtils.isEmpty(fromVerify) && "verified".equalsIgnoreCase(fromVerify)) {
                 getSupportActionBar().show();
                 getSupportActionBar().setTitle("My Profile");
                 homePager.setCurrentItem(2);
                 GetUserRequest userRequest = new GetUserRequest(Preferences.getUserRowId(getApplicationContext()));
                 userRequest.setShouldCache(false);
                 CandeoApplication.getInstance().getAppRequestQueue().add(userRequest);
-            }
-            else
-            {
+            } else {
                 homePager.setCurrentItem(1);
-                String id = TextUtils.isEmpty(Preferences.getUserRowId(getApplicationContext())) ? "0":Preferences.getUserRowId(getApplicationContext());
+                String id = TextUtils.isEmpty(Preferences.getUserRowId(getApplicationContext())) ? "0" : Preferences.getUserRowId(getApplicationContext());
                 FetchLimelightList fetchLimelightListRequest = new FetchLimelightList(id);
                 fetchLimelightListRequest.setShouldCache(false);
                 CandeoApplication.getInstance().getAppRequestQueue().add(fetchLimelightListRequest);
+                getSupportActionBar().hide();
             }
 
-            getSupportActionBar().hide();
+
             homePager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -97,9 +101,9 @@ public class HomeActivity extends ActionBarActivity{
 
                 @Override
                 public void onPageSelected(int position) {
+                    getSupportActionBar().hide();
 
-                    switch (position)
-                    {
+                    switch (position) {
                         case 0:
                             getSupportActionBar().show();
                             getSupportActionBar().setTitle("Performances");
@@ -109,8 +113,8 @@ public class HomeActivity extends ActionBarActivity{
                             break;
                         case 1:
                             getSupportActionBar().hide();
-                            if(Configuration.DEBUG)Log.e(TAG,"Limelight request fetched");
-                            String id = TextUtils.isEmpty(Preferences.getUserRowId(getApplicationContext())) ? "0":Preferences.getUserRowId(getApplicationContext());
+                            if (Configuration.DEBUG) Log.e(TAG, "Limelight request fetched");
+                            String id = TextUtils.isEmpty(Preferences.getUserRowId(getApplicationContext())) ? "0" : Preferences.getUserRowId(getApplicationContext());
                             FetchLimelightList fetchLimelightListRequest = new FetchLimelightList(id);
                             fetchLimelightListRequest.setShouldCache(false);
                             CandeoApplication.getInstance().getAppRequestQueue().add(fetchLimelightListRequest);
@@ -118,9 +122,13 @@ public class HomeActivity extends ActionBarActivity{
                         case 2:
                             getSupportActionBar().show();
                             getSupportActionBar().setTitle("My Profile");
-                            GetUserRequest userRequest = new GetUserRequest(Preferences.getUserRowId(getApplicationContext()));
-                            userRequest.setShouldCache(false);
-                            CandeoApplication.getInstance().getAppRequestQueue().add(userRequest);
+                            if(Preferences.isUserLoggedIn(getApplicationContext()))
+                            {
+                                GetUserRequest userRequest = new GetUserRequest(Preferences.getUserRowId(getApplicationContext()));
+                                userRequest.setShouldCache(false);
+                                CandeoApplication.getInstance().getAppRequestQueue().add(userRequest);
+
+                            }
                             break;
                     }
                 }
@@ -145,13 +153,10 @@ public class HomeActivity extends ActionBarActivity{
 
     @Override
     public void onBackPressed() {
-        if(homePager.getCurrentItem() == 1)
-        {
+        if (homePager.getCurrentItem() == 1) {
             super.onBackPressed();
-        }
-        else
-        {
-            homePager.setCurrentItem(1,true);
+        } else {
+            homePager.setCurrentItem(1, true);
 
         }
     }
@@ -171,8 +176,7 @@ public class HomeActivity extends ActionBarActivity{
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        switch (id)
-        {
+        switch (id) {
             case android.R.id.home:
                 homePager.setCurrentItem(1);
                 break;
@@ -181,14 +185,13 @@ public class HomeActivity extends ActionBarActivity{
     }
 
 
-    private class GetUserRequest extends JsonObjectRequest
-    {
-        public GetUserRequest(String id)
-        {
+    private class GetUserRequest extends JsonObjectRequest {
+        private String id;
+        public GetUserRequest(String id) {
             super(Method.GET,
-                    String.format(GET_USER_API,id),
+                    String.format(GET_USER_API, id),
                     null,
-                    new Response.Listener<JSONObject>(){
+                    new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
                             userFragment.onGetUserComplete(response);
@@ -200,15 +203,36 @@ public class HomeActivity extends ActionBarActivity{
                             Log.e(TAG, "error is " + error.getLocalizedMessage());
                         }
                     });
+            this.id=id;
+        }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            String secret="";
+            if (Preferences.isUserLoggedIn(getApplicationContext()) && !TextUtils.isEmpty(Preferences.getUserEmail(getApplicationContext()))) {
+                params.put("email", Preferences.getUserEmail(getApplicationContext()));
+                secret=Preferences.getUserApiKey(getApplicationContext());
+
+            } else {
+                params.put("email", "");
+                secret=Configuration.CANDEO_DEFAULT_SECRET;
+            }
+            String message = String.format(GET_USER_RELATIVE_API,id);
+            params.put("message", message);
+            Log.e(TAG,"secret->"+secret);
+            String hash = Security.generateHmac(secret, message);
+            Log.e(TAG,"hash->"+hash);
+            params.put("Authorization", "Token token=" + hash);
+            return params;
         }
     }
 
-    private class FetchLimelightList extends JsonObjectRequest
-    {
-        public FetchLimelightList(String id)
-        {
+    private class FetchLimelightList extends JsonObjectRequest {
+        private String id;
+        public FetchLimelightList(String id) {
             super(Method.GET,
-                    String.format(GET_LIMELIGHT_LIST_API,id),
+                    String.format(GET_LIMELIGHT_LIST_API, id),
                     null,
                     new Response.Listener<JSONObject>() {
                         @Override
@@ -222,28 +246,47 @@ public class HomeActivity extends ActionBarActivity{
                         @Override
                         public void onErrorResponse(VolleyError error) {
 
-                            Log.e(TAG,"Error occured");
+                            Log.e(TAG, "Error occured");
                             Log.e(TAG, "localized error while fetching is limelight " + error.getLocalizedMessage());
                             NetworkResponse response = error.networkResponse;
-                            if(response!=null)
-                            {
-                                Log.e(TAG,"Actual error while fetching limelight is "+new String(response.data));
+                            if (response != null) {
+                                Log.e(TAG, "Actual error while fetching limelight is " + new String(response.data));
                             }
 
                         }
                     }
             );
+            this.id=id;
+        }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            String secret="";
+            if (Preferences.isUserLoggedIn(getApplicationContext()) && !TextUtils.isEmpty(Preferences.getUserEmail(getApplicationContext()))) {
+                params.put("email", Preferences.getUserEmail(getApplicationContext()));
+                secret=Preferences.getUserApiKey(getApplicationContext());
+
+            } else {
+                params.put("email", "");
+                secret=Configuration.CANDEO_DEFAULT_SECRET;
+            }
+            String message = String.format(GET_LIMELIGHT_LIST_RELATIVE_API,id);
+            params.put("message", message);
+            Log.e(TAG,"secret->"+secret);
+            String hash = Security.generateHmac(secret, message);
+            Log.e(TAG,"hash->"+hash);
+            params.put("Authorization", "Token token=" + hash);
+            return params;
         }
     }
 
-    private class GetPerformanceRequest extends JsonObjectRequest
-    {
-        public GetPerformanceRequest()
-        {
+    private class GetPerformanceRequest extends JsonObjectRequest {
+        public GetPerformanceRequest() {
             super(Method.GET,
                     GET_PERFORMANCES_API,
                     null,
-                    new Response.Listener<JSONObject>(){
+                    new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
                             leaderBoardFragment.onGetLeaderBoardComplete(response);
@@ -252,17 +295,36 @@ public class HomeActivity extends ActionBarActivity{
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.e(TAG,"Error occured");
+                            Log.e(TAG, "Error occured");
                             Log.e(TAG, "localized error while fetching is leaderboard " + error.getLocalizedMessage());
                             NetworkResponse response = error.networkResponse;
-                            if(response!=null)
-                            {
-                                Log.e(TAG,"Actual error while fetching leaderboard is "+new String(response.data));
+                            if (response != null) {
+                                Log.e(TAG, "Actual error while fetching leaderboard is " + new String(response.data));
                             }
                         }
                     });
         }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            String secret="";
+            if (Preferences.isUserLoggedIn(getApplicationContext()) && !TextUtils.isEmpty(Preferences.getUserEmail(getApplicationContext()))) {
+                params.put("email", Preferences.getUserEmail(getApplicationContext()));
+                secret=Preferences.getUserApiKey(getApplicationContext());
+
+            } else {
+                params.put("email", "");
+                secret=Configuration.CANDEO_DEFAULT_SECRET;
+            }
+            String message = GET_PERFORMANCES_RELATIVE_API;
+            params.put("message", message);
+            Log.e(TAG,"secret->"+secret);
+            String hash = Security.generateHmac(secret, message);
+            Log.e(TAG,"hash->"+hash);
+            params.put("Authorization", "Token token=" + hash);
+            return params;
+        }
     }
-
-
 }
+

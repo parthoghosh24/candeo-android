@@ -1,5 +1,12 @@
 package com.candeo.app.util;
 
+import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.candeo.app.Configuration;
+import com.candeo.app.algorithms.Security;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -24,7 +31,7 @@ public class JSONParser {
     * Parses GET request
     * */
 
-    public static JSONObject parseGET(String url)
+    public static JSONObject parseGET(String url, Context mContext, String relativeUrl)
     {
         InputStream inputStream=null;
         JSONObject json = null;
@@ -34,7 +41,24 @@ public class JSONParser {
         System.out.println("URL is: "+url);
         try {
             DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpResponse response = httpClient.execute(new HttpGet(url));
+            HttpGet get = new HttpGet(url);
+            String secret="";
+            if(TextUtils.isEmpty(Preferences.getUserEmail(mContext)))
+            {
+                secret= Configuration.CANDEO_DEFAULT_SECRET;
+            }
+            else
+            {
+                secret=Preferences.getUserApiKey(mContext);
+            }
+            String message = relativeUrl;
+            String hash = Security.generateHmac(secret, message);
+            get.setHeader("message",message);
+            Log.e("JsonParser","Message is "+message);
+            get.setHeader("email",Preferences.getUserEmail(mContext));
+            get.setHeader("Authorization", "Token token=" + hash);
+            Log.e("JsonParser","Hash is "+hash);
+            HttpResponse response = httpClient.execute(get);
             HttpEntity entity = response.getEntity();
             inputStream = entity.getContent();
             System.out.println("InputStream is: "+inputStream);

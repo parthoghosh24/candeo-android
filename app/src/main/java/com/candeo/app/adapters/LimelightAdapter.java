@@ -10,9 +10,9 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
+import com.candeo.app.content.ResponseListener;
 import com.candeo.app.home.HomeActivity;
 import com.candeo.app.home.LimelightFragment;
-import com.candeo.app.response.ResponseListener;
 
 import java.io.Serializable;
 import java.util.ArrayList;

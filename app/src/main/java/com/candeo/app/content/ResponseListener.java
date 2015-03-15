@@ -1,9 +1,8 @@
-package com.candeo.app.response;
+package com.candeo.app.content;
 
 /**
- * Created by dholu on 9/2/15.
+ * Created by Partho on 15/3/15.
  */
 public interface ResponseListener {
-
     public void onResponseClick(int position);
 }

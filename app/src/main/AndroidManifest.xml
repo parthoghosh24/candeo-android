@@ -50,13 +50,6 @@
                 android:value=".home.HomeActivity" />
         </activity>
         <activity
-            android:name=".content.RespondActivity"
-            android:configChanges="keyboard|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="@string/title_activity_respond" >
-        </activity>
-        <activity
             android:name=".content.PostActivity"
             android:configChanges="keyboard|orientation|screenSize"
             android:screenOrientation="portrait"

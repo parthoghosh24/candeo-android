@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -19,7 +20,9 @@ import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
 import com.candeo.app.adapters.UserPagerAdapter;
+import com.candeo.app.algorithms.Security;
 import com.candeo.app.util.CandeoUtil;
+import com.candeo.app.util.Preferences;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +31,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class DiscoveryFragment extends Fragment {
@@ -44,8 +48,10 @@ public class DiscoveryFragment extends Fragment {
     private LinearLayoutManager inspirationsLinearLayoutManager;
     private View noAppreciations;
     private View noInspirations;
-    private static final String GET_USER_APPRECIATIONS_API=Configuration.BASE_URL+"/api/v1/users/%s/appreciations/%s";
-    private static final String GET_USER_INSPIRATIONS_API=Configuration.BASE_URL+"/api/v1/users/%s/inspirations/%s";
+    private static final String GET_USER_APPRECIATIONS_RELATIVE_API="/users/%s/appreciations/%s";
+    private static final String GET_USER_APPRECIATIONS_API=Configuration.BASE_URL+"/api/v1"+GET_USER_APPRECIATIONS_RELATIVE_API;
+    private static final String GET_USER_INSPIRATIONS_RELATIVE_API="/users/%s/inspirations/%s";
+    private static final String GET_USER_INSPIRATIONS_API=Configuration.BASE_URL+"/api/v1"+GET_USER_INSPIRATIONS_RELATIVE_API;
     private String userId="";
 
     @Override
@@ -86,6 +92,8 @@ public class DiscoveryFragment extends Fragment {
 
     private class GetUserAppreciations extends JsonObjectRequest
     {
+        private String id;
+        private String lastTimeStamp;
         public GetUserAppreciations(String id, String lastTimeStamp)
         {
             super(Method.GET,
@@ -153,11 +161,35 @@ public class DiscoveryFragment extends Fragment {
                             Log.e(TAG, "error is " + error.getLocalizedMessage());
                         }
                     });
+
+                   this.id=id;
+                   this.lastTimeStamp=lastTimeStamp;
+        }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            if (Preferences.isUserLoggedIn(getActivity()) && !TextUtils.isEmpty(Preferences.getUserEmail(getActivity()))) {
+                String secret="";
+                params.put("email", Preferences.getUserEmail(getActivity()));
+                secret=Preferences.getUserApiKey(getActivity());
+                String message = String.format(GET_USER_APPRECIATIONS_RELATIVE_API,id,lastTimeStamp);
+                params.put("message", message);
+                Log.e(TAG,"secret->"+secret);
+                String hash = Security.generateHmac(secret, message);
+                Log.e(TAG,"hash->"+hash);
+                params.put("Authorization", "Token token=" + hash);
+
+            }
+
+            return params;
         }
     }
 
     private class GetUserInspirations extends JsonObjectRequest
     {
+        private String id;
+        private String lastTimeStamp;
         public GetUserInspirations(String id, String lastTimeStamp)
         {
             super(Method.GET,
@@ -227,6 +259,26 @@ public class DiscoveryFragment extends Fragment {
                             Log.e(TAG, "error is " + error.getLocalizedMessage());
                         }
                     });
+            this.id=id;
+            this.lastTimeStamp=lastTimeStamp;
+        }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            if (Preferences.isUserLoggedIn(getActivity()) && !TextUtils.isEmpty(Preferences.getUserEmail(getActivity()))) {
+                String secret="";
+                params.put("email", Preferences.getUserEmail(getActivity()));
+                secret=Preferences.getUserApiKey(getActivity());
+                String message = String.format(GET_USER_INSPIRATIONS_RELATIVE_API,id,lastTimeStamp);
+                params.put("message", message);
+                Log.e(TAG,"secret->"+secret);
+                String hash = Security.generateHmac(secret, message);
+                Log.e(TAG,"hash->"+hash);
+                params.put("Authorization", "Token token=" + hash);
+
+            }
+            return params;
         }
     }
 

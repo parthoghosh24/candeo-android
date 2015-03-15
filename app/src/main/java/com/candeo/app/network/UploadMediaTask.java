@@ -52,7 +52,7 @@ public class UploadMediaTask extends AsyncTask<String, Void, String> {
             if(mediaType >0 && dataArray != null) //Data Array can't be empty for media files. In Showcase, media types are mandatory
             {
                 String url = params[0];
-                CandeoHttpClient client = new CandeoHttpClient(url);
+                CandeoHttpClient client = new CandeoHttpClient(url,mContext);
                 client.connectForMultipart();
                 System.out.println("FILE is " + fileName);
                 client.addFormPart("media_type",Integer.toString(mediaType));

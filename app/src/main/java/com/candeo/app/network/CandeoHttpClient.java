@@ -1,5 +1,13 @@
 package com.candeo.app.network;
 
+import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.candeo.app.Configuration;
+import com.candeo.app.algorithms.Security;
+import com.candeo.app.util.Preferences;
+
 import org.apache.http.util.ByteArrayBuffer;
 
 import java.io.BufferedInputStream;
@@ -17,14 +25,16 @@ import java.net.URL;
 public class CandeoHttpClient {
 
     private String url;
+    private Context mContext;
     private HttpURLConnection connection;
     private OutputStream outputStream;
     private String delimiter="--";
     private String boundary="candeo"+Long.toString(System.currentTimeMillis())+"candeo"; //Making timestamp powered boundary for request payload
 
-    public CandeoHttpClient(String url)
+    public CandeoHttpClient(String url, Context mContext)
     {
         this.url = url;
+        this.mContext=mContext;
     }
 
     public void connectForMultipart() throws MalformedURLException, IOException
@@ -33,8 +43,23 @@ public class CandeoHttpClient {
         connection.setRequestMethod("POST");
         connection.setDoInput(true);
         connection.setDoOutput(true);//Required for POST
-        connection.setRequestProperty("Connection","Keep-Alive");
+        connection.setRequestProperty("Connection", "Keep-Alive");
         connection.setRequestProperty("Content-Type","multipart/form-data; boundary="+boundary);
+        connection.setRequestProperty("email", Preferences.getUserEmail(mContext));
+        String secret="";
+        if(TextUtils.isEmpty(Preferences.getUserEmail(mContext)))
+        {
+            secret=Configuration.CANDEO_DEFAULT_SECRET;
+        }
+        else
+        {
+            secret=Preferences.getUserApiKey(mContext);
+        }
+        String message = Configuration.MEDIA_UPLOAD_RELATIVE_URL;
+        connection.setRequestProperty("message", message);
+        String hash = Security.generateHmac(secret, message);
+        Log.e("CandeoHttp", "hash->" + hash);
+        connection.setRequestProperty("Authorization", "Token token=" + hash);
         connection.setChunkedStreamingMode(1024);
         connection.connect();
         outputStream=connection.getOutputStream();

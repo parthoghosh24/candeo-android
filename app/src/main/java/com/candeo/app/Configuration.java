@@ -17,9 +17,11 @@ public class Configuration {
 //    public static final String BASE_URL ="http://192.168.0.104:3000";
 //      public static final String BASE_URL ="http://192.168.0.103:3000";
 //      public static final String BASE_URL ="http://192.168.0.102:3000";
-    public static final String BASE_URL="http://192.168.43.239:3000";
+    public static final String BASE_URL ="http://192.168.0.101:3000";
+//    public static final String BASE_URL="http://192.168.43.239:3000";
     //    public static final String BASE_URL="http://10.0.3.116:3000";
 
+    public static final String CANDEO_DEFAULT_SECRET="candeosecret2015";
     public static final String BOOKSROOT= Environment.getExternalStorageDirectory().getAbsolutePath()+ File.separator+"Books";
     public static final String CANDEO_BOOKSROOT= Environment.getExternalStorageDirectory()+"/candeo/books";
     public static final String INTENTBOOK="book";
@@ -63,7 +65,8 @@ public class Configuration {
     public static final int INSPIRATION=2;
 
     //Common API Urls
-    public static final String MEDIA_UPLOAD_URL=BASE_URL+"/api/v1/media/create";
+    public static final String MEDIA_UPLOAD_RELATIVE_URL="/media/create";
+    public static final String MEDIA_UPLOAD_URL=BASE_URL+"/api/v1"+MEDIA_UPLOAD_RELATIVE_URL;
 
 
     //Response Lists

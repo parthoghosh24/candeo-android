@@ -40,6 +40,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -47,6 +48,7 @@ import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
 
+import com.candeo.app.algorithms.Security;
 import com.candeo.app.network.CandeoHttpClient;
 import com.candeo.app.network.UploadMediaListener;
 import com.candeo.app.network.UploadMediaTask;
@@ -109,7 +111,8 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
 
     private int contentType=Configuration.INSPIRATION;
     private String type="";
-    private static final String API_POST_CREATE_URL=Configuration.BASE_URL +"/api/v1/contents/create ";
+    private static final String API_POST_CREATE_RELATIVE_URL="/contents/create ";
+    private static final String API_POST_CREATE_URL=Configuration.BASE_URL +"/api/v1"+API_POST_CREATE_RELATIVE_URL;
 
     @Override
     public void onSuccess(String response) {
@@ -387,6 +390,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
 
     class PostContentRequest extends JsonObjectRequest
     {
+        private Map<String, String> payload;
         public PostContentRequest(final Map<String,String> payload)
         {
             super(Method.POST,
@@ -418,6 +422,24 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                             System.out.println("Something went wrong");
                         }
                     });
+            this.payload=payload;
+        }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            if (Preferences.isUserLoggedIn(getApplicationContext()) && !TextUtils.isEmpty(Preferences.getUserEmail(getApplicationContext()))) {
+                String secret="";
+                params.put("email", Preferences.getUserEmail(getApplicationContext()));
+                secret=Preferences.getUserApiKey(getApplicationContext());
+                String message = API_POST_CREATE_RELATIVE_URL+"|"+new JSONObject(payload).toString();
+                params.put("message", message);
+                Log.e(TAG,"secret->"+secret);
+                String hash = Security.generateHmac(secret, message);
+                Log.e(TAG,"hash->"+hash);
+                params.put("Authorization", "Token token=" + hash);
+            }
+            return params;
         }
     }
 

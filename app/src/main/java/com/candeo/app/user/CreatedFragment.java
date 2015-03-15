@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -18,7 +19,9 @@ import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
 import com.candeo.app.adapters.UserPagerAdapter;
+import com.candeo.app.algorithms.Security;
 import com.candeo.app.util.CandeoUtil;
+import com.candeo.app.util.Preferences;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,6 +30,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CreatedFragment extends Fragment {
 
@@ -38,7 +42,8 @@ public class CreatedFragment extends Fragment {
     private UserPagerAdapter creationsAdapter;
     private List<HashMap<String,String>> creationList;
     private RecyclerView creations;
-    private static final String GET_USER_CREATIONS_API=Configuration.BASE_URL+"/api/v1/users/%s/showcases/%s";
+    private static final String GET_USER_CREATIONS_RELATIVE_API="/users/%s/showcases/%s";
+    private static final String GET_USER_CREATIONS_API=Configuration.BASE_URL+"/api/v1"+GET_USER_CREATIONS_RELATIVE_API;
     private String userId="";
 
     @Override
@@ -71,6 +76,7 @@ public class CreatedFragment extends Fragment {
 
     private class GetUserCreations extends JsonObjectRequest
     {
+        private String id, lastTimeStamp;
         public GetUserCreations(String id, String lastTimeStamp)
         {
             super(Method.GET,
@@ -139,6 +145,29 @@ public class CreatedFragment extends Fragment {
                             Log.e(TAG, "error is " + error.getLocalizedMessage());
                         }
                     });
+            this.id=id;
+            this.lastTimeStamp=lastTimeStamp;
+        }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            String secret="";
+            if (Preferences.isUserLoggedIn(getActivity()) && !TextUtils.isEmpty(Preferences.getUserEmail(getActivity()))) {
+                params.put("email", Preferences.getUserEmail(getActivity()));
+                secret=Preferences.getUserApiKey(getActivity());
+
+            } else {
+                params.put("email", "");
+                secret=Configuration.CANDEO_DEFAULT_SECRET;
+            }
+            String message = String.format(GET_USER_CREATIONS_RELATIVE_API,id,lastTimeStamp);
+            params.put("message", message);
+            Log.e(TAG,"secret->"+secret);
+            String hash = Security.generateHmac(secret, message);
+            Log.e(TAG,"hash->"+hash);
+            params.put("Authorization", "Token token=" + hash);
+            return params;
         }
     }
 

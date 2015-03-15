@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
+import com.candeo.app.algorithms.Security;
 import com.candeo.app.home.HomeActivity;
 import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.Preferences;
@@ -25,7 +27,8 @@ import java.util.Map;
 public class UserVerifyActivity extends ActionBarActivity {
 
 
-    private static final String API_USER_VERIFY_URL= Configuration.BASE_URL +"/api/v1/users/verify";
+    private static final String API_USER_VERIFY_RELATIVE_URL="/users/verify";
+    private static final String API_USER_VERIFY_URL= Configuration.BASE_URL +"/api/v1"+API_USER_VERIFY_RELATIVE_URL;
     private static final String TAG="Candeo - User Verify";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +91,20 @@ public class UserVerifyActivity extends ActionBarActivity {
 
                         }
                     });
+        }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            String secret=Configuration.CANDEO_DEFAULT_SECRET;
+            params.put("email", "");
+            String message = API_USER_VERIFY_RELATIVE_URL;
+            params.put("message", message);
+            Log.e(TAG,"secret->"+secret);
+            String hash = Security.generateHmac(secret, message);
+            Log.e(TAG,"hash->"+hash);
+            params.put("Authorization", "Token token=" + hash);
+            return params;
         }
     }
 

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -21,6 +23,7 @@ import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.adapters.LimelightAdapter;
 import com.candeo.app.R;
+import com.candeo.app.algorithms.Security;
 import com.candeo.app.content.PostActivity;
 import com.candeo.app.transformers.ShowcaseTransformer;
 import com.candeo.app.ui.NonSwipeablePager;
@@ -34,6 +37,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class HomeFragment extends Fragment {
 
@@ -48,7 +52,8 @@ public class HomeFragment extends Fragment {
     private View loadingContent = null;
     private View noContent =null;
     private static final String TAG="Candeo - HomeFrag";
-    private static final String HAS_USER_POSTED_URL=Configuration.BASE_URL+"/api/v1/users/posted/%s";
+    private static final String HAS_USER_POSTED_RELATIVE_URL="/users/posted/%s";
+    private static final String HAS_USER_POSTED_URL=Configuration.BASE_URL+"/api/v1"+HAS_USER_POSTED_RELATIVE_URL;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -170,6 +175,7 @@ public class HomeFragment extends Fragment {
 
     class CheckUserPostedRequest extends JsonObjectRequest
     {
+        private String id;
         public CheckUserPostedRequest(String id)
         {
             super(String.format(HAS_USER_POSTED_URL,id),
@@ -182,15 +188,20 @@ public class HomeFragment extends Fragment {
                             {
                                 try {
                                     JSONObject hasPosted = response.getJSONObject("response");
-                                    if(hasPosted==null)
+                                    if(hasPosted!=null)
                                     {
-                                        Intent postIntent = new Intent(getActivity(), PostActivity.class);
-                                        postIntent.putExtra("type", "showcase");
-                                        startActivity(postIntent);
-                                    }
-                                    else
-                                    {
-                                        CandeoUtil.appAlertDialog(getActivity(),"Hey there, You have already performed for this week. You will be again able to post next week. Meanwhile, you can check other performances and help the right talent to grow.");
+                                        boolean posted = hasPosted.getBoolean("state");
+                                        if(posted)
+                                        {
+                                            CandeoUtil.appAlertDialog(getActivity(),"Hey there, You have already performed for this week. You will be again able to post next week. Meanwhile, you can check other performances and help the right talent to grow.");
+                                        }
+                                        else
+                                        {
+                                            Intent postIntent = new Intent(getActivity(), PostActivity.class);
+                                            postIntent.putExtra("type", "showcase");
+                                            startActivity(postIntent);
+                                        }
+
                                     }
                                 }
                                 catch (JSONException jse)
@@ -210,6 +221,25 @@ public class HomeFragment extends Fragment {
                             Toast.makeText(getActivity(),"Please try again",Toast.LENGTH_SHORT).show();;
                         }
                     });
+            this.id=id;
+        }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            if (Preferences.isUserLoggedIn(getActivity()) && !TextUtils.isEmpty(Preferences.getUserEmail(getActivity()))) {
+                String secret="";
+                params.put("email", Preferences.getUserEmail(getActivity()));
+                secret=Preferences.getUserApiKey(getActivity());
+                String message = String.format(HAS_USER_POSTED_RELATIVE_URL,id);
+                params.put("message", message);
+                Log.e(TAG,"secret->"+secret);
+                String hash = Security.generateHmac(secret, message);
+                Log.e(TAG,"hash->"+hash);
+                params.put("Authorization", "Token token=" + hash);
+
+            }
+            return params;
         }
     }
 

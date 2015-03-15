@@ -21,14 +21,16 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
+import com.candeo.app.algorithms.Security;
 import com.candeo.app.content.ContentActivity;
-import com.candeo.app.response.ResponseListener;
+import com.candeo.app.content.ResponseListener;
 import com.candeo.app.ui.ResponseFragment;
 import com.candeo.app.user.LoginActivity;
 import com.candeo.app.util.CandeoUtil;
@@ -39,6 +41,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -47,7 +51,8 @@ public class LimelightFragment extends Fragment{
 
     private String id="";
     private static final String TAG="Candeo- Limelight";
-    private final static String GET_LIMELIGHT_API = Configuration.BASE_URL +"/api/v1/contents/limelight/%s";
+    private final static String LIMELIGHT_RELATIVE_API="/contents/limelight/%s";
+    private final static String GET_LIMELIGHT_API = Configuration.BASE_URL +"/api/v1/"+LIMELIGHT_RELATIVE_API;
     private CircleImageView avatar;
     private ImageView mediaBg;
     private TextView name;
@@ -205,8 +210,10 @@ public class LimelightFragment extends Fragment{
 
     private class FetchLimelight extends JsonObjectRequest
     {
+        private String relativeUrl;
         public FetchLimelight(final String id)
         {
+
             super(Method.GET,
                     String.format(GET_LIMELIGHT_API,id),
                     null,
@@ -263,6 +270,29 @@ public class LimelightFragment extends Fragment{
                         }
                     }
             );
+            this.relativeUrl=String.format(LIMELIGHT_RELATIVE_API,id);
+
+        }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            String secret="";
+            if (Preferences.isUserLoggedIn(getActivity()) && !TextUtils.isEmpty(Preferences.getUserEmail(getActivity()))) {
+                params.put("email", Preferences.getUserEmail(getActivity()));
+                secret=Preferences.getUserApiKey(getActivity());
+
+            } else {
+                params.put("email", "");
+                secret=Configuration.CANDEO_DEFAULT_SECRET;
+            }
+            String message = relativeUrl;
+            params.put("message", message);
+            Log.e(TAG,"secret->"+secret);
+            String hash = Security.generateHmac(secret, message);
+            Log.e(TAG,"hash->"+hash);
+            params.put("Authorization", "Token token=" + hash);
+            return params;
         }
     }
 
