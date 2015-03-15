@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -24,8 +26,10 @@ import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
 import com.candeo.app.adapters.LeaderboardAdapter;
+import com.candeo.app.algorithms.Security;
 import com.candeo.app.home.HomeActivity;
 import com.candeo.app.util.CandeoUtil;
+import com.candeo.app.util.Preferences;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +38,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -53,7 +58,8 @@ public class LeaderBoardFragment extends Fragment {
     private LeaderboardAdapter mLeaderboardAdapter;
     private LinearLayoutManager performanceListLayoutManager;
     private List<HashMap<String,String>> morePerformances = new ArrayList<>();
-    private final static String GET_MORE_PERFORMANCES_API=Configuration.BASE_URL+"/api/v1/contents/performances/list/%s";
+    private final static String GET_MORE_PERFORMANCES_RELATIVE_API="/contents/performances/list/%s";
+    private final static String GET_MORE_PERFORMANCES_API=Configuration.BASE_URL+"/api/v1"+GET_MORE_PERFORMANCES_RELATIVE_API;
     private final static String FIRST_MORE_PERFORMANCE_RANK="5";
 
     @Override
@@ -104,21 +110,17 @@ public class LeaderBoardFragment extends Fragment {
         {
             if(response.length()>0)
             {
+                toggleView(loadingContent,false);
+                toggleView(noContent,false);
                 noContent.setVisibility(View.GONE);
-                if(mLeaderboardAdapter == null)
-                {
-                    mLeaderboardAdapter = new LeaderboardAdapter((HomeActivity)getActivity(),null,morePerformances);
-                }
-                else
-                {
-                    mLeaderboardAdapter.notifyDataSetChanged();
-                }
+                mLeaderboardAdapter = new LeaderboardAdapter((HomeActivity)getActivity(),response,morePerformances);
                 performancesList.setAdapter(mLeaderboardAdapter);
                 CandeoApplication.getInstance().getAppRequestQueue().add(new GetMorePerformancesRequest(FIRST_MORE_PERFORMANCE_RANK,false));
             }
             else
             {
-                noContent.setVisibility(View.VISIBLE);
+                toggleView(loadingContent,false);
+                toggleView(noContent, true);
             }
         }
 
@@ -131,6 +133,7 @@ public class LeaderBoardFragment extends Fragment {
 
     private class GetMorePerformancesRequest extends JsonObjectRequest
     {
+        private String rank;
         public GetMorePerformancesRequest(final String rank, final boolean append)
         {
             super(Method.GET,
@@ -141,6 +144,8 @@ public class LeaderBoardFragment extends Fragment {
                         public void onResponse(JSONObject response) {
                             if(response!=null)
                             {
+                                toggleView(loadingContent,false);
+                                toggleView(noContent,false);
                                 try {
                                     JSONArray list = response.getJSONArray("performances");
                                     if(list.length()>0)
@@ -157,6 +162,8 @@ public class LeaderBoardFragment extends Fragment {
                                 catch (JSONException jse)
                                 {
                                     jse.printStackTrace();
+                                    toggleView(loadingContent,false);
+                                    toggleView(noContent,true);
                                 }
 
                             }
@@ -172,8 +179,32 @@ public class LeaderBoardFragment extends Fragment {
                             {
                                 Log.e(TAG,"Server errot response while fetching performances "+new String(response.data));
                             }
+                            toggleView(loadingContent,false);
+                            toggleView(noContent,true);
                         }
                     });
+            this.rank=rank;
+        }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            String secret="";
+            if (Preferences.isUserLoggedIn(getActivity()) && !TextUtils.isEmpty(Preferences.getUserEmail(getActivity()))) {
+                params.put("email", Preferences.getUserEmail(getActivity()));
+                secret=Preferences.getUserApiKey(getActivity());
+
+            } else {
+                params.put("email", "");
+                secret=Configuration.CANDEO_DEFAULT_SECRET;
+            }
+            String message = String.format(GET_MORE_PERFORMANCES_RELATIVE_API,rank);
+            params.put("message", message);
+            Log.e(TAG,"secret->"+secret);
+            String hash = Security.generateHmac(secret, message);
+            Log.e(TAG,"hash->"+hash);
+            params.put("Authorization", "Token token=" + hash);
+            return params;
         }
     }
 

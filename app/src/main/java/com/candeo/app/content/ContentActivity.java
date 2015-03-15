@@ -167,9 +167,9 @@ public class ContentActivity extends ActionBarActivity{
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-//        Intent intent = new Intent(ContentActivity.this, HomeActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-//        startActivity(intent);
+        Intent intent = new Intent(ContentActivity.this, HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @Override
