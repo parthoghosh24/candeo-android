@@ -190,7 +190,7 @@ public class HomeActivity extends ActionBarActivity {
         public GetUserRequest(String id) {
             super(Method.GET,
                     String.format(GET_USER_API, id),
-                    null,
+                    new JSONObject(),
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
@@ -233,7 +233,7 @@ public class HomeActivity extends ActionBarActivity {
         public FetchLimelightList(String id) {
             super(Method.GET,
                     String.format(GET_LIMELIGHT_LIST_API, id),
-                    null,
+                    new JSONObject(),
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
@@ -285,7 +285,7 @@ public class HomeActivity extends ActionBarActivity {
         public GetPerformanceRequest() {
             super(Method.GET,
                     GET_PERFORMANCES_API,
-                    null,
+                    new JSONObject(),
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {

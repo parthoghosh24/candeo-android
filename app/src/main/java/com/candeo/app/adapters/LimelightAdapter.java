@@ -21,7 +21,7 @@ import java.util.HashMap;
 /**
  * Created by Partho on 9/2/15.
  */
-public class LimelightAdapter extends FragmentStatePagerAdapter implements ResponseListener, Parcelable{
+public class LimelightAdapter extends FragmentStatePagerAdapter implements ResponseListener{
 
 
     private static final String TAG="Candeo- limelight";
@@ -39,8 +39,8 @@ public class LimelightAdapter extends FragmentStatePagerAdapter implements Respo
             Bundle bundle = new Bundle();
             bundle.putString("id",showcaseIds.get(index).get("id"));
             bundle.putInt("position", index);
-            bundle.putParcelable("adapter",this);
             limelightFragment.setArguments(bundle);
+            limelightFragment.setResponseListener(this);
             showcases.add(limelightFragment);
         }
     }
@@ -60,14 +60,5 @@ public class LimelightAdapter extends FragmentStatePagerAdapter implements Respo
         limelightPager.setCurrentItem(position+1);
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-
-    }
 }
 

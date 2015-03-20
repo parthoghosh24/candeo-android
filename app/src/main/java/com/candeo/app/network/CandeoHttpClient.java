@@ -60,7 +60,7 @@ public class CandeoHttpClient {
         String hash = Security.generateHmac(secret, message);
         Log.e("CandeoHttp", "hash->" + hash);
         connection.setRequestProperty("Authorization", "Token token=" + hash);
-        connection.setChunkedStreamingMode(1024);
+//        connection.setChunkedStreamingMode(1024);
         connection.connect();
         outputStream=connection.getOutputStream();
     }

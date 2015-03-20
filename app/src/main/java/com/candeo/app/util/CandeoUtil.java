@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -44,123 +45,102 @@ import java.util.regex.Pattern;
  */
 public class CandeoUtil {
 
-    public static Typeface loadFont(AssetManager assetsLocation, String fontFile)
-    {
-        return Typeface.createFromAsset( assetsLocation,fontFile);
+    public static Typeface loadFont(AssetManager assetsLocation, String fontFile) {
+        return Typeface.createFromAsset(assetsLocation, fontFile);
     }
 
-   public static ArrayList<String> emailAddresses(Activity activity)
-   {
-       ArrayList<String> emails=new ArrayList<String>();
-       Account[] accounts = AccountManager.get(activity).getAccountsByType("com.google");
-       for(Account account: accounts)
-       {
-           emails.add(account.name);
-       }
-       return emails;
-   }
+    public static ArrayList<String> emailAddresses(Activity activity) {
+        ArrayList<String> emails = new ArrayList<String>();
+        Account[] accounts = AccountManager.get(activity).getAccountsByType("com.google");
+        for (Account account : accounts) {
+            emails.add(account.name);
+        }
+        return emails;
+    }
 
-    public static byte[] fileToByteArray(File file)
-    {
+    public static byte[] fileToByteArray(File file) {
         int maxLimit = 16777216; //16 MB
-        if(file.length() > maxLimit)
-        {
+        if (file.length() > maxLimit) {
             return null;
         }
 
-        FileInputStream inputStream =null;
+        FileInputStream inputStream = null;
 
 
-        byte[] bytes= new byte[(int)file.length()];
+        byte[] bytes = new byte[(int) file.length()];
 
-        try
-        {
+        try {
             inputStream = new FileInputStream(file);
             inputStream.read(bytes);
             inputStream.close();
-        }
-        catch (FileNotFoundException fe)
-        {
+        } catch (FileNotFoundException fe) {
             fe.printStackTrace();
-        }
-        catch (IOException ie)
-        {
+        } catch (IOException ie) {
             ie.printStackTrace();
         }
         return bytes;
     }
 
-    public static String getMimeType(Uri uri, Context context)
-    {
+    public static String getMimeType(Uri uri, Context context) {
         ContentResolver contentResolver = context.getContentResolver();
         return contentResolver.getType(uri);
     }
 
-    public static String getCodeFromUrl(String url)
-    {
-        if(!TextUtils.isEmpty(url))
-        {
+    public static String getCodeFromUrl(String url) {
+        if (!TextUtils.isEmpty(url)) {
             Pattern pattern = Pattern.compile("-?\\d+");
             Matcher matcher = pattern.matcher(url);
-            if(matcher.find())
-            {
+            if (matcher.find()) {
                 return matcher.group(0);
-            }
-            else
-            {
-                return  null;
+            } else {
+                return null;
             }
         }
         return null;
     }
-    public static void appAlertDialog(Context context, String mesg)
-    {
+
+    public static void appAlertDialog(Context context, String mesg) {
         final AlertDialog.Builder alert = new AlertDialog.Builder(context);
         alert.setMessage(mesg).setCancelable(true).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
+                dialog.cancel();
             }
         }).create().show();
     }
 
-    public static Uri getImageUri(Context context, Bitmap bitmap, String title)
-    {
+    public static Uri getImageUri(Context context, Bitmap bitmap, String title) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,100,baos);
-        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(),bitmap,title,null);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, title, null);
         return Uri.parse(path);
     }
 
-    public static String getRealPathFromUri(Uri uri, ContentResolver contentResolver)
-    {
-        Cursor cursor = contentResolver.query(uri,null,null,null,null);
+    public static String getRealPathFromUri(Uri uri, ContentResolver contentResolver) {
+        Cursor cursor = contentResolver.query(uri, null, null, null, null);
         cursor.moveToFirst();
         int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
         return cursor.getString(index);
     }
-    public static Bitmap getBitmapFromUrl(String url)
-    {
+
+    public static Bitmap getBitmapFromUrl(String url) {
         Bitmap bitmap = null;
         try {
             URL imageUrl = new URL(url);
             bitmap = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
-        }
-        catch (IOException ioe)
-        {
+        } catch (IOException ioe) {
             ioe.printStackTrace();
         }
         return bitmap;
     }
 
-    public static Bitmap createScaledBitmap(Bitmap bitmap, int newHeight, int newWidth)
-    {
+    public static Bitmap createScaledBitmap(Bitmap bitmap, int newHeight, int newWidth) {
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
-        float scaleWidth = ((float)newWidth)/width;
-        float scaleHeight = ((float)newHeight)/height;
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
         Matrix matrix = new Matrix();
-        matrix.postScale(scaleWidth,scaleHeight);
+        matrix.postScale(scaleWidth, scaleHeight);
         return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, false);
     }
 
@@ -173,7 +153,7 @@ public class CandeoUtil {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         View progressLayout = activity.getLayoutInflater().inflate(R.layout.loading_content, null);
-        ((TextView) progressLayout.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(activity.getAssets(),"fonts/fa.ttf"));
+        ((TextView) progressLayout.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(activity.getAssets(), "fonts/fa.ttf"));
         ((TextView) progressLayout.findViewById(R.id.candeo_progress_icon)).setText(icon);
         ((TextView) progressLayout.findViewById(R.id.candeo_progress_text)).setText(message);
         builder.setView(progressLayout);
@@ -187,4 +167,17 @@ public class CandeoUtil {
         }
     }
 
+    public static void overrideFont(Context context, String defaultFontNameToOverride, String customFontFileNameInAssets) {
+        try {
+            final Typeface customFontTypeface = Typeface.createFromAsset(context.getAssets(), customFontFileNameInAssets);
+
+            final Field defaultFontTypefaceField = Typeface.class.getDeclaredField(defaultFontNameToOverride);
+            defaultFontTypefaceField.setAccessible(true);
+            defaultFontTypefaceField.set(null, customFontTypeface);
+        } catch (Exception e) {
+            Log.e("CandeoUtil", "Can not set custom font " + customFontFileNameInAssets + " instead of " + defaultFontNameToOverride);
+        }
+
+
+    }
 }

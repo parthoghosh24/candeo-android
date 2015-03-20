@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.util.DisplayMetrics;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.candeo.app.util.CandeoUtil;
 
 import java.io.File;
 
@@ -20,6 +21,7 @@ public class CandeoApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        CandeoUtil.overrideFont(getApplicationContext(), "SERIF", "fonts/caviar.ttf");
         displayMetrics = new DisplayMetrics();
         File candeoDirectory = new File(Environment.getExternalStorageDirectory()+"/candeo");
         candeoDirectory.mkdirs();

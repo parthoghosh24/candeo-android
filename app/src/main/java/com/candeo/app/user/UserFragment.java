@@ -10,7 +10,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -27,6 +29,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
+import com.candeo.app.adapters.GeneralUserPagerAdapter;
 import com.candeo.app.adapters.UserContentAdapter;
 import com.candeo.app.home.HomeActivity;
 import com.candeo.app.ui.SlidingTabLayout;
@@ -64,7 +67,7 @@ public class UserFragment extends Fragment {
     private CreatedFragment createdFragment;
     private SocialFragment socialFragment;
     private DiscoveryFragment discoveryFragment;
-    private UserContentAdapter contentAdapter;
+    private FragmentStatePagerAdapter contentAdapter;
     private View notLoggedIn;
     private View loadingContent = null;
     private View root;
@@ -125,17 +128,27 @@ public class UserFragment extends Fragment {
                     new LoadImageTask().execute(Configuration.BASE_URL+user.getString("avatar_path"));
                     Bundle bundle = new Bundle();
                     bundle.putString("userId",userId);
+                    bundle.putString("name",userName.getText().toString());
                     createdFragment = new CreatedFragment();
                     createdFragment.setArguments(bundle);
                     socialFragment = new SocialFragment();
                     socialFragment.setArguments(bundle);
                     discoveryFragment = new DiscoveryFragment();
                     discoveryFragment.setArguments(bundle);
-                    contentAdapter = new UserContentAdapter((HomeActivity)getActivity(), createdFragment,socialFragment,null,discoveryFragment);
+                    boolean isSameUser = Preferences.getUserRowId(getActivity()).equalsIgnoreCase(userId);
+                    contentAdapter = isSameUser? new UserContentAdapter(getActivity().getSupportFragmentManager(), createdFragment,socialFragment,discoveryFragment) : new GeneralUserPagerAdapter(getActivity().getSupportFragmentManager(), createdFragment,socialFragment);
                     userContentPager.setAdapter(contentAdapter);
                     slidingTabs.setViewPager(userContentPager);
                     userContentPager.setCurrentItem(0);
                     Log.e(TAG,"page current item is "+userContentPager.getCurrentItem());
+                    if(Preferences.isUserLoggedIn(getActivity()) || !TextUtils.isEmpty(userId))
+                    {
+                        notLoggedIn.setVisibility(View.GONE);
+                    }
+                    else
+                    {
+                        notLoggedIn.setVisibility(View.VISIBLE);
+                    }
 
                 }
                 catch (JSONException je)
@@ -185,7 +198,7 @@ public class UserFragment extends Fragment {
                 getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
             }
         });
-        if(Preferences.isUserLoggedIn(getActivity()))
+        if(Preferences.isUserLoggedIn(getActivity()) || !TextUtils.isEmpty(userId))
         {
             notLoggedIn.setVisibility(View.GONE);
         }
@@ -193,6 +206,7 @@ public class UserFragment extends Fragment {
         {
             notLoggedIn.setVisibility(View.VISIBLE);
         }
+
     }
 
 

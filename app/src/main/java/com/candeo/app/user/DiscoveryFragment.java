@@ -98,7 +98,7 @@ public class DiscoveryFragment extends Fragment {
         {
             super(Method.GET,
                     String.format(GET_USER_APPRECIATIONS_API,id,lastTimeStamp),
-                    null,
+                    new JSONObject(),
                     new Response.Listener<JSONObject>(){
                         @Override
                         public void onResponse(JSONObject response) {
@@ -194,7 +194,7 @@ public class DiscoveryFragment extends Fragment {
         {
             super(Method.GET,
                     String.format(GET_USER_INSPIRATIONS_API,id,lastTimeStamp),
-                    null,
+                    new JSONObject(),
                     new Response.Listener<JSONObject>(){
                         @Override
                         public void onResponse(JSONObject response) {
@@ -225,7 +225,6 @@ public class DiscoveryFragment extends Fragment {
                                             {
                                                 inspiration.put("bg_url",Configuration.BASE_URL+object.getString("bg_url"));
                                             }
-                                            inspiration.put("id",object.getString("id"));
                                             inspiration.put("user_id",object.getString("user_id"));
                                             inspiration.put("rank",object.getString("rank"));
                                             inspiration.put("created_at",object.getString("created_at"));

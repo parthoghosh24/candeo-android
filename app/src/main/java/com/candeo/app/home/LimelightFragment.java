@@ -33,6 +33,7 @@ import com.candeo.app.content.ContentActivity;
 import com.candeo.app.content.ResponseListener;
 import com.candeo.app.ui.ResponseFragment;
 import com.candeo.app.user.LoginActivity;
+import com.candeo.app.user.UserActivity;
 import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.Preferences;
 
@@ -52,7 +53,7 @@ public class LimelightFragment extends Fragment{
     private String id="";
     private static final String TAG="Candeo- Limelight";
     private final static String LIMELIGHT_RELATIVE_API="/contents/limelight/%s";
-    private final static String GET_LIMELIGHT_API = Configuration.BASE_URL +"/api/v1/"+LIMELIGHT_RELATIVE_API;
+    private final static String GET_LIMELIGHT_API = Configuration.BASE_URL +"/api/v1"+LIMELIGHT_RELATIVE_API;
     private CircleImageView avatar;
     private ImageView mediaBg;
     private TextView name;
@@ -67,7 +68,7 @@ public class LimelightFragment extends Fragment{
     private View root;
     private View loadingContent = null;
     private View noContent =null;
-    private ResponseListener responseListener=null;
+    private ResponseListener responseListener;
     private int position=0;
 
     public LimelightFragment()
@@ -114,65 +115,11 @@ public class LimelightFragment extends Fragment{
         appreciateButtonView.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/applause.ttf"));
 
         appreciateButtonView.setText(Configuration.FA_APPRECIATE);
-        appreciateButtonView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        appreciateButtonView.setOnClickListener(new AppreciateListener(this.responseListener));
 
-                if(!Preferences.isUserLoggedIn(getActivity()))
-                {
-
-
-                    startActivity(new Intent(getActivity(),LoginActivity.class));
-                }
-                else
-                {
-
-                    ResponseFragment response = new ResponseFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("introText", "I find this");
-                    bundle.putStringArray("choices", Configuration.APPRECIATE_LIST);
-                    bundle.putString("title", "Appreciate Showcase");
-                    bundle.putString("positiveText", "Appreciate");
-                    bundle.putString("showcaseId",showcaseHolder.getTag().toString());
-                    bundle.putInt("position",position);
-                    bundle.putInt("responseType",Configuration.APPRECIATE);
-                    bundle.putParcelable("adapter",getArguments().getParcelable("adapter"));
-                    response.setArguments(bundle);
-                    response.show(getActivity().getSupportFragmentManager(), "Appreciate");
-                }
-
-
-            }
-        });
         skipButtonView.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
         skipButtonView.setText(Configuration.FA_SKIP);
-        skipButtonView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!Preferences.isUserLoggedIn(getActivity()))
-                {
-
-
-                    startActivity(new Intent(getActivity(),LoginActivity.class));
-                }
-                else
-                {
-
-                    ResponseFragment response = new ResponseFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("introText", "");
-                    bundle.putStringArray("choices", Configuration.SKIP_LIST);
-                    bundle.putString("title", "Skip Showcase");
-                    bundle.putString("positiveText", "Skip");
-                    bundle.putString("showcaseId",showcaseHolder.getTag().toString());
-                    bundle.putInt("position",position);
-                    bundle.putInt("responseType",Configuration.SKIP);
-                    bundle.putParcelable("adapter",getArguments().getParcelable("adapter"));
-                    response.setArguments(bundle);
-                    response.show(getActivity().getSupportFragmentManager(), "Skip");
-                }
-            }
-        });
+        skipButtonView.setOnClickListener(new SkipListener(this.responseListener));
         mediaIconView.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
         mediaIconView.setText(Configuration.FA_AUDIO);
         copyRightView.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
@@ -200,6 +147,24 @@ public class LimelightFragment extends Fragment{
 
             }
         });
+
+        avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(avatar.getTag()!=null)
+                {
+                    Intent userIntent= new Intent(getActivity(), UserActivity.class);
+                    userIntent.putExtra("id",avatar.getTag().toString());
+                    getActivity().startActivity(userIntent);
+                }
+            }
+        });
+    }
+
+    public void setResponseListener(ResponseListener responseListener)
+    {
+        this.responseListener=responseListener;
+        Log.e(TAG,"RESP LIST"+this.responseListener);
     }
 
     @Override
@@ -208,6 +173,74 @@ public class LimelightFragment extends Fragment{
 
     }
 
+    private class AppreciateListener implements View.OnClickListener
+    {
+        private ResponseListener listener;
+        public AppreciateListener(ResponseListener listener)
+        {
+            this.listener=listener;
+        }
+        @Override
+        public void onClick(View v) {
+                            if(!Preferences.isUserLoggedIn(getActivity()))
+                {
+
+
+                    startActivity(new Intent(getActivity(),LoginActivity.class));
+                }
+                else
+                {
+                    Log.e(TAG,"Responselistener:"+listener);
+
+                    ResponseFragment response = new ResponseFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("introText", "I find this");
+                    bundle.putStringArray("choices", Configuration.APPRECIATE_LIST);
+                    bundle.putString("title", "Appreciate Showcase");
+                    bundle.putString("positiveText", "Appreciate");
+                    bundle.putString("showcaseId",showcaseHolder.getTag().toString());
+                    bundle.putInt("position",position);
+                    bundle.putInt("responseType",Configuration.APPRECIATE);
+                    response.setArguments(bundle);
+                    response.setResponseListener(listener);
+                    response.show(getActivity().getSupportFragmentManager(), "Appreciate");
+                }
+        }
+    }
+
+    private class SkipListener implements View.OnClickListener
+    {
+        private ResponseListener listener;
+        public SkipListener(ResponseListener listener)
+        {
+            this.listener=listener;
+        }
+        @Override
+        public void onClick(View v) {
+            if(!Preferences.isUserLoggedIn(getActivity()))
+            {
+
+
+                startActivity(new Intent(getActivity(),LoginActivity.class));
+            }
+            else
+            {
+
+                ResponseFragment response = new ResponseFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("introText", "");
+                bundle.putStringArray("choices", Configuration.SKIP_LIST);
+                bundle.putString("title", "Skip Showcase");
+                bundle.putString("positiveText", "Skip");
+                bundle.putString("showcaseId",showcaseHolder.getTag().toString());
+                bundle.putInt("position", position);
+                bundle.putInt("responseType",Configuration.SKIP);
+                response.setArguments(bundle);
+                response.setResponseListener(listener);
+                response.show(getActivity().getSupportFragmentManager(), "Skip");
+            }
+        }
+    }
     private class FetchLimelight extends JsonObjectRequest
     {
         private String relativeUrl;
@@ -216,7 +249,7 @@ public class LimelightFragment extends Fragment{
 
             super(Method.GET,
                     String.format(GET_LIMELIGHT_API,id),
-                    null,
+                    new JSONObject(),
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
@@ -250,6 +283,7 @@ public class LimelightFragment extends Fragment{
                                 {
                                     mediaIconView.setText(Configuration.FA_IMAGE);
                                 }
+                                avatar.setTag(limelight.getString("user_id"));
                                 toggleLoading(false);
                                 toggleNoContent(false);
                             }

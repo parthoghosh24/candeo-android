@@ -35,7 +35,7 @@ public class UserVerifyActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_verify);
         String url = getIntent().getDataString();
-        Toast.makeText(getApplicationContext(),"Url is "+url,Toast.LENGTH_LONG).show();
+//        Toast.makeText(getApplicationContext(),"Url is "+url,Toast.LENGTH_LONG).show();
         int code =Integer.parseInt(CandeoUtil.getCodeFromUrl(url));
         Log.e(TAG,"code received is "+code);
         Map<String ,Integer> payload = new HashMap<>();

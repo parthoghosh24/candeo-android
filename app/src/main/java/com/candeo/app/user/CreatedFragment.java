@@ -81,7 +81,7 @@ public class CreatedFragment extends Fragment {
         {
             super(Method.GET,
                     String.format(GET_USER_CREATIONS_API,id,lastTimeStamp),
-                    null,
+                    new JSONObject(),
                     new Response.Listener<JSONObject>(){
                         @Override
                         public void onResponse(JSONObject response) {

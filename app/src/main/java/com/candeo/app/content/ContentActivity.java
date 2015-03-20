@@ -1,7 +1,9 @@
 package com.candeo.app.content;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
@@ -10,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,7 +33,9 @@ import com.candeo.app.Configuration;
 import com.candeo.app.R;
 import com.candeo.app.home.HomeActivity;
 import com.candeo.app.ui.ResponseFragment;
+import com.candeo.app.ui.ScreenReciever;
 import com.candeo.app.user.LoginActivity;
+import com.candeo.app.user.UserActivity;
 import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.JSONParser;
 import com.candeo.app.util.Preferences;
@@ -44,12 +49,12 @@ import java.net.URL;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class ContentActivity extends ActionBarActivity{
+public class ContentActivity extends ActionBarActivity implements InspirationListener{
 
     private static final String TAG="Candeo-Content Activity";
     private Toolbar toolbar;
     private Button launchBook=null; //temporary
-    private final static String CONTENT_RELATIVE_URL="/contents/%s/%s";
+    private final static String CONTENT_RELATIVE_URL="/contents/%s/%s/%s";
     private final static String CONTENT_URL = Configuration.BASE_URL +"/api/v1"+CONTENT_RELATIVE_URL;
     private TextView play = null;
     private int stopPosition=0;
@@ -73,6 +78,7 @@ public class ContentActivity extends ActionBarActivity{
     private View loadingContent;
     private RelativeLayout candeoMediaControl;
     private String id;
+    private BroadcastReceiver mScreenReceiver;
 
 //    private Book book;
 //    private TableOfContents bookToc;
@@ -97,7 +103,7 @@ public class ContentActivity extends ActionBarActivity{
         imageView = (ImageView)findViewById(R.id.candeo_image_viewer);
         launchBook = (Button)findViewById(R.id.candeo_book_launcher);
         setSupportActionBar(toolbar);
-        setTitle("Candeo");
+        setTitle("Please wait...");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         contentViewer=(LinearLayout)findViewById(R.id.candeo_content_viewer);
         bgImageView=(ImageView)findViewById(R.id.candeo_content_bg_image);
@@ -138,7 +144,8 @@ public class ContentActivity extends ActionBarActivity{
                     bundle.putString("showcaseId", id);
                     bundle.putInt("responseType", Configuration.INSPIRE);
                     response.setArguments(bundle);
-                    response.show(ContentActivity.this.getSupportFragmentManager(), "Appreciate");
+                    response.setInspirationListener(ContentActivity.this);
+                    response.show(ContentActivity.this.getSupportFragmentManager().beginTransaction(), "Appreciate");
                 }
             }
         });
@@ -148,13 +155,35 @@ public class ContentActivity extends ActionBarActivity{
         appreciateCount=(TextView)findViewById(R.id.candeo_content_appreciate_count);
         skipCount=(TextView)findViewById(R.id.candeo_content_skip_count);
         inspiredCount=(TextView)findViewById(R.id.candeo_content_inspired_count);
+        userAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(userAvatar.getTag()!=null)
+                {
+                    finish();
+                    Intent userIntent= new Intent(getApplicationContext(), UserActivity.class);
+                    userIntent.putExtra("id",userAvatar.getTag().toString());
+                    startActivity(userIntent);
+                }
+            }
+        });
         int type = getIntent().getIntExtra("type",Configuration.SHOWCASE);
         Log.e(TAG,"ID is :"+id);
         Log.e(TAG,"Type is :"+type);
         if(id!=null)
         {
-            new LoadContent(String.format(CONTENT_RELATIVE_URL,id,type)).execute(String.format(CONTENT_URL,id,type));
+            String userId = TextUtils.isEmpty(Preferences.getUserRowId(getApplicationContext()))?"0": Preferences.getUserRowId(getApplicationContext());
+            new LoadContent(String.format(CONTENT_RELATIVE_URL,id,type,userId)).execute(String.format(CONTENT_URL,id,type,userId));
         }
+    }
+
+    @Override
+    public void onSubmit() {
+        getInspiredButton.setEnabled(false);
+        getInspiredButton.setTextColor(getResources().getColor(R.color.candeo_light_gray));
+        int count = Integer.parseInt(inspiredCount.getText().toString());
+        inspiredCount.setText(""+(++count));
+        Toast.makeText(getApplicationContext(),"You got inspired",Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -170,6 +199,16 @@ public class ContentActivity extends ActionBarActivity{
         Intent intent = new Intent(ContentActivity.this, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -260,11 +299,25 @@ public class ContentActivity extends ActionBarActivity{
                 }
                 new LoadImageTask(Configuration.BASE_URL +jsonObject.optString("user_avatar_url"),userAvatar).execute();
                 userName.setText(jsonObject.optString("user_name"));
+                userAvatar.setTag(jsonObject.optString("user_id"));
                 title.setText(jsonObject.optString("title"));
+                setTitle(jsonObject.optString("title"));
                 appreciateCount.setText(jsonObject.optString("appreciate_count"));
                 skipCount.setText(jsonObject.optString("skip_count"));
                 inspiredCount.setText(jsonObject.optString("inspired_count"));
                 createdAt.setText(jsonObject.optString("created_at"));
+                boolean hasBeenInspired=jsonObject.optBoolean("has_been_inspired");
+                if(hasBeenInspired)
+                {
+                    getInspiredButton.setEnabled(false);
+                    getInspiredButton.setTextColor(getResources().getColor(R.color.candeo_light_gray));
+
+                }
+                else
+                {
+                    getInspiredButton.setEnabled(true);
+                    getInspiredButton.setTextColor(getResources().getColor(R.color.abc_secondary_text_material_dark));
+                }
 
         }
     }

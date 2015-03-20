@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="400dp"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
     android:weightSum="10">
 
     <TextView
@@ -11,7 +12,7 @@
         android:layout_height="0dp"
         android:padding="5dp"
         android:layout_weight="1"
-        android:text="Last Week Top Performances"/>
+        android:text="Last Top Performances"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -26,6 +27,7 @@
             android:orientation="vertical">
 
             <android.support.v7.widget.CardView
+                android:id="@+id/candeo_performance_top_content_1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
@@ -38,7 +40,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <ImageView
+                    <com.android.volley.toolbox.NetworkImageView
                         android:id="@+id/candeo_performance_top_content_1_bg"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -121,12 +123,15 @@
 
 
                                     <TextView
-                                        android:id="@+id/candeo_performance_top_content_1_user_name"
-                                        android:text="Partho Ghosh"
+                                        android:id="@+id/candeo_performance_top_content_1_title"
+                                        android:text="Title 1"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:gravity="center"
                                         android:textSize="13sp"
+                                        android:ellipsize="end"
+                                        android:maxEms="20"
+                                        android:maxLines="1"
                                         />
 
                                 </LinearLayout>
@@ -200,6 +205,7 @@
             android:orientation="vertical">
 
             <android.support.v7.widget.CardView
+                android:id="@+id/candeo_performance_top_content_2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
@@ -212,7 +218,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <ImageView
+                    <com.android.volley.toolbox.NetworkImageView
                         android:id="@+id/candeo_performance_top_content_2_bg"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -296,12 +302,15 @@
 
 
                                     <TextView
-                                        android:id="@+id/candeo_performance_top_content_2_user_name"
-                                        android:text="Partho Ghosh"
+                                        android:id="@+id/candeo_performance_top_content_2_title"
+                                        android:text="Title 2"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:gravity="center"
                                         android:textSize="13sp"
+                                        android:ellipsize="end"
+                                        android:maxEms="20"
+                                        android:maxLines="1"
                                         />
 
                                 </LinearLayout>
@@ -398,6 +407,7 @@
             android:orientation="vertical">
 
             <android.support.v7.widget.CardView
+                android:id="@+id/candeo_performance_top_content_3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
@@ -410,7 +420,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <ImageView
+                    <com.android.volley.toolbox.NetworkImageView
                         android:id="@+id/candeo_performance_top_content_3_bg"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -467,13 +477,16 @@
                                 >
 
 
-                                <de.hdodenhof.circleimageview.CircleImageView
-                                    android:id="@+id/candeo_performance_top_content_3_user_avatar"
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
-                                    android:focusableInTouchMode="true"
-                                    app:border_width="2dp"
-                                    app:border_color="#ffffffff"
+                                <TextView
+                                    android:id="@+id/candeo_performance_top_content_3_title"
+                                    android:text="Title 2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:textSize="12sp"
+                                    android:ellipsize="end"
+                                    android:maxEms="20"
+                                    android:maxLines="1"
                                     />
 
 
@@ -547,6 +560,7 @@
             android:orientation="vertical">
 
             <android.support.v7.widget.CardView
+                android:id="@+id/candeo_performance_top_content_4"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
@@ -559,7 +573,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <ImageView
+                    <com.android.volley.toolbox.NetworkImageView
                         android:id="@+id/candeo_performance_top_content_4_bg"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -615,13 +629,16 @@
                                 >
 
 
-                                <de.hdodenhof.circleimageview.CircleImageView
-                                    android:id="@+id/candeo_performance_top_content_4_user_avatar"
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
-                                    android:focusableInTouchMode="true"
-                                    app:border_width="2dp"
-                                    app:border_color="#ffffffff"
+                                <TextView
+                                    android:id="@+id/candeo_performance_top_content_4_title"
+                                    android:text="Title 4"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:textSize="12sp"
+                                    android:ellipsize="end"
+                                    android:maxEms="20"
+                                    android:maxLines="1"
                                     />
 
 
@@ -695,6 +712,7 @@
             android:orientation="vertical">
 
             <android.support.v7.widget.CardView
+                android:id="@+id/candeo_performance_top_content_5"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
@@ -707,7 +725,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <ImageView
+                    <com.android.volley.toolbox.NetworkImageView
                         android:id="@+id/candeo_performance_top_content_5_bg"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -763,14 +781,16 @@
                                 android:gravity="center"
                                 >
 
-
-                                <de.hdodenhof.circleimageview.CircleImageView
-                                    android:id="@+id/candeo_performance_top_content_5_user_avatar"
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
-                                    android:focusableInTouchMode="true"
-                                    app:border_width="2dp"
-                                    app:border_color="#ffffffff"
+                                <TextView
+                                    android:id="@+id/candeo_performance_top_content_5_title"
+                                    android:text="Title 5"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:textSize="12sp"
+                                    android:ellipsize="end"
+                                    android:maxEms="20"
+                                    android:maxLines="1"
                                     />
 
 

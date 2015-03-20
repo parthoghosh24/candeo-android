@@ -17,8 +17,8 @@ public class Configuration {
 //    public static final String BASE_URL ="http://192.168.0.104:3000";
 //      public static final String BASE_URL ="http://192.168.0.103:3000";
 //      public static final String BASE_URL ="http://192.168.0.102:3000";
-    public static final String BASE_URL ="http://192.168.0.101:3000";
-//    public static final String BASE_URL="http://192.168.43.239:3000";
+//    public static final String BASE_URL ="http://192.168.0.101:3000";
+    public static final String BASE_URL="http://192.168.43.239:3000";
     //    public static final String BASE_URL="http://10.0.3.116:3000";
 
     public static final String CANDEO_DEFAULT_SECRET="candeosecret2015";

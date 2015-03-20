@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
+            <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/candeo_content_bg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -97,6 +97,7 @@
                             android:focusableInTouchMode="true"
                             app:border_width="2dp"
                             app:border_color="#ffffffff"
+                            android:visibility="gone"
                             />
 
 

@@ -57,16 +57,19 @@ public class LeaderBoardFragment extends Fragment {
     private RecyclerView performancesList;
     private LeaderboardAdapter mLeaderboardAdapter;
     private LinearLayoutManager performanceListLayoutManager;
-    private List<HashMap<String,String>> morePerformances = new ArrayList<>();
+    private ArrayList<HashMap<String,String>> morePerformances = new ArrayList<>();
     private final static String GET_MORE_PERFORMANCES_RELATIVE_API="/contents/performances/list/%s";
     private final static String GET_MORE_PERFORMANCES_API=Configuration.BASE_URL+"/api/v1"+GET_MORE_PERFORMANCES_RELATIVE_API;
     private final static String FIRST_MORE_PERFORMANCE_RANK="5";
-
+    private String lastRank="";
+    private boolean loading = true;
+    private int pastVisiblesItems, visibleItemCount, totalItemCount;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.fragment_leader_board, container, false);
+        pastVisiblesItems=visibleItemCount=totalItemCount=0;
         initWidgets();
         return root;
     }
@@ -93,11 +96,21 @@ public class LeaderBoardFragment extends Fragment {
         performanceListLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         performancesList.setLayoutManager(performanceListLayoutManager);
 
+
         performancesList.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                //Here to perform more fetch
-                super.onScrolled(recyclerView, dx, dy);
+                visibleItemCount = performanceListLayoutManager.getChildCount();
+                totalItemCount = performanceListLayoutManager.getItemCount();
+                pastVisiblesItems = performanceListLayoutManager.findFirstVisibleItemPosition();
+                //TODO Not working, need to see
+                if (loading) {
+                    Log.e(TAG,"in loading");
+                    if ( (visibleItemCount+pastVisiblesItems) >= totalItemCount) {
+                        loading = false;
+                        loadMore();
+                    }
+                }
             }
         });
 
@@ -113,7 +126,15 @@ public class LeaderBoardFragment extends Fragment {
                 toggleView(loadingContent,false);
                 toggleView(noContent,false);
                 noContent.setVisibility(View.GONE);
-                mLeaderboardAdapter = new LeaderboardAdapter((HomeActivity)getActivity(),response,morePerformances);
+                if(mLeaderboardAdapter==null)
+                {
+                    mLeaderboardAdapter = new LeaderboardAdapter((HomeActivity)getActivity(),response);
+                }
+                else
+                {
+                    mLeaderboardAdapter.notifyDataSetChanged();
+                }
+
                 performancesList.setAdapter(mLeaderboardAdapter);
                 CandeoApplication.getInstance().getAppRequestQueue().add(new GetMorePerformancesRequest(FIRST_MORE_PERFORMANCE_RANK,false));
             }
@@ -124,6 +145,12 @@ public class LeaderBoardFragment extends Fragment {
             }
         }
 
+    }
+
+    private void loadMore()
+    {
+        Log.e(TAG,"last rank "+lastRank);
+        CandeoApplication.getInstance().getAppRequestQueue().add(new GetMorePerformancesRequest(lastRank,true));
     }
 
     private void toggleView(View view, boolean show)
@@ -138,7 +165,7 @@ public class LeaderBoardFragment extends Fragment {
         {
             super(Method.GET,
                     String.format(GET_MORE_PERFORMANCES_API,rank),
-                    null,
+                    new JSONObject(),
                     new Response.Listener<JSONObject>(){
                         @Override
                         public void onResponse(JSONObject response) {
@@ -148,20 +175,45 @@ public class LeaderBoardFragment extends Fragment {
                                 toggleView(noContent,false);
                                 try {
                                     JSONArray list = response.getJSONArray("performances");
+//                                    if(!append)
+//                                    {
+                                        morePerformances.clear();
+//                                    }
                                     if(list.length()>0)
                                     {
                                         for(int index=0; index<list.length(); ++index)
                                         {
                                             JSONObject performance = list.getJSONObject(index);
+                                            HashMap<String,String> performanceMap = new HashMap<>();
+                                            performanceMap.put("showcase_id",performance.getString("showcase_id"));
+                                            performanceMap.put("showcase_title",performance.getString("showcase_title"));
+                                            performanceMap.put("showcase_media_type",performance.getString("showcase_media_type"));
+                                            performanceMap.put("showcase_total_appreciations",performance.getString("showcase_total_appreciations"));
+                                            performanceMap.put("showcase_rank",performance.getString("showcase_rank"));
+                                            performanceMap.put("showcase_bg_url",performance.getString("bg_url"));
+                                            performanceMap.put("showcase_media_url",performance.getString("media_url"));
+                                            performanceMap.put("showcase_user_name",performance.getString("name"));
+                                            performanceMap.put("showcase_user_avatar_url",performance.getString("user_avatar_url"));
+                                            if(index == list.length()-1)
+                                            {
+                                                lastRank=performance.getString("showcase_rank");
+                                            }
+                                            morePerformances.add(performanceMap);
+//                                            Log.e(TAG, "More Performances len "+morePerformances.size());
                                         }
                                         //Populate morePerformances
+                                        Log.e(TAG,"List size is b4 add "+morePerformances.size());
+                                        Log.e(TAG,"append is "+append);
                                         mLeaderboardAdapter.addAllToMorePerformances(morePerformances,append);
+                                        Log.e(TAG,"List size is "+mLeaderboardAdapter.morePerformances.size());
                                         mLeaderboardAdapter.notifyDataSetChanged();
+//                                        performancesList.setAdapter(mLeaderboardAdapter);
                                     }
                                 }
                                 catch (JSONException jse)
                                 {
                                     jse.printStackTrace();
+                                    Log.e(TAG, "error is "+jse.getLocalizedMessage());
                                     toggleView(loadingContent,false);
                                     toggleView(noContent,true);
                                 }

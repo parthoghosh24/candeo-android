@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/candeo_primary</item>
         <item name="colorPrimaryDark">@color/candeo_primary_dark</item>
         <item name="colorAccent">@color/candeo_accent_light</item>
+        <item name="android:typeface">serif</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.NoActionBar">
@@ -15,6 +16,10 @@
         <item name="colorPrimary">@color/candeo_primary</item>
         <item name="colorPrimaryDark">@color/candeo_primary_dark</item>
         <item name="colorAccent">@color/candeo_accent_light</item>
+        <item name="android:typeface">serif</item>
+    </style>
+    <style name="AppTheme.Light.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:typeface">serif</item>
     </style>
 
 </resources>

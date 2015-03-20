@@ -17,9 +17,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
 import com.candeo.app.content.ContentActivity;
+import com.candeo.app.ui.BitmapLruCache;
+import com.candeo.app.user.UserActivity;
 import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.Preferences;
 
@@ -43,12 +48,16 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
     public int type=CREATED;
     private List<HashMap<String, String>> list;
     private Context mContext;
+    private ImageLoader imageLoader;
+    private BitmapLruCache imageCache;
 
     public UserPagerAdapter(List<HashMap<String, String>> list, int type, Context mContext)
     {
         this.list=list;
         this.type=type;
         this.mContext=mContext;
+        this.imageCache=new BitmapLruCache();
+        this.imageLoader=new ImageLoader(CandeoApplication.getInstance().getAppRequestQueue(),imageCache);
     }
     @Override
     public VariousUserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -79,6 +88,17 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
         if(type==FANS || type==PROMOTED)
         {
             holder.view.setTag(list.get(position).get("id"));
+            holder.view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(holder.view.getTag()!=null)
+                    {
+                        Intent userIntent= new Intent(mContext, UserActivity.class);
+                        userIntent.putExtra("id",holder.view.getTag().toString());
+                        mContext.startActivity(userIntent);
+                    }
+                }
+            });
             holder.userName.setText(list.get(position).get("user_name"));
             new LoadImageTask(holder.userAvatar).execute(list.get(position).get("avatar_path"));
         }
@@ -88,8 +108,10 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
             holder.title.setText(list.get(position).get("title"));
             holder.rankValue.setText(list.get(position).get("rank"));
             holder.appreciationValue.setText(list.get(position).get("appreciation_count"));
+            holder.appreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/applause.ttf"));
             holder.appreciateIcon.setText(Configuration.FA_APPRECIATE);
             holder.inspirationValue.setText(list.get(position).get("inspiration_count"));
+            holder.inspirationIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/response.ttf"));
             holder.inspirationIcon.setText(Configuration.FA_INSPIRE);
             holder.date.setText(list.get(position).get("created_at_text"));
             int mediaType=Integer.parseInt(list.get(position).get("media_type"));
@@ -114,15 +136,25 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
                     }
                 }
             });
-            new LoadImageTask(holder.bgImage).execute(list.get(position).get("bg_url"));
+            holder.bgImage.setImageUrl(list.get(position).get("bg_url"),imageLoader);
 
         }
-        if(type == APPRECIATIONS)
+        if(type == APPRECIATIONS || type == INSPIRATIONS)
         {
             holder.userName.setText(list.get(position).get("user_name"));
             holder.rankValue.setText(list.get(position).get("rank"));
-            holder.appreciationValue.setText(list.get(position).get("appreciation_count"));
-            holder.appreciateIcon.setText(Configuration.FA_APPRECIATE);
+            if(type == APPRECIATIONS)
+            {
+                holder.appreciationValue.setText(list.get(position).get("appreciation_count"));
+                holder.appreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/applause.ttf"));
+                holder.appreciateIcon.setText(Configuration.FA_APPRECIATE);
+            }
+            if(type==INSPIRATIONS)
+            {
+                holder.appreciationValue.setText(list.get(position).get("inspiration_count"));
+                holder.appreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/response.ttf"));
+                holder.appreciateIcon.setText(Configuration.FA_INSPIRE);
+            }
             holder.date.setText(list.get(position).get("created_at_text"));
             int mediaType=Integer.parseInt(list.get(position).get("media_type"));
             if(Configuration.AUDIO == mediaType)
@@ -146,10 +178,7 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
                     }
                 }
             });
-            new LoadImageTask(holder.bgImage).execute(list.get(position).get("bg_url"));
-            new LoadImageTask(holder.userAvatar).execute(list.get(position).get("avatar_path"));
-
-
+            holder.bgImage.setImageUrl(list.get(position).get("bg_url"),imageLoader);
         }
     }
 
@@ -170,7 +199,7 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
         //Discovery
 
         public CircleImageView userAvatar;
-        public ImageView bgImage;
+        public NetworkImageView bgImage;
         public TextView userName;
         public TextView appreciateIcon;
         public TextView rankValue;
@@ -189,7 +218,8 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
             if(mType==UserPagerAdapter.CREATED)
             {
                 title=(TextView)itemLayoutView.findViewById(R.id.candeo_showcase_title);
-
+                inspirationIcon=(TextView)itemLayoutView.findViewById(R.id.candeo_content_inspire_icon);
+                inspirationValue=(TextView)itemLayoutView.findViewById(R.id.candeo_content_inspire_count);
 
             }
             if(mType==UserPagerAdapter.APPRECIATIONS || mType==UserPagerAdapter.INSPIRATIONS || mType==UserPagerAdapter.FANS|| mType==UserPagerAdapter.PROMOTED)
@@ -198,23 +228,16 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
                 userAvatar.setImageURI(Uri.parse(Preferences.getUserAvatarPath(mContext)));
                 userName = (TextView)itemLayoutView.findViewById(R.id.candeo_user_name);
             }
-            if(mType==UserPagerAdapter.CREATED || mType==UserPagerAdapter.APPRECIATIONS)
+            if(mType==UserPagerAdapter.CREATED || mType==UserPagerAdapter.APPRECIATIONS || mType == INSPIRATIONS)
             {
                 appreciateIcon = (TextView)itemLayoutView.findViewById(R.id.candeo_content_appreciate_icon);
                 appreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/applause.ttf"));
-            }
-            if(mType==UserPagerAdapter.CREATED || mType == UserPagerAdapter.INSPIRATIONS)
-            {
-                inspirationIcon=(TextView)itemLayoutView.findViewById(R.id.candeo_content_inspire_icon);
-                inspirationIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/response.ttf"));
-                inspirationValue=(TextView)itemLayoutView.findViewById(R.id.candeo_content_inspire_count);
-
             }
             if(mType==UserPagerAdapter.APPRECIATIONS || mType==UserPagerAdapter.INSPIRATIONS || mType==UserPagerAdapter.CREATED )
             {
                 mediaIcon = (TextView)itemLayoutView.findViewById(R.id.candeo_showcase_media_icon);
                 mediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/fa.ttf"));
-                bgImage = (ImageView)itemLayoutView.findViewById(R.id.candeo_content_bg);
+                bgImage = (NetworkImageView)itemLayoutView.findViewById(R.id.candeo_content_bg);
                 bgImage.setImageURI(Uri.parse(Preferences.getUserAvatarPath(mContext)));
                 date= (TextView)itemLayoutView.findViewById(R.id.candeo_showcase_date);
                 appreciationValue = (TextView)itemLayoutView.findViewById(R.id.candeo_content_appreciate_count);

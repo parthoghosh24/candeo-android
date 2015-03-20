@@ -51,6 +51,7 @@ public class SocialFragment extends Fragment {
     private static final String GET_USER_PROMOTED_RELATIVE_API="/users/%s/promoted/%s";
     private static final String GET_USER_PROMOTED_API=Configuration.BASE_URL+"/api/v1"+GET_USER_PROMOTED_RELATIVE_API;
     private String userId="";
+    private String name="";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,6 +66,7 @@ public class SocialFragment extends Fragment {
     {
 
         userId=getArguments().getString("userId");
+        name=getArguments().getString("name");
         fans =(RecyclerView)mRoot.findViewById(R.id.candeo_user_social_fans);
         promoted=(RecyclerView)mRoot.findViewById(R.id.candeo_user_social_promoted);
         fansLinearLayoutManager = new LinearLayoutManager(getActivity());
@@ -81,6 +83,16 @@ public class SocialFragment extends Fragment {
         toggleNoContent(noPromoted,true);
         fansList = new ArrayList<>();
         promotedList = new ArrayList<>();
+        if(userId.equalsIgnoreCase(Preferences.getUserRowId(getActivity())))
+        {
+            ((TextView)mRoot.findViewById(R.id.candeo_user_social_fans_header)).setText("My Fans");
+            ((TextView)mRoot.findViewById(R.id.candeo_user_social_promoted_header)).setText("My Promoted Stars");
+        }
+        else
+        {
+            ((TextView)mRoot.findViewById(R.id.candeo_user_social_fans_header)).setText(name+"'s Fans");
+            ((TextView)mRoot.findViewById(R.id.candeo_user_social_promoted_header)).setText(name+"'s Promoted Stars");
+        }
         CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserFans(userId,"now"));
         CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserPromoted(userId,"now"));
 
@@ -94,7 +106,7 @@ public class SocialFragment extends Fragment {
         {
             super(Method.GET,
                     String.format(GET_USER_FANS_API,id,lastTimeStamp),
-                    null,
+                    new JSONObject(),
                     new Response.Listener<JSONObject>(){
                         @Override
                         public void onResponse(JSONObject response) {
@@ -175,7 +187,7 @@ public class SocialFragment extends Fragment {
         {
             super(Method.GET,
                     String.format(GET_USER_PROMOTED_API,id,lastTimeStamp),
-                    null,
+                    new JSONObject(),
                     new Response.Listener<JSONObject>(){
                         @Override
                         public void onResponse(JSONObject response) {

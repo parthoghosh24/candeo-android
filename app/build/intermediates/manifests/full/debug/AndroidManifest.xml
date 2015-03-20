@@ -48,7 +48,7 @@
             android:label="@string/title_activity_content"
             android:parentActivityName="com.candeo.app.home.HomeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
+            android:theme="@style/AppTheme.Light.NoActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".home.HomeActivity" />
@@ -102,6 +102,13 @@
                     android:pathPattern="/verify/.*"
                     android:scheme="http" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.candeo.app.user.UserActivity"
+            android:configChanges="keyboard|orientation|screenSize"
+            android:label="@string/title_activity_user"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
             android:name="android.support.v7.widget.TestActivity"

@@ -1,6 +1,8 @@
 package com.candeo.app.adapters;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -18,11 +20,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
+import com.candeo.app.content.ContentActivity;
 import com.candeo.app.home.HomeActivity;
+import com.candeo.app.ui.BitmapLruCache;
+import com.candeo.app.user.UserActivity;
 import com.candeo.app.util.CandeoUtil;
+import com.candeo.app.util.Preferences;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,6 +38,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -43,33 +52,41 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
     private HomeActivity mContext;
     private JSONObject topContentAndUser;
-    private List<HashMap<String,String>> morePerformances;
+    public ArrayList<HashMap<String,String>> morePerformances = new ArrayList<>();
     private static final int TOP_PERFORMANCES=100;
     private static final int TOP_USERS=200;
     private static final int MORE_PERFORMANCES=300;
     private static final String TAG="Candeo-lbadaptr";
+    private ImageLoader imageLoader;
+    private BitmapLruCache imageCache;
+    private Animation in;
 //    private int type=TOP_PERFORMANCES;
 
-    public LeaderboardAdapter(HomeActivity mContext,JSONObject topContentAndUser, List<HashMap<String,String>> morePerformances)
+    public LeaderboardAdapter(HomeActivity mContext,JSONObject topContentAndUser)
     {
+        in = AnimationUtils.loadAnimation(mContext.getApplicationContext(), android.R.anim.fade_in);
         this.mContext=mContext;
         this.topContentAndUser=topContentAndUser;
-        this.morePerformances=morePerformances;
+        this.imageCache=new BitmapLruCache();
+        this.imageLoader=new ImageLoader(CandeoApplication.getInstance().getAppRequestQueue(),imageCache);
     }
     @Override
     public LeaderboardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(getLayoutForType(viewType),parent,false);
         Log.e("Candeo Leaderboard","Type is "+viewType);
-        return new LeaderboardViewHolder(itemLayoutView,viewType);
+        return new LeaderboardViewHolder(itemLayoutView,viewType,mContext);
     }
 
-    public void addAllToMorePerformances(List<HashMap<String,String>> morePerformances, boolean append)
+    public void addAllToMorePerformances(ArrayList<HashMap<String,String>> performances, boolean append)
     {
+        Log.e(TAG,"Incoming list size "+performances.size());
+        Log.e(TAG,"Adding to performances");
         if(!append)
         {
-            this.morePerformances.clear();
+            morePerformances.clear();
         }
-        this.morePerformances.addAll(morePerformances);
+        morePerformances.addAll(performances);
+        Log.e(TAG,"Total size is "+morePerformances.size());
     }
 
     @Override
@@ -102,7 +119,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
 
     @Override
-    public void onBindViewHolder(LeaderboardViewHolder holder, int position) {
+    public void onBindViewHolder(final LeaderboardViewHolder holder, int position) {
 
         if(position == 0)
         {
@@ -110,34 +127,50 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
             try {
                 JSONObject candeoContent1 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopContent1");
                 Log.e(TAG,"top1 "+Configuration.BASE_URL+candeoContent1.getString("bg_url"));
-                if(TextUtils.isEmpty(candeoContent1.getString("bg_url")))
+                holder.candeoTopContentImage1.startAnimation(in);
+                if(TextUtils.isEmpty(candeoContent1.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent1.getString("bg_url")))
                 {
-                    new LoadImageTask(Configuration.BASE_URL+candeoContent1.getString("media_url"),holder.candeoTopContentImage1).execute();
+                    holder.candeoTopContentImage1.setImageUrl(Configuration.BASE_URL+candeoContent1.getString("media_url"),imageLoader);
                 }
                 else
                 {
-                    new LoadImageTask(Configuration.BASE_URL+candeoContent1.getString("bg_url"),holder.candeoTopContentImage1).execute();
+                    holder.candeoTopContentImage1.setImageUrl(Configuration.BASE_URL+candeoContent1.getString("bg_url"),imageLoader);
                 }
 
                 new LoadImageTask(Configuration.BASE_URL+candeoContent1.getString("user_avatar_url"),holder.candeoTopContent1UserAvatar).execute();
 
                 holder.candeoTopContent1AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/applause.ttf"));
                 holder.candeoTopContent1AppreciateIcon.setText(Configuration.FA_APPRECIATE);
-                holder.candeoTopContent1MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/fa.ttf"));
+                holder.candeoTopContent1MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(), "fonts/fa.ttf"));
                 holder.candeoTopContent1MediaIcon.setText(Configuration.FA_AUDIO);
-                holder.candeoTopContent1UserName.setText(candeoContent1.getString("name"));
+                holder.candeoTopContent1Title.setText(candeoContent1.getString("showcase_title"));
                 holder.candeoTopContent1AppreciateCount.setText(candeoContent1.getString("showcase_total_appreciations"));
+                holder.candeoTopContent1.setTag(candeoContent1.getString("showcase_id"));
+                holder.candeoTopContent1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(holder.candeoTopContent1.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopContent1.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent1.getTag().toString()) )
+                        {
+                            Intent contentIntent= new Intent(mContext, ContentActivity.class);
+                            contentIntent.putExtra("id",holder.candeoTopContent1.getTag().toString());
+                            contentIntent.putExtra("type",Configuration.SHOWCASE);
+                            mContext.startActivity(contentIntent);
+                        }
+
+                    }
+                });
 
 
                 JSONObject candeoContent2 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopContent2");
                 Log.e(TAG,"top2 "+Configuration.BASE_URL+candeoContent2.getString("bg_url"));
-                if(TextUtils.isEmpty(candeoContent2.getString("bg_url")))
+                holder.candeoTopContentImage2.startAnimation(in);
+                if(TextUtils.isEmpty(candeoContent2.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent2.getString("bg_url")))
                 {
-                    new LoadImageTask(Configuration.BASE_URL+candeoContent2.getString("media_url"),holder.candeoTopContentImage2).execute();
+                    holder.candeoTopContentImage2.setImageUrl(Configuration.BASE_URL+candeoContent2.getString("media_url"),imageLoader);
                 }
                 else
                 {
-                    new LoadImageTask(Configuration.BASE_URL+candeoContent2.getString("bg_url"),holder.candeoTopContentImage2).execute();
+                    holder.candeoTopContentImage2.setImageUrl(Configuration.BASE_URL+candeoContent2.getString("bg_url"),imageLoader);
                 }
                 new LoadImageTask(Configuration.BASE_URL+candeoContent2.getString("user_avatar_url"),holder.candeoTopContent2UserAvatar).execute();
 
@@ -145,63 +178,122 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                 holder.candeoTopContent2AppreciateIcon.setText(Configuration.FA_APPRECIATE);
                 holder.candeoTopContent2MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/fa.ttf"));
                 holder.candeoTopContent2MediaIcon.setText(Configuration.FA_AUDIO);
-                holder.candeoTopContent2UserName.setText(candeoContent2.getString("name"));
+                holder.candeoTopContent2Title.setText(candeoContent2.getString("showcase_title"));
                 holder.candeoTopContent2AppreciateCount.setText(candeoContent2.getString("showcase_total_appreciations"));
+                holder.candeoTopContent2.setTag(candeoContent2.getString("showcase_id"));
+                holder.candeoTopContent2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(holder.candeoTopContent2.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopContent2.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent2.getTag().toString()) )
+                        {
+                            Intent contentIntent= new Intent(mContext, ContentActivity.class);
+                            contentIntent.putExtra("id",holder.candeoTopContent2.getTag().toString());
+                            contentIntent.putExtra("type",Configuration.SHOWCASE);
+                            mContext.startActivity(contentIntent);
+                        }
+
+                    }
+                });
 
                 JSONObject candeoContent3 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopContent3");
                 Log.e(TAG,"top3 "+Configuration.BASE_URL+candeoContent3.getString("bg_url"));
-                if(TextUtils.isEmpty(candeoContent3.getString("bg_url")))
+                holder.candeoTopContentImage3.startAnimation(in);
+                if(TextUtils.isEmpty(candeoContent3.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent3.getString("bg_url")))
                 {
-                    new LoadImageTask(Configuration.BASE_URL+candeoContent3.getString("media_url"),holder.candeoTopContentImage3).execute();
+                    holder.candeoTopContentImage3.setImageUrl(Configuration.BASE_URL+candeoContent3.getString("media_url"),imageLoader);
                 }
                 else
                 {
-                    new LoadImageTask(Configuration.BASE_URL+candeoContent3.getString("bg_url"),holder.candeoTopContentImage3).execute();
+                    holder.candeoTopContentImage3.setImageUrl(Configuration.BASE_URL+candeoContent3.getString("bg_url"),imageLoader);
                 }
-                new LoadImageTask(Configuration.BASE_URL+candeoContent3.getString("user_avatar_url"),holder.candeoTopContent3UserAvatar).execute();
 
                 holder.candeoTopContent3AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/applause.ttf"));
                 holder.candeoTopContent3AppreciateIcon.setText(Configuration.FA_APPRECIATE);
                 holder.candeoTopContent3MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/fa.ttf"));
                 holder.candeoTopContent3MediaIcon.setText(Configuration.FA_AUDIO);
                 holder.candeoTopContent3AppreciateCount.setText(candeoContent3.getString("showcase_total_appreciations"));
+                holder.candeoTopContent3Title.setText(candeoContent3.getString("showcase_title"));
+                holder.candeoTopContent3.setTag(candeoContent3.getString("showcase_id"));
+                holder.candeoTopContent3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(holder.candeoTopContent3.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopContent3.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent3.getTag().toString()) )
+                        {
+                            Intent contentIntent= new Intent(mContext, ContentActivity.class);
+                            contentIntent.putExtra("id",holder.candeoTopContent3.getTag().toString());
+                            contentIntent.putExtra("type",Configuration.SHOWCASE);
+                            mContext.startActivity(contentIntent);
+                        }
+
+                    }
+                });
 
 
                 JSONObject candeoContent4 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopContent4");
                 Log.e(TAG,"top4 "+Configuration.BASE_URL+candeoContent4.getString("bg_url"));
-                if(TextUtils.isEmpty(candeoContent4.getString("bg_url")))
+                holder.candeoTopContentImage4.startAnimation(in);
+                if(TextUtils.isEmpty(candeoContent4.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent4.getString("bg_url")))
                 {
-                    new LoadImageTask(Configuration.BASE_URL+candeoContent4.getString("media_url"),holder.candeoTopContentImage4).execute();
+                    holder.candeoTopContentImage4.setImageUrl(Configuration.BASE_URL+candeoContent4.getString("media_url"),imageLoader);
                 }
                 else
                 {
-                    new LoadImageTask(Configuration.BASE_URL+candeoContent4.getString("bg_url"),holder.candeoTopContentImage4).execute();
+                    holder.candeoTopContentImage4.setImageUrl(Configuration.BASE_URL+candeoContent4.getString("bg_url"),imageLoader);
                 }
-                new LoadImageTask(Configuration.BASE_URL+candeoContent4.getString("user_avatar_url"),holder.candeoTopContent4UserAvatar).execute();
 
                 holder.candeoTopContent4AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/applause.ttf"));
                 holder.candeoTopContent4AppreciateIcon.setText(Configuration.FA_APPRECIATE);
                 holder.candeoTopContent4MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/fa.ttf"));
                 holder.candeoTopContent4MediaIcon.setText(Configuration.FA_AUDIO);
                 holder.candeoTopContent4AppreciateCount.setText(candeoContent4.getString("showcase_total_appreciations"));
+                holder.candeoTopContent4Title.setText(candeoContent4.getString("showcase_title"));
+                holder.candeoTopContent4.setTag(candeoContent4.getString("showcase_id"));
+                holder.candeoTopContent4.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(holder.candeoTopContent4.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopContent4.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent4.getTag().toString()) )
+                        {
+                            Intent contentIntent= new Intent(mContext, ContentActivity.class);
+                            contentIntent.putExtra("id",holder.candeoTopContent4.getTag().toString());
+                            contentIntent.putExtra("type",Configuration.SHOWCASE);
+                            mContext.startActivity(contentIntent);
+                        }
+
+                    }
+                });
 
                 JSONObject candeoContent5 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopContent5");
                 Log.e(TAG,"top5 "+Configuration.BASE_URL+candeoContent5.getString("bg_url"));
-                if(TextUtils.isEmpty(candeoContent5.getString("bg_url")))
+                holder.candeoTopContentImage5.startAnimation(in);
+                if(TextUtils.isEmpty(candeoContent5.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent5.getString("bg_url")))
                 {
-                    new LoadImageTask(Configuration.BASE_URL+candeoContent5.getString("media_url"),holder.candeoTopContentImage5).execute();
+                    holder.candeoTopContentImage5.setImageUrl(Configuration.BASE_URL+candeoContent5.getString("media_url"),imageLoader);
                 }
                 else
                 {
-                    new LoadImageTask(Configuration.BASE_URL+candeoContent5.getString("bg_url"),holder.candeoTopContentImage5).execute();
+                    holder.candeoTopContentImage5.setImageUrl(Configuration.BASE_URL+candeoContent5.getString("bg_url"),imageLoader);
                 }
-                new LoadImageTask(Configuration.BASE_URL+candeoContent5.getString("user_avatar_url"),holder.candeoTopContent5UserAvatar).execute();
 
                 holder.candeoTopContent5AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/applause.ttf"));
                 holder.candeoTopContent5AppreciateIcon.setText(Configuration.FA_APPRECIATE);
                 holder.candeoTopContent5MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/fa.ttf"));
                 holder.candeoTopContent5MediaIcon.setText(Configuration.FA_AUDIO);
                 holder.candeoTopContent5AppreciateCount.setText(candeoContent5.getString("showcase_total_appreciations"));
+                holder.candeoTopContent5Title.setText(candeoContent5.getString("showcase_title"));
+                holder.candeoTopContent5.setTag(candeoContent5.getString("showcase_id"));
+                holder.candeoTopContent5.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(holder.candeoTopContent5.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopContent5.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent5.getTag().toString()) )
+                        {
+                            Intent contentIntent= new Intent(mContext, ContentActivity.class);
+                            contentIntent.putExtra("id",holder.candeoTopContent5.getTag().toString());
+                            contentIntent.putExtra("type",Configuration.SHOWCASE);
+                            mContext.startActivity(contentIntent);
+                        }
+
+                    }
+                });
 
             }
             catch (JSONException jse)
@@ -215,17 +307,59 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
             try
             {
                 JSONObject candeoTopUser1 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopCreator1");
-                new LoadImageTask(Configuration.BASE_URL+candeoTopUser1.getString("user_avatar_url"),holder.candeoTopCreatorImg1).execute();
-                Log.e(TAG,"candeoTopUser1 "+candeoTopUser1.getString("name"));
+                holder.candeoTopCreatorImg1.startAnimation(in);
+                holder.candeoTopCreatorImg1.setImageUrl(Configuration.BASE_URL + candeoTopUser1.getString("user_avatar_url"), imageLoader);
+                Log.e(TAG, "candeoTopUser1 " + candeoTopUser1.getString("name"));
                 holder.candeoTopCreator1Name.setText(candeoTopUser1.getString("name"));
+                holder.candeoTopCreator1.setTag(candeoTopUser1.getString("id"));
+                holder.candeoTopCreator1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(holder.candeoTopCreator1.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopCreator1.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopCreator1.getTag().toString()) )
+                        {
+                            Intent contentIntent= new Intent(mContext, UserActivity.class);
+                            contentIntent.putExtra("id",holder.candeoTopCreator1.getTag().toString());
+                            mContext.startActivity(contentIntent);
+                        }
+
+                    }
+                });
 
                 JSONObject candeoTopUser2 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopCreator2");
-                new LoadImageTask(Configuration.BASE_URL+candeoTopUser2.getString("user_avatar_url"),holder.candeoTopCreatorImg2).execute();
+                holder.candeoTopCreatorImg2.startAnimation(in);
+                holder.candeoTopCreatorImg2.setImageUrl(Configuration.BASE_URL + candeoTopUser2.getString("user_avatar_url"), imageLoader);
                 holder.candeoTopCreator2Name.setText(candeoTopUser2.getString("name"));
+                holder.candeoTopCreator2.setTag(candeoTopUser2.getString("id"));
+                holder.candeoTopCreator2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(holder.candeoTopCreator2.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopCreator2.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopCreator2.getTag().toString()) )
+                        {
+                            Intent contentIntent= new Intent(mContext, UserActivity.class);
+                            contentIntent.putExtra("id",holder.candeoTopCreator2.getTag().toString());
+                            mContext.startActivity(contentIntent);
+                        }
+
+                    }
+                });
 
                 JSONObject candeoTopUser3 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopCreator3");
-                new LoadImageTask(Configuration.BASE_URL+candeoTopUser3.getString("user_avatar_url"),holder.candeoTopCreatorImg3).execute();
+                holder.candeoTopCreatorImg3.startAnimation(in);
+                holder.candeoTopCreatorImg3.setImageUrl(Configuration.BASE_URL + candeoTopUser3.getString("user_avatar_url"), imageLoader);
                 holder.candeoTopCreator3Name.setText(candeoTopUser3.getString("name"));
+                holder.candeoTopCreator3.setTag(candeoTopUser3.getString("id"));
+                holder.candeoTopCreator3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(holder.candeoTopCreator3.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopCreator3.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopCreator3.getTag().toString()) )
+                        {
+                            Intent contentIntent= new Intent(mContext, UserActivity.class);
+                            contentIntent.putExtra("id",holder.candeoTopCreator3.getTag().toString());
+                            mContext.startActivity(contentIntent);
+                        }
+
+                    }
+                });
             }
             catch (JSONException jse)
             {
@@ -236,7 +370,45 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
         }
         else
         {
-            //Regular
+            //More
+            HashMap<String, String> morePerformance = morePerformances.get(position-2);
+            holder.bgImage.startAnimation(in);
+            holder.bgImage.setImageUrl(Configuration.BASE_URL + morePerformance.get("showcase_bg_url"), imageLoader);
+            holder.title.setText(morePerformance.get("showcase_title"));
+            new LoadImageTask(Configuration.BASE_URL + morePerformance.get("showcase_user_avatar_url"),holder.userAvatar).execute();
+            holder.appreciateIcon.setText(Configuration.FA_APPRECIATE);
+            holder.appreciationValue.setText(morePerformance.get("showcase_total_appreciations"));
+            holder.rankValue.setText(morePerformance.get("showcase_rank"));
+            if(Configuration.AUDIO == Integer.parseInt(morePerformance.get("showcase_media_type")))
+            {
+                holder.mediaIcon.setText(Configuration.FA_AUDIO);
+            }
+            else if(Configuration.IMAGE == Integer.parseInt(morePerformance.get("showcase_media_type")))
+            {
+                holder.mediaIcon.setText(Configuration.FA_AUDIO);
+            }
+            else if(Configuration.VIDEO == Integer.parseInt(morePerformance.get("showcase_media_type")))
+            {
+                holder.mediaIcon.setText(Configuration.FA_VIDEO);
+            }
+            else if(Configuration.BOOK == Integer.parseInt(morePerformance.get("showcase_media_type")))
+            {
+                holder.mediaIcon.setText(Configuration.FA_BOOK);
+            }
+            holder.contentHolder.setTag(morePerformance.get("showcase_id"));
+            holder.contentHolder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(holder.contentHolder.getTag()!=null && !TextUtils.isEmpty(holder.contentHolder.getTag().toString()) && !"-1".equalsIgnoreCase(holder.contentHolder.getTag().toString()) )
+                    {
+                        Intent contentIntent= new Intent(mContext, ContentActivity.class);
+                        contentIntent.putExtra("id",holder.contentHolder.getTag().toString());
+                        contentIntent.putExtra("type",Configuration.SHOWCASE);
+                        mContext.startActivity(contentIntent);
+                    }
+                }
+            });
+
         }
 
 
@@ -245,7 +417,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     @Override
     public int getItemCount() {
 
-        Log.e("Leaderboard","count "+(morePerformances.size()+2));
+        Log.e(TAG,"count "+(morePerformances.size()+2));
         return morePerformances.size()+2;
     }
 
@@ -253,101 +425,148 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     {
 
         //Top 5 last week contents
-        public ImageView candeoTopContentImage1 = null;
+        public NetworkImageView candeoTopContentImage1 = null;
         public TextView candeoTopContent1AppreciateIcon=null;
         public TextView candeoTopContent1AppreciateCount = null;
         public TextView candeoTopContent1MediaIcon=null;
         public ImageView candeoTopContent1UserAvatar=null;
-        public TextView candeoTopContent1UserName=null;
+        public TextView candeoTopContent1Title=null;
+        public CardView candeoTopContent1=null;
 
-        public ImageView candeoTopContentImage2 = null;
+        public NetworkImageView candeoTopContentImage2 = null;
         public TextView candeoTopContent2AppreciateIcon=null;
         public TextView candeoTopContent2AppreciateCount = null;
         public TextView candeoTopContent2MediaIcon=null;
         public ImageView candeoTopContent2UserAvatar=null;
-        public TextView candeoTopContent2UserName=null;
+        public TextView candeoTopContent2Title=null;
+        public CardView candeoTopContent2=null;
 
-        public ImageView candeoTopContentImage3 = null;
+        public NetworkImageView candeoTopContentImage3 = null;
         public TextView candeoTopContent3AppreciateIcon=null;
         public TextView candeoTopContent3AppreciateCount = null;
         public TextView candeoTopContent3MediaIcon=null;
-        public ImageView candeoTopContent3UserAvatar=null;
+        public TextView candeoTopContent3Title=null;
+        public CardView candeoTopContent3=null;
 
-        public ImageView candeoTopContentImage4 = null;
+        public NetworkImageView candeoTopContentImage4 = null;
         public TextView candeoTopContent4AppreciateIcon=null;
         public TextView candeoTopContent4AppreciateCount = null;
         public TextView candeoTopContent4MediaIcon=null;
-        public ImageView candeoTopContent4UserAvatar=null;
+        public TextView candeoTopContent4Title=null;
+        public CardView candeoTopContent4=null;
 
-        public ImageView candeoTopContentImage5 = null;
+        public NetworkImageView candeoTopContentImage5 = null;
         public TextView candeoTopContent5AppreciateIcon=null;
         public TextView candeoTopContent5AppreciateCount = null;
         public TextView candeoTopContent5MediaIcon=null;
-        public ImageView candeoTopContent5UserAvatar=null;
+        public TextView candeoTopContent5Title=null;
+        public CardView candeoTopContent5=null;
 
         //Top 3 All time creators
-        public CircleImageView candeoTopCreatorImg1 = null;
+        public CardView candeoTopCreator1=null;
+        public NetworkImageView candeoTopCreatorImg1 = null;
         public TextView candeoTopCreator1Name = null;
-        public CircleImageView candeoTopCreatorImg2 = null;
+        public CardView candeoTopCreator2=null;
+        public NetworkImageView candeoTopCreatorImg2 = null;
         public TextView candeoTopCreator2Name = null;
-        public CircleImageView candeoTopCreatorImg3 = null;
+        public CardView candeoTopCreator3=null;
+        public NetworkImageView candeoTopCreatorImg3 = null;
         public TextView candeoTopCreator3Name = null;
 
+        //More Performances
+        private TextView title;
+        public CircleImageView userAvatar;
+        public NetworkImageView bgImage;
+        public TextView userName;
+        public TextView appreciateIcon;
+        public TextView rankValue;
+        public TextView appreciationValue;
+        public TextView date;
+        public TextView mediaIcon;
+        public LinearLayout inspirationHolder;
+        public View view;
+        public CardView contentHolder;
 
         private int type;
+        private Context mContext;
 
-        public LeaderboardViewHolder(View itemLayoutView,int type)
+        public LeaderboardViewHolder(View itemLayoutView,int type, Context mContext)
         {
             super(itemLayoutView);
             this.type=type;
+            this.mContext=mContext;
 
             if(TOP_PERFORMANCES == type)
             {
-                candeoTopContentImage1 = (ImageView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_1_bg);
+                candeoTopContentImage1 = (NetworkImageView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_1_bg);
                 candeoTopContent1AppreciateIcon=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_1_appreciate_icon);
                 candeoTopContent1AppreciateCount=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_1_appreciate_count);
                 candeoTopContent1MediaIcon=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_1_media_icon);
                 candeoTopContent1UserAvatar=(ImageView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_1_user_avatar);
-                candeoTopContent1UserName=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_1_user_name);
+                candeoTopContent1Title=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_1_title);
+                candeoTopContent1=(CardView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_1);
 
-                candeoTopContentImage2 = (ImageView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_2_bg);
+                candeoTopContentImage2 = (NetworkImageView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_2_bg);
                 candeoTopContent2AppreciateIcon=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_2_appreciate_icon);
                 candeoTopContent2AppreciateCount=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_2_appreciate_count);
                 candeoTopContent2MediaIcon=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_2_media_icon);
                 candeoTopContent2UserAvatar=(ImageView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_2_user_avatar);
-                candeoTopContent2UserName=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_2_user_name);
+                candeoTopContent2Title=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_2_title);
+                candeoTopContent2=(CardView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_2);
 
-                candeoTopContentImage3 = (ImageView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_3_bg);
+                candeoTopContentImage3 = (NetworkImageView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_3_bg);
                 candeoTopContent3AppreciateIcon=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_3_appreciate_icon);
                 candeoTopContent3AppreciateCount=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_3_appreciate_count);
                 candeoTopContent3MediaIcon=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_3_media_icon);
-                candeoTopContent3UserAvatar=(ImageView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_3_user_avatar);
+                candeoTopContent3Title=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_3_title);
+                candeoTopContent3=(CardView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_3);
 
-                candeoTopContentImage4 = (ImageView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_4_bg);
+                candeoTopContentImage4 = (NetworkImageView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_4_bg);
                 candeoTopContent4AppreciateIcon=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_4_appreciate_icon);
                 candeoTopContent4AppreciateCount=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_4_appreciate_count);
                 candeoTopContent4MediaIcon=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_4_media_icon);
-                candeoTopContent4UserAvatar=(ImageView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_4_user_avatar);
+                candeoTopContent4Title=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_4_title);
+                candeoTopContent4=(CardView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_4);
 
-                candeoTopContentImage5 = (ImageView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_5_bg);
+                candeoTopContentImage5 = (NetworkImageView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_5_bg);
                 candeoTopContent5AppreciateIcon=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_5_appreciate_icon);
                 candeoTopContent5AppreciateCount=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_5_appreciate_count);
                 candeoTopContent5MediaIcon=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_5_media_icon);
-                candeoTopContent5UserAvatar=(ImageView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_5_user_avatar);
+                candeoTopContent5Title=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_5_title);
+                candeoTopContent5=(CardView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_5);
 
             }
             if(TOP_USERS==type)
             {
-                candeoTopCreatorImg1 = (CircleImageView)itemLayoutView.findViewById(R.id.candeo_top_user_1_avatar);
+                candeoTopCreatorImg1 = (NetworkImageView)itemLayoutView.findViewById(R.id.candeo_top_user_1_avatar);
                 candeoTopCreator1Name = (TextView)itemLayoutView.findViewById(R.id.candeo_top_user_1_name);
-                candeoTopCreatorImg2 = (CircleImageView)itemLayoutView.findViewById(R.id.candeo_top_user_2_avatar);
+                candeoTopCreator1=(CardView)itemLayoutView.findViewById(R.id.candeo_top_user_1);
+                candeoTopCreatorImg2 = (NetworkImageView)itemLayoutView.findViewById(R.id.candeo_top_user_2_avatar);
                 candeoTopCreator2Name = (TextView)itemLayoutView.findViewById(R.id.candeo_top_user_2_name);
-                candeoTopCreatorImg3 = (CircleImageView)itemLayoutView.findViewById(R.id.candeo_top_user_3_avatar);
+                candeoTopCreator2=(CardView)itemLayoutView.findViewById(R.id.candeo_top_user_2);
+                candeoTopCreatorImg3 = (NetworkImageView)itemLayoutView.findViewById(R.id.candeo_top_user_3_avatar);
                 candeoTopCreator3Name = (TextView)itemLayoutView.findViewById(R.id.candeo_top_user_3_name);
+                candeoTopCreator3=(CardView)itemLayoutView.findViewById(R.id.candeo_top_user_3);
 
             }
             if(MORE_PERFORMANCES ==type)
             {
+                inspirationHolder=(LinearLayout)itemLayoutView.findViewById(R.id.candeo_content_inspire_holder);
+                inspirationHolder.setVisibility(View.GONE);
+                title=(TextView)itemLayoutView.findViewById(R.id.candeo_showcase_title);
+                userAvatar=(CircleImageView)itemLayoutView.findViewById(R.id.candeo_content_user_avatar);
+                userAvatar.setVisibility(View.VISIBLE);
+                mediaIcon = (TextView)itemLayoutView.findViewById(R.id.candeo_showcase_media_icon);
+                mediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/fa.ttf"));
+                bgImage = (NetworkImageView)itemLayoutView.findViewById(R.id.candeo_content_bg);
+                bgImage.setImageURI(Uri.parse(Preferences.getUserAvatarPath(mContext)));
+                date= (TextView)itemLayoutView.findViewById(R.id.candeo_showcase_date);
+                appreciationValue = (TextView)itemLayoutView.findViewById(R.id.candeo_content_appreciate_count);
+                rankValue = (TextView)itemLayoutView.findViewById(R.id.candeo_content_rank_value);
+                appreciateIcon = (TextView)itemLayoutView.findViewById(R.id.candeo_content_appreciate_icon);
+                appreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/applause.ttf"));
+                contentHolder=(CardView)itemLayoutView.findViewById(R.id.candeo_content_holder);
+
 
             }
 
