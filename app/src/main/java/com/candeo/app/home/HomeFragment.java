@@ -160,7 +160,7 @@ public class HomeFragment extends Fragment {
                 toggleNoContent(false);
             }
         }
-        catch (JSONException jse)
+        catch (NullPointerException|JSONException jse)
         {
             jse.printStackTrace();
             Log.e(TAG,"Error is "+jse.getLocalizedMessage());

@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,14 +43,19 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class UserFragment extends Fragment {
+public class UserFragment extends Fragment implements UserProfileUpdateListener {
 
 
     private ImageView userAvatar;
     private TextView userName;
+    private TextView userBio;
+    private String name;
+    private String bio;
+    private String avatarUrl;
 
     //stats
     private TextView appreciateIcon;
@@ -72,6 +78,10 @@ public class UserFragment extends Fragment {
     private View loadingContent = null;
     private View root;
     private String userId="";
+    private LinearLayout updateUserVeil;
+    private LinearLayout updateUserButton;
+    private TextView updateProfileText;
+    private UserProfileUpdateListener userProfileUpdateListener=null;
 
     private final static String TAG="Candeo - User Fragment";
 
@@ -81,7 +91,7 @@ public class UserFragment extends Fragment {
 
             root=inflater.inflate(R.layout.fragment_user, container, false);
 
-
+            userProfileUpdateListener=this;
 
             if(Configuration.DEBUG)
             {
@@ -93,6 +103,28 @@ public class UserFragment extends Fragment {
             }
             initWidgets();
             return root;
+    }
+
+    @Override
+    public void onProfileUpdate(HashMap<String, String> params) {
+        if(params!=null && params.size()>0)
+        {
+            if(!TextUtils.isEmpty(params.get("name")))
+            {
+                userName.setText(params.get("name"));
+            }
+
+            if(!TextUtils.isEmpty(params.get("bio")))
+            {
+                userBio.setText(params.get("bio"));
+            }
+
+            if(!TextUtils.isEmpty(params.get("avatarUrl")))
+            {
+                new LoadImageTask().execute(params.get("avatarUrl"));
+            }
+
+        }
     }
 
     @Override
@@ -120,12 +152,16 @@ public class UserFragment extends Fragment {
                 try {
                     JSONObject user =response.getJSONObject("user");
                     userId = user.getString("id");
-                    userName.setText(user.getString("name"));
+                    name=user.getString("name");
+                    bio=user.getString("about");
+                    avatarUrl=Configuration.BASE_URL+user.getString("avatar_path");
+                    userName.setText(name);
+                    userBio.setText(TextUtils.isEmpty(bio) ? Configuration.CANDEO_DEFAULT_BIO : bio);
                     appreciateCount.setText(""+user.getInt("total_appreciations"));
                     inspireCount.setText(""+user.getInt("total_inspires"));
                     currentRank.setText(""+user.get("current_rank"));
                     highestRank.setText(""+user.get("highest_rank"));
-                    new LoadImageTask().execute(Configuration.BASE_URL+user.getString("avatar_path"));
+                    new LoadImageTask().execute(avatarUrl);
                     Bundle bundle = new Bundle();
                     bundle.putString("userId",userId);
                     bundle.putString("name",userName.getText().toString());
@@ -149,11 +185,21 @@ public class UserFragment extends Fragment {
                     {
                         notLoggedIn.setVisibility(View.VISIBLE);
                     }
+                    if(Preferences.isUserLoggedIn(getActivity()) && !TextUtils.isEmpty(userId) && userId.equalsIgnoreCase(Preferences.getUserRowId(getActivity())))
+                    {
+                        updateUserVeil.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        updateUserVeil.setVisibility(View.GONE);
+                    }
+                    Log.e(TAG,"USER LOADED");
 
                 }
                 catch (JSONException je)
                 {
                     je.printStackTrace();
+                    Log.e(TAG,"ERROR IS "+je.getLocalizedMessage());
                 }
                 toggleLoading(false);
 
@@ -176,6 +222,7 @@ public class UserFragment extends Fragment {
         userAvatar = (CircleImageView)root.findViewById(R.id.candeo_user_avatar);
         userAvatar.setImageURI(Uri.parse("android.resource://" + getActivity().getPackageName() + "/"+ R.raw.default_avatar));
         userName = (TextView)root.findViewById(R.id.candeo_user_name_text);
+        userBio=(TextView)root.findViewById(R.id.candeo_user_bio);
         appreciateIcon = (TextView)root.findViewById(R.id.candeo_user_appreciate_icon);
         appreciateIcon.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/applause.ttf"));
         appreciateIcon.setText(Configuration.FA_APPRECIATE);
@@ -188,6 +235,25 @@ public class UserFragment extends Fragment {
         highestRank=(TextView)root.findViewById(R.id.candeo_user_highest_rank_value);
         slidingTabs = (SlidingTabLayout)root.findViewById(R.id.candeo_user_sliding_tabs);
         userContentPager=(ViewPager)root.findViewById(R.id.candeo_user_content_pager);
+        updateUserVeil=(LinearLayout)root.findViewById(R.id.candeo_user_update_veil);
+        updateUserButton=(LinearLayout)root.findViewById(R.id.candeo_user_update_button);
+        Log.e(TAG,"is same user? "+(Preferences.isUserLoggedIn(getActivity()) && !TextUtils.isEmpty(userId) && userId.equalsIgnoreCase(Preferences.getUserRowId(getActivity()))));
+        updateProfileText=(TextView)root.findViewById(R.id.candeo_user_update_profile_text);
+        updateProfileText.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/fa.ttf"));
+        updateProfileText.setText(Configuration.FA_PENCIL);
+        updateUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProfileUpdateFragment profileUpdateFragment = new ProfileUpdateFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("name",name);
+                bundle.putString("bio",bio);
+                bundle.putString("avatarUrl",avatarUrl);
+                profileUpdateFragment.setArguments(bundle);
+                profileUpdateFragment.setUpdateProfileListener(userProfileUpdateListener);
+                profileUpdateFragment.show(getActivity().getSupportFragmentManager(), "Update Profile");
+            }
+        });
 
         notLoggedIn = root.findViewById(R.id.candeo_user_not_logged_in);
         ((TextView)notLoggedIn.findViewById(R.id.candeo_no_content_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/fa.ttf"));

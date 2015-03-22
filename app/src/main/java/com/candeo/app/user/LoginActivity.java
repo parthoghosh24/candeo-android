@@ -234,11 +234,6 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                     filePath = CandeoUtil.getRealPathFromUri(imageUri, getContentResolver());
                     file = new File(filePath);
                     Log.e(TAG,"Capture image path is "+filePath);
-//                    options = new BitmapFactory.Options();
-//                    options.inJustDecodeBounds = false;
-//                    options.inPreferredConfig = Bitmap.Config.RGB_565;
-//                    options.inDither = true;
-//                    bitmap = BitmapFactory.decodeFile(filePath,options);
                     bitmap = BitmapFactory.decodeFile(filePath);
                     try {
                         exifInterface = new ExifInterface(filePath);
@@ -257,11 +252,6 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                     filePath = CandeoUtil.getRealPathFromUri(uri, getContentResolver());
                     file = new File(filePath);
                     Log.e(TAG,"Picked image path is "+filePath);
-//                    options = new BitmapFactory.Options();
-//                    options.inJustDecodeBounds = false;
-//                    options.inPreferredConfig = Bitmap.Config.RGB_565;
-//                    options.inDither = true;
-//                    bitmap=BitmapFactory.decodeFile(filePath, options);
                     bitmap = BitmapFactory.decodeFile(filePath);
                     try {
                         exifInterface = new ExifInterface(filePath);

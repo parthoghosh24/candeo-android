@@ -50,9 +50,11 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
     private Context mContext;
     private ImageLoader imageLoader;
     private BitmapLruCache imageCache;
+    private Animation in;
 
     public UserPagerAdapter(List<HashMap<String, String>> list, int type, Context mContext)
     {
+        in = AnimationUtils.loadAnimation(mContext.getApplicationContext(), android.R.anim.fade_in);
         this.list=list;
         this.type=type;
         this.mContext=mContext;
@@ -136,12 +138,14 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
                     }
                 }
             });
+            holder.bgImage.startAnimation(in);
             holder.bgImage.setImageUrl(list.get(position).get("bg_url"),imageLoader);
 
         }
         if(type == APPRECIATIONS || type == INSPIRATIONS)
         {
-            holder.userName.setText(list.get(position).get("user_name"));
+
+            holder.userName.setText(list.get(position).get("title"));
             holder.rankValue.setText(list.get(position).get("rank"));
             if(type == APPRECIATIONS)
             {
@@ -178,6 +182,7 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
                     }
                 }
             });
+            holder.bgImage.startAnimation(in);
             holder.bgImage.setImageUrl(list.get(position).get("bg_url"),imageLoader);
         }
     }

@@ -115,6 +115,7 @@ public class DiscoveryFragment extends Fragment {
                                             JSONObject object= array.getJSONObject(index);
                                             HashMap<String,String> appreciation = new HashMap<>();
                                             appreciation.put("id",object.getString("id"));
+                                            appreciation.put("title",object.getString("title"));
                                             appreciation.put("user_name",object.getString("user_name"));
                                             appreciation.put("avatar_path",Configuration.BASE_URL+object.getString("avatar_path"));
                                             if(TextUtils.isEmpty(object.getString("bg_url")) ||"null".equalsIgnoreCase(object.getString("bg_url")) )
@@ -214,6 +215,7 @@ public class DiscoveryFragment extends Fragment {
                                             JSONObject object= array.getJSONObject(index);
                                             HashMap<String,String> inspiration = new HashMap<>();
                                             inspiration.put("id",object.getString("id"));
+                                            inspiration.put("title",object.getString("title"));
                                             inspiration.put("user_name",object.getString("user_name"));
                                             inspiration.put("avatar_path",Configuration.BASE_URL+object.getString("avatar_path"));
                                             if(TextUtils.isEmpty(object.getString("bg_url")) ||"null".equalsIgnoreCase(object.getString("bg_url")) )

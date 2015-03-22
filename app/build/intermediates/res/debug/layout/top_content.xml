@@ -30,6 +30,7 @@
                 android:id="@+id/candeo_performance_top_content_1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:minHeight="100dp"
                 android:clipToPadding="false"
                 app:cardCornerRadius="4dp"
                 app:cardUseCompatPadding="true"
@@ -208,6 +209,7 @@
                 android:id="@+id/candeo_performance_top_content_2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:minHeight="100dp"
                 android:clipToPadding="false"
                 app:cardCornerRadius="4dp"
                 app:cardUseCompatPadding="true"
@@ -410,6 +412,7 @@
                 android:id="@+id/candeo_performance_top_content_3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:minHeight="100dp"
                 android:clipToPadding="false"
                 app:cardCornerRadius="4dp"
                 app:cardUseCompatPadding="true"
@@ -563,6 +566,7 @@
                 android:id="@+id/candeo_performance_top_content_4"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:minHeight="100dp"
                 android:clipToPadding="false"
                 app:cardCornerRadius="4dp"
                 app:cardUseCompatPadding="true"
@@ -715,6 +719,7 @@
                 android:id="@+id/candeo_performance_top_content_5"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:minHeight="100dp"
                 android:clipToPadding="false"
                 app:cardCornerRadius="4dp"
                 app:cardUseCompatPadding="true"
@@ -859,4 +864,4 @@
     </LinearLayout>
 
 
-</LinearLayout><!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/src/main/res/layout/top_content.xml -->
+</LinearLayout><!-- From: file:/home/dholu/projects/candeo-android/app/src/main/res/layout/top_content.xml -->

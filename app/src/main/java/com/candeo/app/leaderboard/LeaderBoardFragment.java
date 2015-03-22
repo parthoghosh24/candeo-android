@@ -48,8 +48,6 @@ public class LeaderBoardFragment extends Fragment {
     private View root = null;
 
 
-    //More contents created till now
-    private ListView candeoRestContentView = null;
     private static final String TAG="Candeo - Leaderboard";
     //No Content
     private View noContent  = null;
@@ -229,10 +227,14 @@ public class LeaderBoardFragment extends Fragment {
                             NetworkResponse response = error.networkResponse;
                             if(response!=null)
                             {
-                                Log.e(TAG,"Server errot response while fetching performances "+new String(response.data));
+                                Log.e(TAG,"Server error response while fetching performances "+new String(response.data));
                             }
                             toggleView(loadingContent,false);
-                            toggleView(noContent,true);
+                            if(morePerformances.size()==0)
+                            {
+                                toggleView(noContent,true);
+                            }
+
                         }
                     });
             this.rank=rank;

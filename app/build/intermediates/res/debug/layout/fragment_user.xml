@@ -10,7 +10,8 @@
         android:visibility="gone"/>
 
     <include layout="@layout/loading_content"
-        android:id="@+id/candeo_data_loading"/>
+        android:id="@+id/candeo_data_loading"
+        android:visibility="visible"/>
 
       <LinearLayout
           android:layout_width="match_parent"
@@ -62,22 +63,57 @@
                   android:orientation="vertical"
                   android:layout_weight="1">
 
-                  <LinearLayout
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:orientation="vertical"
-                      android:gravity="center">
 
-                      <de.hdodenhof.circleimageview.CircleImageView
-                          xmlns:app="http://schemas.android.com/apk/res-auto"
-                          android:id="@+id/candeo_user_avatar"
-                          android:layout_width="80dp"
-                          android:layout_height="80dp"
-                          app:border_width="2dp"
-                          app:border_color="#ffffffff"/>
+                      <FrameLayout
+                          android:layout_width="match_parent"
+                          android:layout_height="match_parent"
+                          android:gravity="center">
+
+                          <LinearLayout
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:orientation="vertical"
+                              android:gravity="center">
+                                  <de.hdodenhof.circleimageview.CircleImageView
+                                      xmlns:app="http://schemas.android.com/apk/res-auto"
+                                      android:id="@+id/candeo_user_avatar"
+                                      android:layout_width="80dp"
+                                      android:layout_height="80dp"
+                                      app:border_width="2dp"
+                                      app:border_color="#ffffffff"/>
+                          </LinearLayout>
+                          <LinearLayout
+                              android:id="@+id/candeo_user_update_veil"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:orientation="vertical"
+                              android:gravity="center">
+                              <LinearLayout
+                                  android:id="@+id/candeo_user_update_button"
+                                  android:layout_width="80dp"
+                                  android:layout_height="80dp"
+                                  android:gravity="top|right">
+
+                                  <TextView
+                                      android:id="@+id/candeo_user_update_profile_text"
+                                      android:layout_width="25dp"
+                                      android:layout_height="25dp"
+                                      android:background="@drawable/roundedbluebg"
+                                      android:padding="3dp"
+                                      android:gravity="center"
+                                      android:textStyle="bold"
+                                      android:textSize="16sp"
+                                      android:text="EDIT"/>
+
+                               </LinearLayout>
+                          </LinearLayout>
+
+                      </FrameLayout>
 
 
-                  </LinearLayout>
+
+
+
 
 
 
@@ -138,10 +174,12 @@
               >
 
               <TextView
+                  android:id="@+id/candeo_user_bio"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:textStyle="italic"
-                  android:text="Music is my soul"
+                  android:textStyle="bold"
+                  android:textSize="13sp"
+                  android:text="Hello World"
                   android:textColor="@color/abc_secondary_text_material_dark"/>
 
           </LinearLayout>
@@ -239,4 +277,4 @@
 
 
 </LinearLayout>
-<!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/src/main/res/layout/fragment_user.xml -->
+<!-- From: file:/home/dholu/projects/candeo-android/app/src/main/res/layout/fragment_user.xml -->
