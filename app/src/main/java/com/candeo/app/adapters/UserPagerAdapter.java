@@ -30,6 +30,7 @@ import com.candeo.app.util.Preferences;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -46,16 +47,15 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
     public static final int APPRECIATIONS=4;
     public static final int INSPIRATIONS=5;
     public int type=CREATED;
-    private List<HashMap<String, String>> list;
+    private List<HashMap<String, String>> list = new ArrayList<>();
     private Context mContext;
     private ImageLoader imageLoader;
     private BitmapLruCache imageCache;
     private Animation in;
 
-    public UserPagerAdapter(List<HashMap<String, String>> list, int type, Context mContext)
+    public UserPagerAdapter(int type, Context mContext)
     {
         in = AnimationUtils.loadAnimation(mContext.getApplicationContext(), android.R.anim.fade_in);
-        this.list=list;
         this.type=type;
         this.mContext=mContext;
         this.imageCache=new BitmapLruCache();
@@ -82,6 +82,15 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
                  return R.layout.user_item;
         }
         return R.layout.content_item;
+    }
+
+    public void addAllToList(List<HashMap<String, String>> items, boolean append)
+    {
+        if(!append)
+        {
+            list.clear();
+        }
+        list.addAll(items);
     }
     @Override
     public void onBindViewHolder(final VariousUserViewHolder holder, int position) {

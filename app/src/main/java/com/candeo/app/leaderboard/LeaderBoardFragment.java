@@ -1,9 +1,7 @@
 package com.candeo.app.leaderboard;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -11,14 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -37,10 +31,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class LeaderBoardFragment extends Fragment {
 
@@ -61,13 +52,13 @@ public class LeaderBoardFragment extends Fragment {
     private final static String FIRST_MORE_PERFORMANCE_RANK="5";
     private String lastRank="";
     private boolean loading = true;
-    private int pastVisiblesItems, visibleItemCount, totalItemCount;
+    private int pastVisibleItems, visibleItemCount, totalItemCount;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.fragment_leader_board, container, false);
-        pastVisiblesItems=visibleItemCount=totalItemCount=0;
+        pastVisibleItems =visibleItemCount=totalItemCount=0;
         initWidgets();
         return root;
     }
@@ -85,8 +76,8 @@ public class LeaderBoardFragment extends Fragment {
         ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setText(Configuration.FA_STATS);
         ((TextView)loadingContent.findViewById(R.id.candeo_progress_text)).setText("Loading Performances...");
 
-        toggleView(loadingContent,true);
-        toggleView(noContent,false);
+        CandeoUtil.toggleView(loadingContent,true);
+        CandeoUtil.toggleView(noContent,false);
 
 
         performancesList= (RecyclerView)root.findViewById(R.id.candeo_performance_list);
@@ -98,13 +89,16 @@ public class LeaderBoardFragment extends Fragment {
         performancesList.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+
                 visibleItemCount = performanceListLayoutManager.getChildCount();
+                Log.e(TAG,"visible item count "+visibleItemCount);
                 totalItemCount = performanceListLayoutManager.getItemCount();
-                pastVisiblesItems = performanceListLayoutManager.findFirstVisibleItemPosition();
-                //TODO Not working, need to see
+                Log.e(TAG,"total item count "+totalItemCount);
+                pastVisibleItems = performanceListLayoutManager.findFirstVisibleItemPosition();
+                Log.e(TAG,"past visible item count "+ pastVisibleItems);
                 if (loading) {
                     Log.e(TAG,"in loading");
-                    if ( (visibleItemCount+pastVisiblesItems) >= totalItemCount) {
+                    if ( (visibleItemCount+ pastVisibleItems) >= totalItemCount) {
                         loading = false;
                         loadMore();
                     }
@@ -121,8 +115,8 @@ public class LeaderBoardFragment extends Fragment {
         {
             if(response.length()>0)
             {
-                toggleView(loadingContent,false);
-                toggleView(noContent,false);
+                CandeoUtil.toggleView(loadingContent,false);
+                CandeoUtil.toggleView(noContent,false);
                 noContent.setVisibility(View.GONE);
                 if(mLeaderboardAdapter==null)
                 {
@@ -138,8 +132,8 @@ public class LeaderBoardFragment extends Fragment {
             }
             else
             {
-                toggleView(loadingContent,false);
-                toggleView(noContent, true);
+                CandeoUtil.toggleView(loadingContent,false);
+                CandeoUtil.toggleView(noContent, true);
             }
         }
 
@@ -151,10 +145,7 @@ public class LeaderBoardFragment extends Fragment {
         CandeoApplication.getInstance().getAppRequestQueue().add(new GetMorePerformancesRequest(lastRank,true));
     }
 
-    private void toggleView(View view, boolean show)
-    {
-        view.setVisibility(show?View.VISIBLE:View.GONE);
-    }
+
 
     private class GetMorePerformancesRequest extends JsonObjectRequest
     {
@@ -169,14 +160,11 @@ public class LeaderBoardFragment extends Fragment {
                         public void onResponse(JSONObject response) {
                             if(response!=null)
                             {
-                                toggleView(loadingContent,false);
-                                toggleView(noContent,false);
+                                CandeoUtil.toggleView(loadingContent,false);
+                                CandeoUtil.toggleView(noContent,false);
                                 try {
                                     JSONArray list = response.getJSONArray("performances");
-//                                    if(!append)
-//                                    {
                                         morePerformances.clear();
-//                                    }
                                     if(list.length()>0)
                                     {
                                         for(int index=0; index<list.length(); ++index)
@@ -206,14 +194,15 @@ public class LeaderBoardFragment extends Fragment {
                                         Log.e(TAG,"List size is "+mLeaderboardAdapter.morePerformances.size());
                                         mLeaderboardAdapter.notifyDataSetChanged();
 //                                        performancesList.setAdapter(mLeaderboardAdapter);
+                                        loading=true;
                                     }
                                 }
                                 catch (JSONException jse)
                                 {
                                     jse.printStackTrace();
                                     Log.e(TAG, "error is "+jse.getLocalizedMessage());
-                                    toggleView(loadingContent,false);
-                                    toggleView(noContent,true);
+                                    CandeoUtil.toggleView(loadingContent,false);
+                                    CandeoUtil.toggleView(noContent,true);
                                 }
 
                             }
@@ -229,10 +218,10 @@ public class LeaderBoardFragment extends Fragment {
                             {
                                 Log.e(TAG,"Server error response while fetching performances "+new String(response.data));
                             }
-                            toggleView(loadingContent,false);
+                            CandeoUtil.toggleView(loadingContent,false);
                             if(morePerformances.size()==0)
                             {
-                                toggleView(noContent,true);
+                                CandeoUtil.toggleView(noContent,true);
                             }
 
                         }

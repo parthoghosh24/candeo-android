@@ -78,6 +78,7 @@ public class UserVerifyActivity extends ActionBarActivity {
                                }
                                catch (JSONException je)
                                {
+
                                    je.printStackTrace();
                                }
 

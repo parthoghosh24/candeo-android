@@ -45,6 +45,9 @@ public class CreatedFragment extends Fragment {
     private static final String GET_USER_CREATIONS_RELATIVE_API="/users/%s/showcases/%s";
     private static final String GET_USER_CREATIONS_API=Configuration.BASE_URL+"/api/v1"+GET_USER_CREATIONS_RELATIVE_API;
     private String userId="";
+    private boolean loading = true;
+    private int pastVisibleItems, visibleItemCount, totalItemCount;
+    private String lastTimestamp="";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -63,15 +66,40 @@ public class CreatedFragment extends Fragment {
         creations.setLayoutManager(creationsLinearLayoutManager);
         noUserCreatedContent = mRoot.findViewById(R.id.candeo_user_no_created_content);
         noUserCreatedContent.setBackgroundColor(getActivity().getResources().getColor(R.color.background_floating_material_light));
-        ((TextView)noUserCreatedContent.findViewById(R.id.candeo_no_content_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/fa.ttf"));
+        ((TextView)noUserCreatedContent.findViewById(R.id.candeo_no_content_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
         ((TextView)noUserCreatedContent.findViewById(R.id.candeo_no_content_icon)).setText(Configuration.FA_MAGIC);
         ((TextView)noUserCreatedContent.findViewById(R.id.candeo_no_content_icon)).setTextColor(getActivity().getResources().getColor(R.color.candeo_light_gray));
         ((TextView)noUserCreatedContent.findViewById(R.id.candeo_no_content_text)).setText("No content created yet.");
         ((TextView)noUserCreatedContent.findViewById(R.id.candeo_no_content_text)).setTextColor(getActivity().getResources().getColor(R.color.candeo_light_gray));
-        toggleNoContent(noUserCreatedContent,true);
+        CandeoUtil.toggleView(noUserCreatedContent, true);
         creationList = new ArrayList<>();
+        creations.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                visibleItemCount = creationsLinearLayoutManager.getChildCount();
+                Log.e(TAG, "visible item count " + visibleItemCount);
+                totalItemCount = creationsLinearLayoutManager.getItemCount();
+                Log.e(TAG,"total item count "+totalItemCount);
+                pastVisibleItems = creationsLinearLayoutManager.findFirstVisibleItemPosition();
+                Log.e(TAG,"past visible item count "+pastVisibleItems);
+                //TODO Not working, need to see
+                if (loading) {
+                    Log.e(TAG,"in loading");
+                    if ( (visibleItemCount+pastVisibleItems) >= totalItemCount) {
+                        loading = false;
+                        loadMore();
+                    }
+                }
+            }
+        });
         CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserCreations(userId,"now"));
 
+    }
+
+    private void loadMore()
+    {
+        Log.e(TAG,"last timestamp "+lastTimestamp);
+        CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserCreations(userId,lastTimestamp));
     }
 
     private class GetUserCreations extends JsonObjectRequest
@@ -90,9 +118,10 @@ public class CreatedFragment extends Fragment {
                                 try {
 
                                     JSONArray array = response.getJSONArray("showcases");
+                                    creationList.clear();
                                     if(array.length()>0)
                                     {
-                                        toggleNoContent(noUserCreatedContent,false);
+                                        CandeoUtil.toggleView(noUserCreatedContent,false);
                                         for(int index=0; index<array.length();++index)
                                         {
                                             JSONObject object= array.getJSONObject(index);
@@ -116,17 +145,26 @@ public class CreatedFragment extends Fragment {
                                             created.put("appreciation_count", object.getString("appreciation_count"));
                                             created.put("inspiration_count", object.getString("inspiration_count"));
                                             creationList.add(created);
+                                            if(index == array.length()-1)
+                                            {
+                                                lastTimestamp=object.getString("created_at");
+                                            }
                                         }
+                                        boolean append;
                                         if(creationsAdapter == null)
                                         {
-                                            creationsAdapter = new UserPagerAdapter(creationList,UserPagerAdapter.CREATED,getActivity());
+                                            creationsAdapter = new UserPagerAdapter(UserPagerAdapter.CREATED,getActivity());
+                                            append=false;
                                         }
                                         else
                                         {
-                                            creationsAdapter.notifyDataSetChanged();
+                                            append=true;
                                         }
+                                        creationsAdapter.addAllToList(creationList,append);
+                                        creationsAdapter.notifyDataSetChanged();
                                         creations.setVisibility(View.VISIBLE);
                                         creations.setAdapter(creationsAdapter);
+                                        loading=true;
                                     }
 
                                 }
@@ -143,6 +181,10 @@ public class CreatedFragment extends Fragment {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             Log.e(TAG, "error is " + error.getLocalizedMessage());
+                            if(creationList.size()==0)
+                            {
+                                CandeoUtil.toggleView(noUserCreatedContent,true);
+                            }
                         }
                     });
             this.id=id;
@@ -171,9 +213,6 @@ public class CreatedFragment extends Fragment {
         }
     }
 
-    private void toggleNoContent(View view, boolean show)
-    {
-        view.setVisibility(show?View.VISIBLE:View.GONE);
-    }
+
 
 }

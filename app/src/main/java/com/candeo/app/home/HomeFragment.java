@@ -193,7 +193,8 @@ public class HomeFragment extends Fragment {
                                         boolean posted = hasPosted.getBoolean("state");
                                         if(posted)
                                         {
-                                            CandeoUtil.appAlertDialog(getActivity(),"Hey there, You have already performed for this week. You will be again able to post next week. Meanwhile, you can check other performances and help the right talent to grow.");
+                                            String date = hasPosted.getString("start_date");
+                                            CandeoUtil.appAlertDialog(getActivity(),"Hey there, You have already performed for this week. You will be again able to post "+CandeoUtil.formatDateString(date)+" onwards. Meanwhile, you can check other performances and help the right talent to grow.");
                                         }
                                         else
                                         {

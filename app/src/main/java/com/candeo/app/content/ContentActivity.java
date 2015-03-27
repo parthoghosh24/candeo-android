@@ -204,11 +204,20 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
     @Override
     protected void onPause() {
         super.onPause();
+        if(mediaPlayer!=null && mediaPlayer.isPlaying())
+        {
+            mediaPlayer.pause();
+        }
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        if(mediaPlayer!=null && !mediaPlayer.isPlaying())
+        {
+            mediaPlayer.start();
+        }
     }
 
     @Override
@@ -525,6 +534,11 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
+                    if(mediaPlayer.isPlaying())
+                    {
+                        mediaPlayer.stop();
+                        mediaPlayer.release();
+                    }
                     mediaPlayer.start();
                 }
             });

@@ -34,7 +34,13 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -179,5 +185,27 @@ public class CandeoUtil {
         }
 
 
+    }
+
+    public static void toggleView(View view, boolean show)
+    {
+        view.setVisibility(show?View.VISIBLE:View.GONE);
+    }
+
+    public static String formatDateString(String oldDate) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        String parsedDate = "";
+        Date date = null;
+        try {
+            dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+            date = dateFormat.parse(oldDate);
+            DateFormat dateTimeFormat = DateFormat.getDateTimeInstance();
+            parsedDate = dateTimeFormat.format(date);
+        } catch (ParseException pe) {
+            pe.printStackTrace();
+        }
+
+
+        return parsedDate;
     }
 }

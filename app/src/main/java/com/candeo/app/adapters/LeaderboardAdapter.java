@@ -379,6 +379,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
             holder.appreciateIcon.setText(Configuration.FA_APPRECIATE);
             holder.appreciationValue.setText(morePerformance.get("showcase_total_appreciations"));
             holder.rankValue.setText(morePerformance.get("showcase_rank"));
+            holder.date.setText(morePerformance.get("showcase_user_name"));
             if(Configuration.AUDIO == Integer.parseInt(morePerformance.get("showcase_media_type")))
             {
                 holder.mediaIcon.setText(Configuration.FA_AUDIO);

@@ -55,6 +55,7 @@ public class HomeActivity extends ActionBarActivity {
     private final static String GET_PERFORMANCES_RELATIVE_API = "/contents/performances/show";
     private final static String GET_PERFORMANCES_API = Configuration.BASE_URL + "/api/v1" + GET_PERFORMANCES_RELATIVE_API;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
