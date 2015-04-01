@@ -95,7 +95,7 @@ public class UserActivity extends ActionBarActivity {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.e(TAG, "error is " + error.getLocalizedMessage());
+                            if(Configuration.DEBUG)Log.e(TAG, "error is " + error.getLocalizedMessage());
                         }
                     });
             this.id=id;
@@ -115,9 +115,9 @@ public class UserActivity extends ActionBarActivity {
             }
             String message = String.format(GET_USER_RELATIVE_API,id);
             params.put("message", message);
-            Log.e(TAG,"secret->"+secret);
+            if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
             String hash = Security.generateHmac(secret, message);
-            Log.e(TAG,"hash->"+hash);
+            if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
             params.put("Authorization", "Token token=" + hash);
             return params;
         }

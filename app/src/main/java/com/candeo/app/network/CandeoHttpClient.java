@@ -58,7 +58,7 @@ public class CandeoHttpClient {
         String message = Configuration.MEDIA_UPLOAD_RELATIVE_URL;
         connection.setRequestProperty("message", message);
         String hash = Security.generateHmac(secret, message);
-        Log.e("CandeoHttp", "hash->" + hash);
+        if(Configuration.DEBUG)Log.e("CandeoHttp", "hash->" + hash);
         connection.setRequestProperty("Authorization", "Token token=" + hash);
 //        connection.setChunkedStreamingMode(1024);
         connection.connect();

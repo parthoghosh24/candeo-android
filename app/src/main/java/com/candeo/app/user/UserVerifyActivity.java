@@ -37,7 +37,7 @@ public class UserVerifyActivity extends ActionBarActivity {
         String url = getIntent().getDataString();
 //        Toast.makeText(getApplicationContext(),"Url is "+url,Toast.LENGTH_LONG).show();
         int code =Integer.parseInt(CandeoUtil.getCodeFromUrl(url));
-        Log.e(TAG,"code received is "+code);
+        if(Configuration.DEBUG)Log.e(TAG,"code received is "+code);
         Map<String ,Integer> payload = new HashMap<>();
         payload.put("token",code);
         UserVerifyRequest verifyRequest = new UserVerifyRequest(payload);
@@ -74,7 +74,7 @@ public class UserVerifyActivity extends ActionBarActivity {
                                    intent.putExtra("fromVerify","verified");
                                    startActivity(intent);
 
-                                   Log.e(TAG,"Response is "+response.toString());
+                                   if(Configuration.DEBUG)Log.e(TAG,"Response is "+response.toString());
                                }
                                catch (JSONException je)
                                {
@@ -101,9 +101,9 @@ public class UserVerifyActivity extends ActionBarActivity {
             params.put("email", "");
             String message = API_USER_VERIFY_RELATIVE_URL;
             params.put("message", message);
-            Log.e(TAG,"secret->"+secret);
+            if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
             String hash = Security.generateHmac(secret, message);
-            Log.e(TAG,"hash->"+hash);
+            if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
             params.put("Authorization", "Token token=" + hash);
             return params;
         }

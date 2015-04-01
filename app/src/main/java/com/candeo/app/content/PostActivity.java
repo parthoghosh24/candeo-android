@@ -123,7 +123,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                 JSONObject json = new JSONObject(response);
                 mediaId = json.getString("id");
                 hasMedia=true;
-                Log.e(TAG,"Media id is "+mediaId);
+                if(Configuration.DEBUG)Log.e(TAG,"Media id is "+mediaId);
             }
             catch (JSONException jsonex)
             {
@@ -316,6 +316,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
         postIt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                postIt.setEnabled(false);
                 if(Configuration.SHOWCASE == contentType)
                 {
                   if(!hasMedia || TextUtils.isEmpty(showcaseTitle.getText()))
@@ -402,7 +403,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                             try
                             {
                                 String id = response.getString("id");
-                                Log.e(PostActivity.class.getName(),"AND THE ID IS "+id);
+                                if(Configuration.DEBUG)Log.e(PostActivity.class.getName(),"AND THE ID IS "+id);
                                 Intent contentIntent = new Intent(PostActivity.this,ContentActivity.class);
                                 contentIntent.putExtra("id",id);
                                 contentIntent.putExtra("type",contentType);
@@ -434,9 +435,9 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                 secret=Preferences.getUserApiKey(getApplicationContext());
                 String message = API_POST_CREATE_RELATIVE_URL+"|"+new JSONObject(payload).toString();
                 params.put("message", message);
-                Log.e(TAG,"secret->"+secret);
+                if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
                 String hash = Security.generateHmac(secret, message);
-                Log.e(TAG,"hash->"+hash);
+                if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
                 params.put("Authorization", "Token token=" + hash);
             }
             return params;
@@ -462,7 +463,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                 case REQUEST_IMAGE_CAMERA:
                     filePath = CandeoUtil.getRealPathFromUri(imageUri,getContentResolver());
                     file = new File(filePath);
-                    Log.e(TAG,"Capture image path is "+filePath);
+                    if(Configuration.DEBUG)Log.e(TAG,"Capture image path is "+filePath);
                     fileName = file.getName();
                     mimeType=CandeoUtil.getMimeType(imageUri, PostActivity.this);
                     options = new BitmapFactory.Options();
@@ -473,7 +474,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                     try {
                         exifInterface = new ExifInterface(filePath);
                         int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-                        Log.e(TAG,"orientation in image capture is "+orientation);
+                        if(Configuration.DEBUG)Log.e(TAG,"orientation in image capture is "+orientation);
                         new RotateTask(orientation).execute(bitmap);
                     }
                     catch(IOException ioe)
@@ -487,7 +488,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                     uri = data.getData();
                     filePath = CandeoUtil.getRealPathFromUri(uri,getContentResolver());
                     file = new File(filePath);
-                    Log.e(TAG,"Picked image path is "+filePath);
+                    if(Configuration.DEBUG)Log.e(TAG,"Picked image path is "+filePath);
                     mimeType=CandeoUtil.getMimeType(uri, PostActivity.this);
                     fileName = file.getName();
                     options = new BitmapFactory.Options();
@@ -498,7 +499,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                     try {
                         exifInterface = new ExifInterface(filePath);
                         int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-                        Log.e(TAG,"orientation in pick image is "+orientation);
+                        if(Configuration.DEBUG)Log.e(TAG,"orientation in pick image is "+orientation);
                         new RotateTask(orientation).execute(bitmap);
                     }
                     catch(IOException ioe)
@@ -843,6 +844,8 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.content, menu);
+        MenuItem settings = menu.getItem(0);
+        settings.setVisible(false);
         return true;
     }
 
@@ -891,7 +894,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                 case 0:
 
                     icon.setText(Configuration.FA_AUDIO);
-                    content.setText("Showcase your talent for music");
+                    content.setText("Record or upload awesome your created or owned song, instrumental, poem, sound or even joke...");
                     view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -935,7 +938,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
 
                 case 1:
                     icon.setText(Configuration.FA_IMAGE);
-                    content.setText("Bring out the artist in you");
+                    content.setText("Click or upload your photographic, artistic and painting talents owned or created by you.");
                     view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

@@ -135,7 +135,7 @@ public class HomeFragment extends Fragment {
     {
         if(Configuration.DEBUG)
         {
-            Log.e(TAG,"Getting limelight list");
+            if(Configuration.DEBUG)Log.e(TAG,"Getting limelight list");
         }
         try {
             JSONArray list = response.getJSONArray("limelights");
@@ -152,7 +152,7 @@ public class HomeFragment extends Fragment {
             showcases.add(limelightMap);
             if(showcases!=null && showcases.size()>0)
             {
-                Log.e(TAG,"fm "+getActivity());
+                if(Configuration.DEBUG)Log.e(TAG,"fm "+getActivity());
                pagerAdapter = new LimelightAdapter(showcasePager,getActivity().getSupportFragmentManager(),showcases);
                 showcasePager.setAdapter(pagerAdapter);
 //               pagerAdapter.notifyDataSetChanged();
@@ -163,7 +163,7 @@ public class HomeFragment extends Fragment {
         catch (NullPointerException|JSONException jse)
         {
             jse.printStackTrace();
-            Log.e(TAG,"Error is "+jse.getLocalizedMessage());
+            if(Configuration.DEBUG)Log.e(TAG,"Error is "+jse.getLocalizedMessage());
             toggleLoading(false);
             toggleNoContent(true);
         }
@@ -234,9 +234,9 @@ public class HomeFragment extends Fragment {
                 secret=Preferences.getUserApiKey(getActivity());
                 String message = String.format(HAS_USER_POSTED_RELATIVE_URL,id);
                 params.put("message", message);
-                Log.e(TAG,"secret->"+secret);
+                if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
                 String hash = Security.generateHmac(secret, message);
-                Log.e(TAG,"hash->"+hash);
+                if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
                 params.put("Authorization", "Token token=" + hash);
 
             }

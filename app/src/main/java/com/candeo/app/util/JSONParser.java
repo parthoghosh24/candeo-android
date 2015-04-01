@@ -54,10 +54,10 @@ public class JSONParser {
             String message = relativeUrl;
             String hash = Security.generateHmac(secret, message);
             get.setHeader("message",message);
-            Log.e("JsonParser","Message is "+message);
+            if(Configuration.DEBUG)Log.e("JsonParser","Message is "+message);
             get.setHeader("email",Preferences.getUserEmail(mContext));
             get.setHeader("Authorization", "Token token=" + hash);
-            Log.e("JsonParser","Hash is "+hash);
+            if(Configuration.DEBUG)Log.e("JsonParser","Hash is "+hash);
             HttpResponse response = httpClient.execute(get);
             HttpEntity entity = response.getEntity();
             inputStream = entity.getContent();

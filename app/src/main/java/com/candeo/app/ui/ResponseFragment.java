@@ -94,7 +94,7 @@ public class ResponseFragment extends DialogFragment {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 responseScore=""+(picker.getValue()+1);
-                Log.e(TAG,"Response score is "+responseScore);
+                if(Configuration.DEBUG)Log.e(TAG,"Response score is "+responseScore);
             }
         });
         if(TextUtils.isEmpty(introText))
@@ -199,7 +199,7 @@ public class ResponseFragment extends DialogFragment {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            Log.e(TAG, "Response is "+response);
+                            if(Configuration.DEBUG)Log.e(TAG, "Response is "+response);
                         }
                     },
                     new Response.ErrorListener() {
@@ -217,16 +217,16 @@ public class ResponseFragment extends DialogFragment {
         @Override
         public Map<String, String> getHeaders() throws AuthFailureError {
             Map<String, String> params = new HashMap<>();
-            Log.e(TAG,"getActivity is "+mContext);
+            if(Configuration.DEBUG)Log.e(TAG,"getActivity is "+mContext);
             if (Preferences.isUserLoggedIn(mContext) && !TextUtils.isEmpty(Preferences.getUserEmail(mContext))) {
                 String secret="";
                 params.put("email", Preferences.getUserEmail(mContext));
                 secret=Preferences.getUserApiKey(mContext);
                 String message = relativeUrl+"|"+new JSONObject(payload).toString();
                 params.put("message", message);
-                Log.e(TAG,"secret->"+secret);
+                if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
                 String hash = Security.generateHmac(secret, message);
-                Log.e(TAG,"hash->"+hash);
+                if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
                 params.put("Authorization", "Token token=" + hash);
 
             }

@@ -103,13 +103,13 @@ public class SocialFragment extends Fragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 visibleFansItemCount = fansLinearLayoutManager.getChildCount();
-                Log.e(TAG,"visible fans item count "+visibleFansItemCount );
+                if(Configuration.DEBUG)Log.e(TAG,"visible fans item count "+visibleFansItemCount );
                 totalFansItemCount = fansLinearLayoutManager.getItemCount();
-                Log.e(TAG,"total fans item count "+totalFansItemCount);
+                if(Configuration.DEBUG)Log.e(TAG,"total fans item count "+totalFansItemCount);
                 pastFansVisibleItems = fansLinearLayoutManager.findFirstVisibleItemPosition();
-                Log.e(TAG,"past visible fans item count "+ pastFansVisibleItems);
+                if(Configuration.DEBUG)Log.e(TAG,"past visible fans item count "+ pastFansVisibleItems);
                 if (fansLoading) {
-                    Log.e(TAG,"in fans loading");
+                    if(Configuration.DEBUG)Log.e(TAG,"in fans loading");
                     if ( (visibleFansItemCount+ pastFansVisibleItems) >= totalFansItemCount) {
                         fansLoading = false;
                         loadFansMore();
@@ -122,13 +122,13 @@ public class SocialFragment extends Fragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 visiblePromotedItemCount = promotedLinearLayoutManager.getChildCount();
-                Log.e(TAG,"visible promoted item count "+visiblePromotedItemCount);
+                if(Configuration.DEBUG)Log.e(TAG,"visible promoted item count "+visiblePromotedItemCount);
                 totalPromotedItemCount = promotedLinearLayoutManager.getItemCount();
-                Log.e(TAG,"total promoted item count "+totalPromotedItemCount);
+                if(Configuration.DEBUG)Log.e(TAG,"total promoted item count "+totalPromotedItemCount);
                 pastPromotedVisibleItems = promotedLinearLayoutManager.findFirstVisibleItemPosition();
-                Log.e(TAG,"past visible promoted item count "+ pastPromotedVisibleItems);
+                if(Configuration.DEBUG)Log.e(TAG,"past visible promoted item count "+ pastPromotedVisibleItems);
                 if (promotedLoading) {
-                    Log.e(TAG,"in promoted loading");
+                    if(Configuration.DEBUG)Log.e(TAG,"in promoted loading");
                     if ( (visiblePromotedItemCount+ pastPromotedVisibleItems) >= totalPromotedItemCount) {
                         promotedLoading = false;
                         loadPromotedMore();
@@ -144,13 +144,13 @@ public class SocialFragment extends Fragment {
 
     private void loadFansMore()
     {
-        Log.e(TAG,"last fans timestamp "+lastFansTimestamp);
+        if(Configuration.DEBUG)Log.e(TAG,"last fans timestamp "+lastFansTimestamp);
         CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserFans(userId,lastFansTimestamp));
     }
 
     private void loadPromotedMore()
     {
-        Log.e(TAG,"last promoted timestamp "+lastPromotedTimestamp);
+        if(Configuration.DEBUG)Log.e(TAG,"last promoted timestamp "+lastPromotedTimestamp);
         CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserPromoted(userId,lastPromotedTimestamp));
     }
 
@@ -180,7 +180,7 @@ public class SocialFragment extends Fragment {
                                             HashMap<String,String> fans = new HashMap<>();
                                             fans.put("id", object.getString("id"));
                                             fans.put("user_name", object.getString("name"));
-                                            fans.put("avatar_path", Configuration.BASE_URL + object.getString("avatar_path"));
+                                            fans.put("avatar_path", object.getString("avatar_path"));
                                             fansList.add(fans);
                                             if(index == array.length()-1)
                                             {
@@ -215,7 +215,7 @@ public class SocialFragment extends Fragment {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.e(TAG, "error is " + error.getLocalizedMessage());
+                            if(Configuration.DEBUG)Log.e(TAG, "error is " + error.getLocalizedMessage());
                             if(fansList.size()==0)
                             {
                                 CandeoUtil.toggleView(noFans,true);
@@ -240,9 +240,9 @@ public class SocialFragment extends Fragment {
             }
             String message = String.format(GET_USER_FANS_RELATIVE_API,id,lastTimeStamp);
             params.put("message", message);
-            Log.e(TAG,"secret->"+secret);
+            if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
             String hash = Security.generateHmac(secret, message);
-            Log.e(TAG,"hash->"+hash);
+            if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
             params.put("Authorization", "Token token=" + hash);
             return params;
         }
@@ -266,7 +266,7 @@ public class SocialFragment extends Fragment {
                                 try {
                                     JSONArray array = response.getJSONArray("promoted");
                                     promotedList.clear();
-                                    Log.e(TAG,"Promoted count "+array.length());
+                                    if(Configuration.DEBUG)Log.e(TAG,"Promoted count "+array.length());
                                     if(array.length()>0)
                                     {
                                         CandeoUtil.toggleView(noPromoted,false);
@@ -276,7 +276,8 @@ public class SocialFragment extends Fragment {
                                             HashMap<String,String> promoted = new HashMap<>();
                                             promoted.put("id", object.getString("id"));
                                             promoted.put("user_name", object.getString("name"));
-                                            promoted.put("avatar_path", Configuration.BASE_URL + object.getString("avatar_path"));
+                                            promoted.put("avatar_path", object.getString("avatar_path"));
+                                            if(Configuration.DEBUG)Log.e(TAG,"AVATAR PAAAAAAAAATH "+object.getString("avatar_path"));
                                             promotedList.add(promoted);
                                             if(index == array.length()-1)
                                             {
@@ -310,7 +311,7 @@ public class SocialFragment extends Fragment {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.e(TAG, "error is " + error.getLocalizedMessage());
+                            if(Configuration.DEBUG)Log.e(TAG, "error is " + error.getLocalizedMessage());
                             if(promotedList.size()==0)
                             {
                                 CandeoUtil.toggleView(noPromoted,true);
@@ -335,9 +336,9 @@ public class SocialFragment extends Fragment {
             }
             String message = String.format(GET_USER_PROMOTED_RELATIVE_API,id,lastTimeStamp);
             params.put("message", message);
-            Log.e(TAG,"secret->"+secret);
+            if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
             String hash = Security.generateHmac(secret, message);
-            Log.e(TAG,"hash->"+hash);
+            if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
             params.put("Authorization", "Token token=" + hash);
             return params;
         }

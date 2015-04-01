@@ -62,7 +62,7 @@ public class DiscoveryFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        Log.e(TAG,"In Discovery Fragment create");
+        if(Configuration.DEBUG)Log.e(TAG,"In Discovery Fragment create");
         mRoot=inflater.inflate(R.layout.fragment_discovery, container, false);
         initWidgets();
         return mRoot;
@@ -93,13 +93,13 @@ public class DiscoveryFragment extends Fragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 visibleAppreciationItemCount = appreciationsLinearLayoutManager.getChildCount();
-                Log.e(TAG, "visible appreciations item count " + visibleAppreciationItemCount);
+                if(Configuration.DEBUG)Log.e(TAG, "visible appreciations item count " + visibleAppreciationItemCount);
                 totalAppreciationItemCount = appreciationsLinearLayoutManager.getItemCount();
-                Log.e(TAG,"total appreciations item count "+totalAppreciationItemCount);
+                if(Configuration.DEBUG)Log.e(TAG,"total appreciations item count "+totalAppreciationItemCount);
                 pastAppreciationVisibleItems = appreciationsLinearLayoutManager.findFirstVisibleItemPosition();
-                Log.e(TAG,"past visible appreciations item count "+ pastAppreciationVisibleItems);
+                if(Configuration.DEBUG)Log.e(TAG,"past visible appreciations item count "+ pastAppreciationVisibleItems);
                 if (appreciationLoading) {
-                    Log.e(TAG,"in appreciations loading");
+                    if(Configuration.DEBUG)Log.e(TAG,"in appreciations loading");
                     if ( (visibleAppreciationItemCount+ pastAppreciationVisibleItems) >= totalAppreciationItemCount) {
                         appreciationLoading = false;
                         loadAppreciationsMore();
@@ -111,13 +111,13 @@ public class DiscoveryFragment extends Fragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 visibleInspirationItemCount= inspirationsLinearLayoutManager.getChildCount();
-                Log.e(TAG, "visible inspirations item count " + visibleInspirationItemCount);
+                if(Configuration.DEBUG)Log.e(TAG, "visible inspirations item count " + visibleInspirationItemCount);
                 totalInspirationItemCount = inspirationsLinearLayoutManager.getItemCount();
-                Log.e(TAG,"total inspirations item count "+totalInspirationItemCount);
+                if(Configuration.DEBUG)Log.e(TAG,"total inspirations item count "+totalInspirationItemCount);
                 pastInspirationVisibleItems = inspirationsLinearLayoutManager.findFirstVisibleItemPosition();
-                Log.e(TAG,"past visible inspirations item count "+ pastInspirationVisibleItems);
+                if(Configuration.DEBUG)Log.e(TAG,"past visible inspirations item count "+ pastInspirationVisibleItems);
                 if (inspirationLoading) {
-                    Log.e(TAG,"in inspirations loading");
+                    if(Configuration.DEBUG)Log.e(TAG,"in inspirations loading");
                     if ( (visibleInspirationItemCount+ pastInspirationVisibleItems) >= totalInspirationItemCount) {
                         inspirationLoading = false;
                         loadInspirationsMore();
@@ -133,13 +133,13 @@ public class DiscoveryFragment extends Fragment {
 
     private void loadAppreciationsMore()
     {
-        Log.e(TAG,"last appreciations timestamp "+lastAppreciationTimestamp);
+        if(Configuration.DEBUG)Log.e(TAG,"last appreciations timestamp "+lastAppreciationTimestamp);
         CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserAppreciations(userId,lastAppreciationTimestamp));
     }
 
     private void loadInspirationsMore()
     {
-        Log.e(TAG,"last inspirations timestamp "+lastInspirationTimestamp);
+        if(Configuration.DEBUG)Log.e(TAG,"last inspirations timestamp "+lastInspirationTimestamp);
         CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserInspirations(userId,lastInspirationTimestamp));
     }
 
@@ -172,15 +172,15 @@ public class DiscoveryFragment extends Fragment {
                                             appreciation.put("id",object.getString("id"));
                                             appreciation.put("title",object.getString("title"));
                                             appreciation.put("user_name",object.getString("user_name"));
-                                            appreciation.put("avatar_path",Configuration.BASE_URL+object.getString("avatar_path"));
+                                            appreciation.put("avatar_path",object.getString("avatar_path"));
                                             if(TextUtils.isEmpty(object.getString("bg_url")) ||"null".equalsIgnoreCase(object.getString("bg_url")) )
                                             {
-                                                Log.e(TAG,"Media url is "+object.getString("media_url"));
-                                                appreciation.put("bg_url",Configuration.BASE_URL+object.getString("media_url"));
+                                                if(Configuration.DEBUG)Log.e(TAG,"Media url is "+object.getString("media_url"));
+                                                appreciation.put("bg_url",object.getString("media_url"));
                                             }
                                             else
                                             {
-                                                appreciation.put("bg_url",Configuration.BASE_URL+object.getString("bg_url"));
+                                                appreciation.put("bg_url",object.getString("bg_url"));
                                             }
                                             appreciation.put("user_id",object.getString("user_id"));
                                             appreciation.put("rank",object.getString("rank"));
@@ -223,7 +223,7 @@ public class DiscoveryFragment extends Fragment {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.e(TAG, "error is " + error.getLocalizedMessage());
+                            if(Configuration.DEBUG)Log.e(TAG, "error is " + error.getLocalizedMessage());
                             if(appreciationList.size()==0)
                             {
                                 CandeoUtil.toggleView(noAppreciations,true);
@@ -244,9 +244,9 @@ public class DiscoveryFragment extends Fragment {
                 secret=Preferences.getUserApiKey(getActivity());
                 String message = String.format(GET_USER_APPRECIATIONS_RELATIVE_API,id,lastTimeStamp);
                 params.put("message", message);
-                Log.e(TAG,"secret->"+secret);
+                if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
                 String hash = Security.generateHmac(secret, message);
-                Log.e(TAG,"hash->"+hash);
+                if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
                 params.put("Authorization", "Token token=" + hash);
 
             }
@@ -275,7 +275,7 @@ public class DiscoveryFragment extends Fragment {
                                 try {
                                     JSONArray array = response.getJSONArray("inspirations");
                                     inspirationList.clear();
-                                    Log.e(TAG,"INSPIRATIONS SIZE "+array.length());
+                                    if(Configuration.DEBUG)Log.e(TAG,"INSPIRATIONS SIZE "+array.length());
                                     if(array.length()>0)
                                     {
                                         CandeoUtil.toggleView(noInspirations,false);
@@ -286,15 +286,15 @@ public class DiscoveryFragment extends Fragment {
                                             inspiration.put("id",object.getString("id"));
                                             inspiration.put("title",object.getString("title"));
                                             inspiration.put("user_name",object.getString("user_name"));
-                                            inspiration.put("avatar_path",Configuration.BASE_URL+object.getString("avatar_path"));
+                                            inspiration.put("avatar_path",object.getString("avatar_path"));
                                             if(TextUtils.isEmpty(object.getString("bg_url")) ||"null".equalsIgnoreCase(object.getString("bg_url")) )
                                             {
-                                                Log.e(TAG,"Media url is "+object.getString("media_url"));
-                                                inspiration.put("bg_url",Configuration.BASE_URL+object.getString("media_url"));
+                                                if(Configuration.DEBUG)Log.e(TAG,"Media url is "+object.getString("media_url"));
+                                                inspiration.put("bg_url",object.getString("media_url"));
                                             }
                                             else
                                             {
-                                                inspiration.put("bg_url",Configuration.BASE_URL+object.getString("bg_url"));
+                                                inspiration.put("bg_url",object.getString("bg_url"));
                                             }
                                             inspiration.put("user_id",object.getString("user_id"));
                                             inspiration.put("rank",object.getString("rank"));
@@ -334,7 +334,7 @@ public class DiscoveryFragment extends Fragment {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.e(TAG, "error is " + error.getLocalizedMessage());
+                            if(Configuration.DEBUG)Log.e(TAG, "error is " + error.getLocalizedMessage());
                             if(inspirationList.size()==0)
                             {
                                 CandeoUtil.toggleView(noInspirations,true);
@@ -354,9 +354,9 @@ public class DiscoveryFragment extends Fragment {
                 secret=Preferences.getUserApiKey(getActivity());
                 String message = String.format(GET_USER_INSPIRATIONS_RELATIVE_API,id,lastTimeStamp);
                 params.put("message", message);
-                Log.e(TAG,"secret->"+secret);
+                if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
                 String hash = Security.generateHmac(secret, message);
-                Log.e(TAG,"hash->"+hash);
+                if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
                 params.put("Authorization", "Token token=" + hash);
 
             }

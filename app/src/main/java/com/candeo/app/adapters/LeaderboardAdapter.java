@@ -73,20 +73,20 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     @Override
     public LeaderboardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(getLayoutForType(viewType),parent,false);
-        Log.e("Candeo Leaderboard","Type is "+viewType);
+        if(Configuration.DEBUG)Log.e("Candeo Leaderboard","Type is "+viewType);
         return new LeaderboardViewHolder(itemLayoutView,viewType,mContext);
     }
 
     public void addAllToMorePerformances(ArrayList<HashMap<String,String>> performances, boolean append)
     {
-        Log.e(TAG,"Incoming list size "+performances.size());
-        Log.e(TAG,"Adding to performances");
+        if(Configuration.DEBUG)Log.e(TAG,"Incoming list size "+performances.size());
+        if(Configuration.DEBUG)Log.e(TAG,"Adding to performances");
         if(!append)
         {
             morePerformances.clear();
         }
         morePerformances.addAll(performances);
-        Log.e(TAG,"Total size is "+morePerformances.size());
+        if(Configuration.DEBUG)Log.e(TAG,"Total size is "+morePerformances.size());
     }
 
     @Override
@@ -126,7 +126,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
             try {
                 JSONObject candeoContent1 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopContent1");
-                Log.e(TAG,"top1 "+Configuration.BASE_URL+candeoContent1.getString("bg_url"));
+                if(Configuration.DEBUG)Log.e(TAG,"top1 "+Configuration.BASE_URL+candeoContent1.getString("bg_url"));
                 holder.candeoTopContentImage1.startAnimation(in);
                 if(TextUtils.isEmpty(candeoContent1.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent1.getString("bg_url")))
                 {
@@ -162,7 +162,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
 
                 JSONObject candeoContent2 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopContent2");
-                Log.e(TAG,"top2 "+Configuration.BASE_URL+candeoContent2.getString("bg_url"));
+                if(Configuration.DEBUG)Log.e(TAG,"top2 "+Configuration.BASE_URL+candeoContent2.getString("bg_url"));
                 holder.candeoTopContentImage2.startAnimation(in);
                 if(TextUtils.isEmpty(candeoContent2.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent2.getString("bg_url")))
                 {
@@ -196,7 +196,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                 });
 
                 JSONObject candeoContent3 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopContent3");
-                Log.e(TAG,"top3 "+Configuration.BASE_URL+candeoContent3.getString("bg_url"));
+                if(Configuration.DEBUG)Log.e(TAG,"top3 "+Configuration.BASE_URL+candeoContent3.getString("bg_url"));
                 holder.candeoTopContentImage3.startAnimation(in);
                 if(TextUtils.isEmpty(candeoContent3.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent3.getString("bg_url")))
                 {
@@ -230,7 +230,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
 
                 JSONObject candeoContent4 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopContent4");
-                Log.e(TAG,"top4 "+Configuration.BASE_URL+candeoContent4.getString("bg_url"));
+                if(Configuration.DEBUG)Log.e(TAG,"top4 "+Configuration.BASE_URL+candeoContent4.getString("bg_url"));
                 holder.candeoTopContentImage4.startAnimation(in);
                 if(TextUtils.isEmpty(candeoContent4.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent4.getString("bg_url")))
                 {
@@ -263,7 +263,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                 });
 
                 JSONObject candeoContent5 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopContent5");
-                Log.e(TAG,"top5 "+Configuration.BASE_URL+candeoContent5.getString("bg_url"));
+                if(Configuration.DEBUG)Log.e(TAG,"top5 "+Configuration.BASE_URL+candeoContent5.getString("bg_url"));
                 holder.candeoTopContentImage5.startAnimation(in);
                 if(TextUtils.isEmpty(candeoContent5.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent5.getString("bg_url")))
                 {
@@ -309,7 +309,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                 JSONObject candeoTopUser1 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopCreator1");
                 holder.candeoTopCreatorImg1.startAnimation(in);
                 holder.candeoTopCreatorImg1.setImageUrl(Configuration.BASE_URL + candeoTopUser1.getString("user_avatar_url"), imageLoader);
-                Log.e(TAG, "candeoTopUser1 " + candeoTopUser1.getString("name"));
+                if(Configuration.DEBUG)Log.e(TAG, "candeoTopUser1 " + candeoTopUser1.getString("name"));
                 holder.candeoTopCreator1Name.setText(candeoTopUser1.getString("name"));
                 holder.candeoTopCreator1.setTag(candeoTopUser1.getString("id"));
                 holder.candeoTopCreator1.setOnClickListener(new View.OnClickListener() {
@@ -363,7 +363,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
             }
             catch (JSONException jse)
             {
-                Log.e(TAG,"IN HRREREEE");
+                if(Configuration.DEBUG)Log.e(TAG,"IN HRREREEE");
                 jse.printStackTrace();
             }
 
@@ -418,7 +418,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     @Override
     public int getItemCount() {
 
-        Log.e(TAG,"count "+(morePerformances.size()+2));
+        if(Configuration.DEBUG)Log.e(TAG,"count "+(morePerformances.size()+2));
         return morePerformances.size()+2;
     }
 
@@ -591,7 +591,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
         @Override
         protected Bitmap doInBackground(String... params) {
-            Log.e(TAG,"IN HERE");
+            if(Configuration.DEBUG)Log.e(TAG,"IN HERE");
             Bitmap bitmap=null;
             try
             {
@@ -614,21 +614,21 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
             {
                 int height=bitmap.getHeight();
                 int width=bitmap.getWidth();
-                Log.e(TAG,"Bitmap width is "+ width+" and height is "+height);
+                if(Configuration.DEBUG)Log.e(TAG,"Bitmap width is "+ width+" and height is "+height);
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG,100,bos);
                 mContext.getWindowManager().getDefaultDisplay().getMetrics(CandeoApplication.displayMetrics);
                 int screenWidth=CandeoApplication.displayMetrics.widthPixels;
-                Log.e(TAG,"Screen width is "+ screenWidth);
+                if(Configuration.DEBUG)Log.e(TAG,"Screen width is "+ screenWidth);
                 double scaleFactor = (width*1.0)/(screenWidth*1.0);
-                Log.e(TAG,"Scale Factor is "+scaleFactor);
+                if(Configuration.DEBUG)Log.e(TAG,"Scale Factor is "+scaleFactor);
                 int calculatedHeight=height;
                 if(scaleFactor>0)
                 {
                     calculatedHeight = (int)(height/scaleFactor);
                 }
 
-                Log.e(TAG,"Calculated width is "+ screenWidth+" and height is "+calculatedHeight);
+                if(Configuration.DEBUG)Log.e(TAG,"Calculated width is "+ screenWidth+" and height is "+calculatedHeight);
                 Animation in = AnimationUtils.loadAnimation(mContext.getApplicationContext(), android.R.anim.fade_in);
                 imageView.startAnimation(in);
                 imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap,screenWidth,calculatedHeight,false));

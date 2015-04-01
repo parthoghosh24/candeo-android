@@ -24,6 +24,7 @@ import com.candeo.app.Configuration;
 import com.candeo.app.R;
 import com.candeo.app.SplashActivity;
 import com.candeo.app.adapters.TabPagerAdapter;
+import com.candeo.app.algorithms.FFmpegOperations;
 import com.candeo.app.algorithms.Security;
 import com.candeo.app.leaderboard.LeaderBoardFragment;
 import com.candeo.app.user.LoginActivity;
@@ -59,7 +60,6 @@ public class HomeActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (Preferences.isFirstRun(getApplicationContext())) {
             finish();
             startActivity(new Intent(getApplicationContext(), SplashActivity.class));
@@ -201,7 +201,7 @@ public class HomeActivity extends ActionBarActivity {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.e(TAG, "error is " + error.getLocalizedMessage());
+                            if(Configuration.DEBUG)Log.e(TAG, "error is " + error.getLocalizedMessage());
                         }
                     });
             this.id=id;
@@ -221,9 +221,9 @@ public class HomeActivity extends ActionBarActivity {
             }
             String message = String.format(GET_USER_RELATIVE_API,id);
             params.put("message", message);
-            Log.e(TAG,"secret->"+secret);
+            if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
             String hash = Security.generateHmac(secret, message);
-            Log.e(TAG,"hash->"+hash);
+            if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
             params.put("Authorization", "Token token=" + hash);
             return params;
         }
@@ -247,11 +247,11 @@ public class HomeActivity extends ActionBarActivity {
                         @Override
                         public void onErrorResponse(VolleyError error) {
 
-                            Log.e(TAG, "Error occured");
-                            Log.e(TAG, "localized error while fetching is limelight " + error.getLocalizedMessage());
+                            if(Configuration.DEBUG)Log.e(TAG, "Error occured");
+                            if(Configuration.DEBUG)Log.e(TAG, "localized error while fetching is limelight " + error.getLocalizedMessage());
                             NetworkResponse response = error.networkResponse;
                             if (response != null) {
-                                Log.e(TAG, "Actual error while fetching limelight is " + new String(response.data));
+                                if(Configuration.DEBUG)Log.e(TAG, "Actual error while fetching limelight is " + new String(response.data));
                             }
 
                         }
@@ -274,9 +274,9 @@ public class HomeActivity extends ActionBarActivity {
             }
             String message = String.format(GET_LIMELIGHT_LIST_RELATIVE_API,id);
             params.put("message", message);
-            Log.e(TAG,"secret->"+secret);
+            if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
             String hash = Security.generateHmac(secret, message);
-            Log.e(TAG,"hash->"+hash);
+            if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
             params.put("Authorization", "Token token=" + hash);
             return params;
         }
@@ -296,11 +296,11 @@ public class HomeActivity extends ActionBarActivity {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.e(TAG, "Error occured");
-                            Log.e(TAG, "localized error while fetching is leaderboard " + error.getLocalizedMessage());
+                            if(Configuration.DEBUG)Log.e(TAG, "Error occured");
+                            if(Configuration.DEBUG)Log.e(TAG, "localized error while fetching is leaderboard " + error.getLocalizedMessage());
                             NetworkResponse response = error.networkResponse;
                             if (response != null) {
-                                Log.e(TAG, "Actual error while fetching leaderboard is " + new String(response.data));
+                                if(Configuration.DEBUG)Log.e(TAG, "Actual error while fetching leaderboard is " + new String(response.data));
                             }
                         }
                     });
@@ -320,9 +320,9 @@ public class HomeActivity extends ActionBarActivity {
             }
             String message = GET_PERFORMANCES_RELATIVE_API;
             params.put("message", message);
-            Log.e(TAG,"secret->"+secret);
+            if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
             String hash = Security.generateHmac(secret, message);
-            Log.e(TAG,"hash->"+hash);
+            if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
             params.put("Authorization", "Token token=" + hash);
             return params;
         }

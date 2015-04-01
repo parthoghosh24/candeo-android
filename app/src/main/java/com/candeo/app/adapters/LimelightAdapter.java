@@ -31,7 +31,7 @@ public class LimelightAdapter extends FragmentStatePagerAdapter implements Respo
     public LimelightAdapter(ViewPager limelightPager, FragmentManager fragmentManager, ArrayList<HashMap<String, String>> showcaseIds)
     {
         super(fragmentManager);
-        Log.e(TAG,"Adapter instantiated");
+        if(Configuration.DEBUG)Log.e(TAG,"Adapter instantiated");
         this.limelightPager=limelightPager;
         for(int index=0; index<showcaseIds.size();++index)
         {

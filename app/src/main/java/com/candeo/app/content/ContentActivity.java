@@ -12,6 +12,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -168,16 +170,45 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
             }
         });
         int type = getIntent().getIntExtra("type",Configuration.SHOWCASE);
-        Log.e(TAG,"ID is :"+id);
-        Log.e(TAG,"Type is :"+type);
+        if(Configuration.DEBUG)Log.e(TAG,"ID is :"+id);
+        if(Configuration.DEBUG)Log.e(TAG,"Type is :"+type);
         if(id!=null)
         {
             String userId = TextUtils.isEmpty(Preferences.getUserRowId(getApplicationContext()))?"0": Preferences.getUserRowId(getApplicationContext());
             new LoadContent(String.format(CONTENT_RELATIVE_URL,id,type,userId)).execute(String.format(CONTENT_URL,id,type,userId));
         }
+        PhoneStateListener phoneStateListener = new PhoneStateListener(){
+            @Override
+            public void onCallStateChanged(int state, String incomingNumber) {
+                switch (state)
+                {
+                    case TelephonyManager.CALL_STATE_RINGING:
+                        if(mediaPlayer!=null && mediaPlayer.isPlaying())
+                        {
+                            mediaPlayer.pause();
+                        }
+                    case TelephonyManager.CALL_STATE_OFFHOOK:
+                        break;
+                    case TelephonyManager.CALL_STATE_IDLE:
+                        if(mediaPlayer!=null && !mediaPlayer.isPlaying())
+                        {
+                            mediaPlayer.start();
+                        }
+                        break;
+
+                }
+
+            }
+        };
+        TelephonyManager manager = (TelephonyManager)getSystemService(TELEPHONY_SERVICE);
+        if(manager!=null)
+        {
+            manager.listen(phoneStateListener,PhoneStateListener.LISTEN_CALL_STATE);
+        }
     }
 
     @Override
+
     public void onSubmit() {
         getInspiredButton.setEnabled(false);
         getInspiredButton.setTextColor(getResources().getColor(R.color.candeo_light_gray));
@@ -204,20 +235,12 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
     @Override
     protected void onPause() {
         super.onPause();
-        if(mediaPlayer!=null && mediaPlayer.isPlaying())
-        {
-            mediaPlayer.pause();
-        }
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(mediaPlayer!=null && !mediaPlayer.isPlaying())
-        {
-            mediaPlayer.start();
-        }
     }
 
     @Override
@@ -253,12 +276,13 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
         protected void onPostExecute(JSONObject jsonObject) {
                 loadingContent.setVisibility(View.GONE);
                 int type = jsonObject.optInt("media_type");
-                Log.e(TAG,"AND THE CONTENT IS: "+jsonObject.toString());
+                if(Configuration.DEBUG)Log.e(TAG,"AND THE CONTENT IS: "+jsonObject.toString());
                 contentViewer.setTag(type);
                 if(type>0)
                 {
-                    final String mediaUrl=Configuration.BASE_URL +jsonObject.optString("media_url");
-                    final String bgUrl =Configuration.BASE_URL +jsonObject.optString("bg_url");
+                    final String mediaUrl=jsonObject.optString("media_url");
+                    if(Configuration.DEBUG)Log.e(TAG,"MEDIA URL IS "+mediaUrl);
+                    final String bgUrl =jsonObject.optString("bg_url");
                     switch (type)
                     {
                         case 1: //audio
@@ -285,7 +309,7 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
                             play.setVisibility(View.GONE);
                             imageView.setVisibility(View.VISIBLE);
                             launchBook.setVisibility(View.GONE);
-                            Log.e(TAG, "MEDIA URL is : "+mediaUrl);
+                            if(Configuration.DEBUG)Log.e(TAG, "MEDIA URL is : "+mediaUrl);
                             new LoadImageTask(mediaUrl,imageView).execute();
                             break;
 
@@ -306,7 +330,7 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
 
                     }
                 }
-                new LoadImageTask(Configuration.BASE_URL +jsonObject.optString("user_avatar_url"),userAvatar).execute();
+                new LoadImageTask(jsonObject.optString("user_avatar_url"),userAvatar).execute();
                 userName.setText(jsonObject.optString("user_name"));
                 userAvatar.setTag(jsonObject.optString("user_id"));
                 title.setText(jsonObject.optString("title"));
@@ -393,7 +417,7 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
 //                URL url = new URL(params[0]);
 //                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 //                urlConnection.connect();
-//                Log.e(ContentActivity.class.getName(),"REQUEST METHOD IS "+urlConnection.getRequestMethod());
+//                if(Configuration.DEBUG)Log.e(ContentActivity.class.getName(),"REQUEST METHOD IS "+urlConnection.getRequestMethod());
 //                File file = new File(Environment.getExternalStorageDirectory()+"/candeo/books/tmp.epub");
 //                FileOutputStream fos = new FileOutputStream(file);
 //                InputStream inputStream = urlConnection.getInputStream();
@@ -481,21 +505,21 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
             {
                 int height=bitmap.getHeight();
                 int width=bitmap.getWidth();
-                Log.e(TAG,"Bitmap width is "+ width+" and height is "+height);
+                if(Configuration.DEBUG)Log.e(TAG,"Bitmap width is "+ width+" and height is "+height);
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG,100,bos);
                 getWindowManager().getDefaultDisplay().getMetrics(CandeoApplication.displayMetrics);
                 int screenWidth=CandeoApplication.displayMetrics.widthPixels;
-                Log.e(TAG,"Screen width is "+ screenWidth);
+                if(Configuration.DEBUG)Log.e(TAG,"Screen width is "+ screenWidth);
                 double scaleFactor = (width*1.0)/(screenWidth*1.0);
-                Log.e(TAG,"Scale Factor is "+scaleFactor);
+                if(Configuration.DEBUG)Log.e(TAG,"Scale Factor is "+scaleFactor);
                 int calculatedHeight=height;
                 if(scaleFactor>0)
                 {
                     calculatedHeight = (int)(height/scaleFactor);
                 }
 
-                Log.e(TAG,"Calculated width is "+ screenWidth+" and height is "+calculatedHeight);
+                if(Configuration.DEBUG)Log.e(TAG,"Calculated width is "+ screenWidth+" and height is "+calculatedHeight);
                 Animation in = AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in);
                 imageView.startAnimation(in);
                 imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap,screenWidth,calculatedHeight,false));
@@ -546,7 +570,7 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
             candeoMediaControl.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.e(TAG,"Media control clicked");
+                    if(Configuration.DEBUG)Log.e(TAG,"Media control clicked");
                     if(play.getVisibility() == View.VISIBLE)
                     {
                         mediaPlayer.start();

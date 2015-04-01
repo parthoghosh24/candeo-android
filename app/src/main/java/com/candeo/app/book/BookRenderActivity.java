@@ -60,7 +60,7 @@ public class BookRenderActivity extends Activity {
         unzippedBook = getIntent().getParcelableExtra(Configuration.INTENTBOOK);
         chapterList =getIntent().getParcelableArrayListExtra(Configuration.INTENTCHAPTERLIST);
         mBaseUrl=getIntent().getStringExtra(Configuration.INTENTBASEURL);
-        Log.e(TAG,"BASE URL "+mBaseUrl);
+        if(Configuration.DEBUG)Log.e(TAG,"BASE URL "+mBaseUrl);
         initWidgets();
         openChapter(mCurrentChapter, bookView);
     }
@@ -79,7 +79,7 @@ public class BookRenderActivity extends Activity {
         bookView.setWebChromeClient(new WebChromeClient(){
             @Override
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-                Log.e(TAG,"INCOMING ALERT MESSAGE IS "+message);
+                if(Configuration.DEBUG)Log.e(TAG,"INCOMING ALERT MESSAGE IS "+message);
                 result.confirm();
                 return true;
             }
@@ -95,8 +95,8 @@ public class BookRenderActivity extends Activity {
         String chapterPath = mBaseUrl+File.separator+chapterList.get(currentChapter-1).getUrl();
         Log.i(TAG, "chapterPath "+chapterPath);
         getWindowManager().getDefaultDisplay().getMetrics(CandeoApplication.displayMetrics);
-        Log.e(TAG, "Screen Width is "+CandeoApplication.displayMetrics.widthPixels);
-        Log.e(TAG, "Screen Height is "+CandeoApplication.displayMetrics.heightPixels);
+        if(Configuration.DEBUG)Log.e(TAG, "Screen Width is "+CandeoApplication.displayMetrics.widthPixels);
+        if(Configuration.DEBUG)Log.e(TAG, "Screen Height is "+CandeoApplication.displayMetrics.heightPixels);
         int width = CandeoApplication.displayMetrics.widthPixels+SCREEN_WIDTH_CORRECTION;
         int height = CandeoApplication.displayMetrics.heightPixels+SCREEN_HEIGHT_CORRECTION;
         String data=preprocess(chapterPath,width,height);

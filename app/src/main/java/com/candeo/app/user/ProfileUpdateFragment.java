@@ -141,7 +141,7 @@ public class ProfileUpdateFragment extends DialogFragment implements UploadMedia
             try {
                 JSONObject json = new JSONObject(response);
                 mediaId = json.getString("id");
-                Log.e(TAG,"Media id is "+mediaId);
+                if(Configuration.DEBUG)Log.e(TAG,"Media id is "+mediaId);
             }
             catch (JSONException jsonex)
             {
@@ -216,12 +216,12 @@ public class ProfileUpdateFragment extends DialogFragment implements UploadMedia
                 case REQUEST_IMAGE_CAMERA:
                     filePath = CandeoUtil.getRealPathFromUri(imageUri, getActivity().getContentResolver());
                     file = new File(filePath);
-                    Log.e(TAG,"Capture image path is "+filePath);
+                    if(Configuration.DEBUG)Log.e(TAG,"Capture image path is "+filePath);
                     bitmap = BitmapFactory.decodeFile(filePath);
                     try {
                         exifInterface = new ExifInterface(filePath);
                         int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-                        Log.e(TAG,"orientation in image capture is "+orientation);
+                        if(Configuration.DEBUG)Log.e(TAG,"orientation in image capture is "+orientation);
                         new RotateTask(orientation,file.getName(),CandeoUtil.getMimeType(imageUri, getActivity())).execute(bitmap);
                     }
                     catch(IOException ioe)
@@ -234,12 +234,12 @@ public class ProfileUpdateFragment extends DialogFragment implements UploadMedia
                     uri = data.getData();
                     filePath = CandeoUtil.getRealPathFromUri(uri, getActivity().getContentResolver());
                     file = new File(filePath);
-                    Log.e(TAG,"Picked image path is "+filePath);
+                    if(Configuration.DEBUG)Log.e(TAG,"Picked image path is "+filePath);
                     bitmap = BitmapFactory.decodeFile(filePath);
                     try {
                         exifInterface = new ExifInterface(filePath);
                         int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-                        Log.e(TAG,"orientation in pick image is "+orientation);
+                        if(Configuration.DEBUG)Log.e(TAG,"orientation in pick image is "+orientation);
                         new RotateTask(orientation,file.getName(),CandeoUtil.getMimeType(uri, getActivity())).execute(bitmap);
                     }
                     catch(IOException ioe)
@@ -324,8 +324,8 @@ public class ProfileUpdateFragment extends DialogFragment implements UploadMedia
     private Bitmap rotateBitmap(Bitmap bitmap, int orientation)
     {
         Matrix matrix = new Matrix();
-        Log.e(TAG, "WIDTH IS " + bitmap.getWidth());
-        Log.e(TAG,"HEIGHT IS "+bitmap.getHeight());
+        if(Configuration.DEBUG)Log.e(TAG, "WIDTH IS " + bitmap.getWidth());
+        if(Configuration.DEBUG)Log.e(TAG,"HEIGHT IS "+bitmap.getHeight());
         try
         {
             switch (orientation)
@@ -447,7 +447,7 @@ public class ProfileUpdateFragment extends DialogFragment implements UploadMedia
                             NetworkResponse response = error.networkResponse;
                             if(response!=null)
                             {
-                                Log.e(TAG,"error is "+new String(response.data));
+                                if(Configuration.DEBUG)Log.e(TAG,"error is "+new String(response.data));
                             }
                         }
                     });
@@ -457,16 +457,16 @@ public class ProfileUpdateFragment extends DialogFragment implements UploadMedia
         @Override
         public Map<String, String> getHeaders() throws AuthFailureError {
             Map<String, String> params = new HashMap<>();
-            Log.e(TAG,"getActivity is "+getActivity());
+            if(Configuration.DEBUG)Log.e(TAG,"getActivity is "+getActivity());
             if (Preferences.isUserLoggedIn(getActivity()) && !TextUtils.isEmpty(Preferences.getUserEmail(getActivity()))) {
                 String secret="";
                 params.put("email", Preferences.getUserEmail(getActivity()));
                 secret=Preferences.getUserApiKey(getActivity());
                 String message = USER_PROFILE_UPDATE_RELATIVE_API+"|"+new JSONObject(payload).toString();
                 params.put("message", message);
-                Log.e(TAG,"secret->"+secret);
+                if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
                 String hash = Security.generateHmac(secret, message);
-                Log.e(TAG,"hash->"+hash);
+                if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
                 params.put("Authorization", "Token token=" + hash);
 
             }

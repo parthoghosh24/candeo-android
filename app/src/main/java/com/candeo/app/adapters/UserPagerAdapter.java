@@ -69,7 +69,7 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
 
     private int getLayoutForType(int type)
     {
-        Log.e("USER ADAPTER","type is "+type);
+        if(Configuration.DEBUG)Log.e("USER ADAPTER","type is "+type);
         switch (type)
         {
             case CREATED:
@@ -111,6 +111,7 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
                 }
             });
             holder.userName.setText(list.get(position).get("user_name"));
+            if(Configuration.DEBUG)Log.e("userprof","userprof avatar "+list.get(position).get("avatar_path"));
             new LoadImageTask(holder.userAvatar).execute(list.get(position).get("avatar_path"));
         }
 

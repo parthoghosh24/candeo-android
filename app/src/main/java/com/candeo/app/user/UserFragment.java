@@ -95,11 +95,11 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
 
             if(Configuration.DEBUG)
             {
-                Log.e(TAG,"User API KEY is "+ Preferences.getUserApiKey(getActivity()));
-                Log.e(TAG,"User username is "+ Preferences.getUserUsername(getActivity()));
-                Log.e(TAG,"User Full Name is "+ Preferences.getUserName(getActivity()));
-                Log.e(TAG,"User Email is "+ Preferences.getUserEmail(getActivity()));
-                Log.e(TAG,"User Server Db row Id is "+ Preferences.getUserRowId(getActivity()));
+                if(Configuration.DEBUG)Log.e(TAG,"User API KEY is "+ Preferences.getUserApiKey(getActivity()));
+                if(Configuration.DEBUG)Log.e(TAG,"User username is "+ Preferences.getUserUsername(getActivity()));
+                if(Configuration.DEBUG)Log.e(TAG,"User Full Name is "+ Preferences.getUserName(getActivity()));
+                if(Configuration.DEBUG)Log.e(TAG,"User Email is "+ Preferences.getUserEmail(getActivity()));
+                if(Configuration.DEBUG)Log.e(TAG,"User Server Db row Id is "+ Preferences.getUserRowId(getActivity()));
             }
             initWidgets();
             return root;
@@ -145,7 +145,7 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
         {
             if(Configuration.DEBUG)
             {
-                Log.e(TAG,"I am called");
+                if(Configuration.DEBUG)Log.e(TAG,"I am called");
             }
             if(response.length()>0)
             {
@@ -154,7 +154,7 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
                     userId = user.getString("id");
                     name=user.getString("name");
                     bio=user.getString("about");
-                    avatarUrl=Configuration.BASE_URL+user.getString("avatar_path");
+                    avatarUrl=user.getString("avatar_path");
                     userName.setText(name);
                     userBio.setText(TextUtils.isEmpty(bio) ? Configuration.CANDEO_DEFAULT_BIO : bio);
                     appreciateCount.setText(""+user.getInt("total_appreciations"));
@@ -176,7 +176,7 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
                     userContentPager.setAdapter(contentAdapter);
                     slidingTabs.setViewPager(userContentPager);
                     userContentPager.setCurrentItem(0);
-                    Log.e(TAG,"page current item is "+userContentPager.getCurrentItem());
+                    if(Configuration.DEBUG)Log.e(TAG,"page current item is "+userContentPager.getCurrentItem());
                     if(Preferences.isUserLoggedIn(getActivity()) || !TextUtils.isEmpty(userId))
                     {
                         notLoggedIn.setVisibility(View.GONE);
@@ -193,13 +193,13 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
                     {
                         updateUserVeil.setVisibility(View.GONE);
                     }
-                    Log.e(TAG,"USER LOADED");
+                    if(Configuration.DEBUG)Log.e(TAG,"USER LOADED");
 
                 }
                 catch (JSONException je)
                 {
                     je.printStackTrace();
-                    Log.e(TAG,"ERROR IS "+je.getLocalizedMessage());
+                    if(Configuration.DEBUG)Log.e(TAG,"ERROR IS "+je.getLocalizedMessage());
                 }
                 toggleLoading(false);
 
@@ -237,7 +237,7 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
         userContentPager=(ViewPager)root.findViewById(R.id.candeo_user_content_pager);
         updateUserVeil=(LinearLayout)root.findViewById(R.id.candeo_user_update_veil);
         updateUserButton=(LinearLayout)root.findViewById(R.id.candeo_user_update_button);
-        Log.e(TAG,"is same user? "+(Preferences.isUserLoggedIn(getActivity()) && !TextUtils.isEmpty(userId) && userId.equalsIgnoreCase(Preferences.getUserRowId(getActivity()))));
+        if(Configuration.DEBUG)Log.e(TAG,"is same user? "+(Preferences.isUserLoggedIn(getActivity()) && !TextUtils.isEmpty(userId) && userId.equalsIgnoreCase(Preferences.getUserRowId(getActivity()))));
         updateProfileText=(TextView)root.findViewById(R.id.candeo_user_update_profile_text);
         updateProfileText.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/fa.ttf"));
         updateProfileText.setText(Configuration.FA_PENCIL);

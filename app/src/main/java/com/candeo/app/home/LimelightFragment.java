@@ -80,7 +80,7 @@ public class LimelightFragment extends Fragment{
                              Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.fragment_limelight, container, false);
-        Log.e(TAG,"IN Lime light fragment");
+        if(Configuration.DEBUG)Log.e(TAG,"IN Lime light fragment");
         initWidgets();
         return root;
     }
@@ -108,7 +108,7 @@ public class LimelightFragment extends Fragment{
         appreciateButtonView = (Button)root.findViewById(R.id.candeo_showcase_appreciate_button);
         skipButtonView = (Button)root.findViewById(R.id.candeo_showcase_skip_button);
         avatar = (CircleImageView)root.findViewById(R.id.candeo_showcase_user_avatar);
-        Log.e(TAG,"Avatar is "+avatar);
+        if(Configuration.DEBUG)Log.e(TAG,"Avatar is "+avatar);
         avatar.setImageURI(Uri.parse("android.resource://" + getActivity().getPackageName() + "/" + R.raw.default_avatar));
         mediaBg = (ImageView)root.findViewById(R.id.candeo_showcase_media_bg);
         mediaBg.setImageURI(Uri.parse("android.resource://" + getActivity().getPackageName() + "/"+ R.raw.default_avatar));
@@ -129,7 +129,7 @@ public class LimelightFragment extends Fragment{
         id=getArguments().getString("id");
         responseListener = (ResponseListener)getArguments().getParcelable("adapter");
         position=getArguments().getInt("position");
-        Log.e(TAG,"id is "+id);
+        if(Configuration.DEBUG)Log.e(TAG,"id is "+id);
         if(!TextUtils.isEmpty(id))
         {
             CandeoApplication.getInstance().getAppRequestQueue().add(new FetchLimelight(id));
@@ -164,7 +164,7 @@ public class LimelightFragment extends Fragment{
     public void setResponseListener(ResponseListener responseListener)
     {
         this.responseListener=responseListener;
-        Log.e(TAG,"RESP LIST"+this.responseListener);
+        if(Configuration.DEBUG)Log.e(TAG,"RESP LIST"+this.responseListener);
     }
 
     @Override
@@ -190,7 +190,7 @@ public class LimelightFragment extends Fragment{
                 }
                 else
                 {
-                    Log.e(TAG,"Responselistener:"+listener);
+                    if(Configuration.DEBUG)Log.e(TAG,"Responselistener:"+listener);
 
                     ResponseFragment response = new ResponseFragment();
                     Bundle bundle = new Bundle();
@@ -254,8 +254,8 @@ public class LimelightFragment extends Fragment{
                         @Override
                         public void onResponse(JSONObject response) {
 
-                            Log.e(TAG, "Fetched limelight");
-                            Log.e(TAG,"id fetched is "+id);
+                            if(Configuration.DEBUG)Log.e(TAG, "Fetched limelight");
+                            if(Configuration.DEBUG)Log.e(TAG,"id fetched is "+id);
 
                             try {
                                 JSONObject limelight = response.getJSONObject("limelight");
@@ -263,16 +263,16 @@ public class LimelightFragment extends Fragment{
                                 name.setText(limelight.getString("name"));
                                 title.setText(limelight.getString("title"));
                                 appreciateCount.setText(""+limelight.getInt("total_appreciations"));
-                                new LoadImageTask(avatar).execute(Configuration.BASE_URL+limelight.getString("user_avatar_url"));
-                                Log.e(TAG,"is bg url empty "+TextUtils.isEmpty(limelight.getString("bg_url")));
+                                new LoadImageTask(avatar).execute(limelight.getString("user_avatar_url"));
+                                if(Configuration.DEBUG)Log.e(TAG,"is bg url empty "+TextUtils.isEmpty(limelight.getString("bg_url")));
                                 if(TextUtils.isEmpty(limelight.getString("bg_url")) ||"null".equalsIgnoreCase(limelight.getString("bg_url")) )
                                 {
-                                    Log.e(TAG,"Media url is "+limelight.getString("media_url"));
-                                    new LoadImageTask(mediaBg).execute(Configuration.BASE_URL+limelight.getString("media_url"));
+                                    if(Configuration.DEBUG)Log.e(TAG,"Media url is "+limelight.getString("media_url"));
+                                    new LoadImageTask(mediaBg).execute(limelight.getString("media_url"));
                                 }
                                 else
                                 {
-                                    new LoadImageTask(mediaBg).execute(Configuration.BASE_URL+limelight.getString("bg_url"));
+                                    new LoadImageTask(mediaBg).execute(limelight.getString("bg_url"));
                                 }
                                 int mediaType = Integer.parseInt(limelight.getString("media_type"));
                                 if(Configuration.AUDIO == mediaType)
@@ -322,9 +322,9 @@ public class LimelightFragment extends Fragment{
             }
             String message = relativeUrl;
             params.put("message", message);
-            Log.e(TAG,"secret->"+secret);
+            if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
             String hash = Security.generateHmac(secret, message);
-            Log.e(TAG,"hash->"+hash);
+            if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
             params.put("Authorization", "Token token=" + hash);
             return params;
         }

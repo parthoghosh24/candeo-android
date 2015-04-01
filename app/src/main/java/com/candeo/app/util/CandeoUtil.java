@@ -21,6 +21,7 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.TextView;
 
+import com.candeo.app.Configuration;
 import com.candeo.app.R;
 
 import org.apache.http.util.ByteArrayBuffer;
@@ -181,7 +182,7 @@ public class CandeoUtil {
             defaultFontTypefaceField.setAccessible(true);
             defaultFontTypefaceField.set(null, customFontTypeface);
         } catch (Exception e) {
-            Log.e("CandeoUtil", "Can not set custom font " + customFontFileNameInAssets + " instead of " + defaultFontNameToOverride);
+            if(Configuration.DEBUG)Log.e("CandeoUtil", "Can not set custom font " + customFontFileNameInAssets + " instead of " + defaultFontNameToOverride);
         }
 
 

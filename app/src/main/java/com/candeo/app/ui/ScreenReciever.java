@@ -13,7 +13,7 @@ public class ScreenReciever extends BroadcastReceiver {
     public static boolean isScreenOn=true;
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.e("reciever", "Reciever called");
+        if(Configuration.DEBUG)Log.e("reciever", "Reciever called");
         if(intent.getAction().equals(Intent.ACTION_SCREEN_OFF))
         {
             isScreenOn=false;

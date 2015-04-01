@@ -25,6 +25,8 @@ public class CandeoApplication extends Application {
         displayMetrics = new DisplayMetrics();
         File candeoDirectory = new File(Environment.getExternalStorageDirectory()+"/candeo");
         candeoDirectory.mkdirs();
+        File candeoBinaryDirectory = new File(Environment.getExternalStorageDirectory()+"/candeo/bin");
+        candeoBinaryDirectory.mkdirs();
         File candeoAudioDirectory = new File(Environment.getExternalStorageDirectory()+"/candeo/audios");
         candeoAudioDirectory.mkdirs();
         File candeoVideoDirectory = new File(Environment.getExternalStorageDirectory()+"/candeo/videos");

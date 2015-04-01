@@ -86,7 +86,7 @@ public class LoginActivity extends Activity implements UploadMediaListener {
         hasImage=false;
         mediaId="";
         debugEmail= (EditText)findViewById(R.id.candeo_login_email_debug);
-        debugEmail.setVisibility(View.VISIBLE);
+        if(Configuration.DEBUG)debugEmail.setVisibility(View.VISIBLE);
         emails= CandeoUtil.emailAddresses(this);
         ArrayAdapter<String> emailSelectorAdapter = new ArrayAdapter<>(this, R.layout.candeo_email_spinner_item,emails.toArray(new String[emails.size()]));
         emailSelectorAdapter.setDropDownViewResource(R.layout.candeo_spinner_dropdown_item);
@@ -97,9 +97,11 @@ public class LoginActivity extends Activity implements UploadMediaListener {
             @Override
             public void onClick(View v) {
                 String email = !TextUtils.isEmpty(debugEmail.getText()) ? debugEmail.getText().toString() : emailSelector.getSelectedItem().toString();
-                Log.e(TAG,"And the email is "+email);
+                if(Configuration.DEBUG)Log.e(TAG,"And the email is "+email);
+                signup.setEnabled(false);
                if(isSignup)
                {
+
                    registerUser(name.getText().toString(), email);
                }
                else
@@ -114,6 +116,7 @@ public class LoginActivity extends Activity implements UploadMediaListener {
         signin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                signup.setEnabled(true);
                 if(isSignup)
                 {
                     isSignup=false;
@@ -196,7 +199,7 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                 JSONObject json = new JSONObject(response);
                 mediaId = json.getString("id");
                 hasImage=true;
-                Log.e(TAG,"Media id is "+mediaId);
+                if(Configuration.DEBUG)Log.e(TAG,"Media id is "+mediaId);
             }
             catch (JSONException jsonex)
             {
@@ -233,12 +236,12 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                 case REQUEST_IMAGE_CAMERA:
                     filePath = CandeoUtil.getRealPathFromUri(imageUri, getContentResolver());
                     file = new File(filePath);
-                    Log.e(TAG,"Capture image path is "+filePath);
+                    if(Configuration.DEBUG)Log.e(TAG,"Capture image path is "+filePath);
                     bitmap = BitmapFactory.decodeFile(filePath);
                     try {
                         exifInterface = new ExifInterface(filePath);
                         int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-                        Log.e(TAG,"orientation in image capture is "+orientation);
+                        if(Configuration.DEBUG)Log.e(TAG,"orientation in image capture is "+orientation);
                         new RotateTask(orientation,file.getName(),CandeoUtil.getMimeType(imageUri, getApplicationContext())).execute(bitmap);
                     }
                     catch(IOException ioe)
@@ -251,12 +254,12 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                     uri = data.getData();
                     filePath = CandeoUtil.getRealPathFromUri(uri, getContentResolver());
                     file = new File(filePath);
-                    Log.e(TAG,"Picked image path is "+filePath);
+                    if(Configuration.DEBUG)Log.e(TAG,"Picked image path is "+filePath);
                     bitmap = BitmapFactory.decodeFile(filePath);
                     try {
                         exifInterface = new ExifInterface(filePath);
                         int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-                        Log.e(TAG,"orientation in pick image is "+orientation);
+                        if(Configuration.DEBUG)Log.e(TAG,"orientation in pick image is "+orientation);
                         new RotateTask(orientation,file.getName(),CandeoUtil.getMimeType(uri, getApplicationContext())).execute(bitmap);
                     }
                     catch(IOException ioe)
@@ -279,7 +282,7 @@ public class LoginActivity extends Activity implements UploadMediaListener {
             params.put("name",name);
             params.put("email",email);
             params.put("media_id",mediaId);
-            Log.e(TAG,"Getting Request Queue "+CandeoApplication.getInstance());
+            if(Configuration.DEBUG)Log.e(TAG,"Getting Request Queue "+CandeoApplication.getInstance());
             CandeoApplication.getInstance().getAppRequestQueue().add(new RegisterUserRequest(params));
         }
         else
@@ -330,7 +333,7 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                             NetworkResponse response = error.networkResponse;
                             if(response!=null)
                             {
-                                Log.e(TAG,"error is "+new String(response.data));
+                                if(Configuration.DEBUG)Log.e(TAG,"error is "+new String(response.data));
                             }
                         }
                     });
@@ -343,9 +346,9 @@ public class LoginActivity extends Activity implements UploadMediaListener {
             params.put("email", "");
             String message = API_REGISTER_RELATIVE_URL;
             params.put("message", message);
-            Log.e(TAG,"secret->"+secret);
+            if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
             String hash = Security.generateHmac(secret, message);
-            Log.e(TAG,"hash->"+hash);
+            if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
             params.put("Authorization", "Token token=" + hash);
             return params;
         }
@@ -361,7 +364,7 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                   new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            Log.e(TAG, "Response is "+response);
+                            if(Configuration.DEBUG)Log.e(TAG, "Response is "+response);
                             noContent.setVisibility(View.VISIBLE);
                         }
                   },
@@ -372,7 +375,7 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                             NetworkResponse response = error.networkResponse;
                             if(response!=null)
                             {
-                                Log.e(TAG,"error is "+new String(response.data));
+                                if(Configuration.DEBUG)Log.e(TAG,"error is "+new String(response.data));
                             }
                             noContent.setVisibility(View.GONE);
                         }
@@ -386,9 +389,9 @@ public class LoginActivity extends Activity implements UploadMediaListener {
             params.put("email", "");
             String message = API_LOGIN_RELATIVE_URL;
             params.put("message", message);
-            Log.e(TAG,"secret->"+secret);
+            if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
             String hash = Security.generateHmac(secret, message);
-            Log.e(TAG,"hash->"+hash);
+            if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
             params.put("Authorization", "Token token=" + hash);
             return params;
         }
@@ -465,8 +468,8 @@ public class LoginActivity extends Activity implements UploadMediaListener {
     private Bitmap rotateBitmap(Bitmap bitmap, int orientation)
     {
         Matrix matrix = new Matrix();
-        Log.e(TAG,"WIDTH IS "+bitmap.getWidth());
-        Log.e(TAG,"HEIGHT IS "+bitmap.getHeight());
+        if(Configuration.DEBUG)Log.e(TAG,"WIDTH IS "+bitmap.getWidth());
+        if(Configuration.DEBUG)Log.e(TAG,"HEIGHT IS "+bitmap.getHeight());
         try
         {
             switch (orientation)

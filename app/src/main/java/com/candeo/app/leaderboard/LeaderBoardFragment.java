@@ -91,13 +91,13 @@ public class LeaderBoardFragment extends Fragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 
                 visibleItemCount = performanceListLayoutManager.getChildCount();
-                Log.e(TAG,"visible item count "+visibleItemCount);
+                if(Configuration.DEBUG)Log.e(TAG,"visible item count "+visibleItemCount);
                 totalItemCount = performanceListLayoutManager.getItemCount();
-                Log.e(TAG,"total item count "+totalItemCount);
+                if(Configuration.DEBUG)Log.e(TAG,"total item count "+totalItemCount);
                 pastVisibleItems = performanceListLayoutManager.findFirstVisibleItemPosition();
-                Log.e(TAG,"past visible item count "+ pastVisibleItems);
+                if(Configuration.DEBUG)Log.e(TAG,"past visible item count "+ pastVisibleItems);
                 if (loading) {
-                    Log.e(TAG,"in loading");
+                    if(Configuration.DEBUG)Log.e(TAG,"in loading");
                     if ( (visibleItemCount+ pastVisibleItems) >= totalItemCount) {
                         loading = false;
                         loadMore();
@@ -141,7 +141,7 @@ public class LeaderBoardFragment extends Fragment {
 
     private void loadMore()
     {
-        Log.e(TAG,"last rank "+lastRank);
+        if(Configuration.DEBUG)Log.e(TAG,"last rank "+lastRank);
         CandeoApplication.getInstance().getAppRequestQueue().add(new GetMorePerformancesRequest(lastRank,true));
     }
 
@@ -185,13 +185,13 @@ public class LeaderBoardFragment extends Fragment {
                                                 lastRank=performance.getString("showcase_rank");
                                             }
                                             morePerformances.add(performanceMap);
-//                                            Log.e(TAG, "More Performances len "+morePerformances.size());
+//                                            if(Configuration.DEBUG)Log.e(TAG, "More Performances len "+morePerformances.size());
                                         }
                                         //Populate morePerformances
-                                        Log.e(TAG,"List size is b4 add "+morePerformances.size());
-                                        Log.e(TAG,"append is "+append);
+                                        if(Configuration.DEBUG)Log.e(TAG,"List size is b4 add "+morePerformances.size());
+                                        if(Configuration.DEBUG)Log.e(TAG,"append is "+append);
                                         mLeaderboardAdapter.addAllToMorePerformances(morePerformances,append);
-                                        Log.e(TAG,"List size is "+mLeaderboardAdapter.morePerformances.size());
+                                        if(Configuration.DEBUG)Log.e(TAG,"List size is "+mLeaderboardAdapter.morePerformances.size());
                                         mLeaderboardAdapter.notifyDataSetChanged();
 //                                        performancesList.setAdapter(mLeaderboardAdapter);
                                         loading=true;
@@ -200,7 +200,7 @@ public class LeaderBoardFragment extends Fragment {
                                 catch (JSONException jse)
                                 {
                                     jse.printStackTrace();
-                                    Log.e(TAG, "error is "+jse.getLocalizedMessage());
+                                    if(Configuration.DEBUG)Log.e(TAG, "error is "+jse.getLocalizedMessage());
                                     CandeoUtil.toggleView(loadingContent,false);
                                     CandeoUtil.toggleView(noContent,true);
                                 }
@@ -212,11 +212,11 @@ public class LeaderBoardFragment extends Fragment {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.e(TAG,"Error occured");
+                            if(Configuration.DEBUG)Log.e(TAG,"Error occured");
                             NetworkResponse response = error.networkResponse;
                             if(response!=null)
                             {
-                                Log.e(TAG,"Server error response while fetching performances "+new String(response.data));
+                                if(Configuration.DEBUG)Log.e(TAG,"Server error response while fetching performances "+new String(response.data));
                             }
                             CandeoUtil.toggleView(loadingContent,false);
                             if(morePerformances.size()==0)
@@ -243,9 +243,9 @@ public class LeaderBoardFragment extends Fragment {
             }
             String message = String.format(GET_MORE_PERFORMANCES_RELATIVE_API,rank);
             params.put("message", message);
-            Log.e(TAG,"secret->"+secret);
+            if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
             String hash = Security.generateHmac(secret, message);
-            Log.e(TAG,"hash->"+hash);
+            if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
             params.put("Authorization", "Token token=" + hash);
             return params;
         }

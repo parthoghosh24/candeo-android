@@ -77,14 +77,14 @@ public class CreatedFragment extends Fragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 visibleItemCount = creationsLinearLayoutManager.getChildCount();
-                Log.e(TAG, "visible item count " + visibleItemCount);
+                if(Configuration.DEBUG)Log.e(TAG, "visible item count " + visibleItemCount);
                 totalItemCount = creationsLinearLayoutManager.getItemCount();
-                Log.e(TAG,"total item count "+totalItemCount);
+                if(Configuration.DEBUG)Log.e(TAG,"total item count "+totalItemCount);
                 pastVisibleItems = creationsLinearLayoutManager.findFirstVisibleItemPosition();
-                Log.e(TAG,"past visible item count "+pastVisibleItems);
+                if(Configuration.DEBUG)Log.e(TAG,"past visible item count "+pastVisibleItems);
                 //TODO Not working, need to see
                 if (loading) {
-                    Log.e(TAG,"in loading");
+                    if(Configuration.DEBUG)Log.e(TAG,"in loading");
                     if ( (visibleItemCount+pastVisibleItems) >= totalItemCount) {
                         loading = false;
                         loadMore();
@@ -98,7 +98,7 @@ public class CreatedFragment extends Fragment {
 
     private void loadMore()
     {
-        Log.e(TAG,"last timestamp "+lastTimestamp);
+        if(Configuration.DEBUG)Log.e(TAG,"last timestamp "+lastTimestamp);
         CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserCreations(userId,lastTimestamp));
     }
 
@@ -130,12 +130,12 @@ public class CreatedFragment extends Fragment {
                                             created.put("title", object.getString("title"));
                                             if(TextUtils.isEmpty(object.getString("bg_url")) ||"null".equalsIgnoreCase(object.getString("bg_url")) )
                                             {
-                                                Log.e(TAG,"Media url is "+object.getString("media_url"));
-                                                created.put("bg_url",Configuration.BASE_URL+object.getString("media_url"));
+                                                if(Configuration.DEBUG)Log.e(TAG,"Media url is "+object.getString("media_url"));
+                                                created.put("bg_url",object.getString("media_url"));
                                             }
                                             else
                                             {
-                                                created.put("bg_url",Configuration.BASE_URL+object.getString("bg_url"));
+                                                created.put("bg_url",object.getString("bg_url"));
                                             }
                                             created.put("user_id", object.getString("user_id"));
                                             created.put("rank", object.getString("rank"));
@@ -170,7 +170,7 @@ public class CreatedFragment extends Fragment {
                                 }
                                 catch (JSONException jse)
                                 {
-                                    Log.e(TAG,"Something wrong happened");
+                                    if(Configuration.DEBUG)Log.e(TAG,"Something wrong happened");
                                     jse.printStackTrace();
                                 }
 
@@ -180,7 +180,7 @@ public class CreatedFragment extends Fragment {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.e(TAG, "error is " + error.getLocalizedMessage());
+                            if(Configuration.DEBUG)Log.e(TAG, "error is " + error.getLocalizedMessage());
                             if(creationList.size()==0)
                             {
                                 CandeoUtil.toggleView(noUserCreatedContent,true);
@@ -205,9 +205,9 @@ public class CreatedFragment extends Fragment {
             }
             String message = String.format(GET_USER_CREATIONS_RELATIVE_API,id,lastTimeStamp);
             params.put("message", message);
-            Log.e(TAG,"secret->"+secret);
+            if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
             String hash = Security.generateHmac(secret, message);
-            Log.e(TAG,"hash->"+hash);
+            if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
             params.put("Authorization", "Token token=" + hash);
             return params;
         }

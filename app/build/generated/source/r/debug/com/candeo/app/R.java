@@ -1440,14 +1440,15 @@ containing a value of this type.
         public static final int abc_textfield_search_activated_mtrl_alpha=0x7f020030;
         public static final int abc_textfield_search_default_mtrl_alpha=0x7f020031;
         public static final int abc_textfield_search_material=0x7f020032;
-        public static final int drawer_shadow=0x7f020033;
-        public static final int ic_drawer=0x7f020034;
-        public static final int ic_launcher=0x7f020035;
-        public static final int logo=0x7f020036;
-        public static final int roundedbluebg=0x7f020037;
-        public static final int roundedbutton=0x7f020038;
-        public static final int roundedbuttontranslucent=0x7f020039;
-        public static final int roundedbuttontranslucentblack=0x7f02003a;
+        public static final int default_avatar=0x7f020033;
+        public static final int drawer_shadow=0x7f020034;
+        public static final int ic_drawer=0x7f020035;
+        public static final int ic_launcher=0x7f020036;
+        public static final int logo=0x7f020037;
+        public static final int roundedbluebg=0x7f020038;
+        public static final int roundedbutton=0x7f020039;
+        public static final int roundedbuttontranslucent=0x7f02003a;
+        public static final int roundedbuttontranslucentblack=0x7f02003b;
     }
     public static final class id {
         public static final int action_bar=0x7f090031;
