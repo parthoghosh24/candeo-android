@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.candeo.app.Configuration;
+
 /**
  * Created by partho on 19/3/15.
  */
