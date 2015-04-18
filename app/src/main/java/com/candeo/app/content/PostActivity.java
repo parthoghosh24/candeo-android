@@ -41,6 +41,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -325,12 +326,16 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                   }
                   else
                   {
+                      if(Configuration.DEBUG)Log.e(TAG,"I AM GETTING CALLED.......");
                       Map<String, String> payload = new HashMap<>();
                       payload.put("type",Integer.toString(Configuration.SHOWCASE));
                       payload.put("media_id",mediaId);
                       payload.put("user_id",Preferences.getUserRowId(getApplicationContext()));
                       payload.put("title",showcaseTitle.getText().toString());
-                      CandeoApplication.getInstance().getAppRequestQueue().add(new PostContentRequest(payload));
+                      CandeoUtil.showProgress(PostActivity.this,"Creating...",Configuration.FA_MAGIC);
+                      PostContentRequest postContentRequest= new PostContentRequest(payload);
+                      postContentRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                      CandeoApplication.getInstance().getAppRequestQueue().add(postContentRequest);
                   }
                 }
                 else
@@ -345,7 +350,11 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                         }
                         payload.put("user_id",Preferences.getUserRowId(getApplicationContext()));
                         payload.put("description",description.getText().toString());
-                        CandeoApplication.getInstance().getAppRequestQueue().add(new PostContentRequest(payload));
+                        CandeoUtil.showProgress(PostActivity.this, "Creating...", Configuration.FA_MAGIC);
+                        System.setProperty("http.keepAlive", "false");
+                        PostContentRequest postContentRequest = new PostContentRequest(payload);
+                        postContentRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                        CandeoApplication.getInstance().getAppRequestQueue().add(postContentRequest);
 
                     }
                     else
@@ -400,6 +409,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                     new Response.Listener<JSONObject>(){
                         @Override
                         public void onResponse(JSONObject response) {
+                            CandeoUtil.hideProgress();
                             try
                             {
                                 String id = response.getString("id");
@@ -407,6 +417,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                                 Intent contentIntent = new Intent(PostActivity.this,ContentActivity.class);
                                 contentIntent.putExtra("id",id);
                                 contentIntent.putExtra("type",contentType);
+                                contentIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(contentIntent);
                                 finish();
                             }
@@ -420,6 +431,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            CandeoUtil.hideProgress();
                             System.out.println("Something went wrong");
                         }
                     });

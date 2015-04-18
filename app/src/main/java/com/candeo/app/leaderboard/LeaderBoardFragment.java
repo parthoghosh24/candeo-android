@@ -49,6 +49,8 @@ public class LeaderBoardFragment extends Fragment {
     private ArrayList<HashMap<String,String>> morePerformances = new ArrayList<>();
     private final static String GET_MORE_PERFORMANCES_RELATIVE_API="/contents/performances/list/%s";
     private final static String GET_MORE_PERFORMANCES_API=Configuration.BASE_URL+"/api/v1"+GET_MORE_PERFORMANCES_RELATIVE_API;
+    private final static String GET_PERFORMANCES_RELATIVE_API = "/contents/performances/show";
+    private final static String GET_PERFORMANCES_API = Configuration.BASE_URL + "/api/v1" + GET_PERFORMANCES_RELATIVE_API;
     private final static String FIRST_MORE_PERFORMANCE_RANK="5";
     private String lastRank="";
     private boolean loading = true;
@@ -242,6 +244,52 @@ public class LeaderBoardFragment extends Fragment {
                 secret=Configuration.CANDEO_DEFAULT_SECRET;
             }
             String message = String.format(GET_MORE_PERFORMANCES_RELATIVE_API,rank);
+            params.put("message", message);
+            if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
+            String hash = Security.generateHmac(secret, message);
+            if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
+            params.put("Authorization", "Token token=" + hash);
+            return params;
+        }
+    }
+
+    private class GetPerformanceRequest extends JsonObjectRequest {
+        public GetPerformanceRequest() {
+            super(Method.GET,
+                    GET_PERFORMANCES_API,
+                    new JSONObject(),
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            onGetLeaderBoardComplete(response);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            if(Configuration.DEBUG)Log.e(TAG, "Error occured");
+                            if(Configuration.DEBUG)Log.e(TAG, "localized error while fetching is leaderboard " + error.getLocalizedMessage());
+                            NetworkResponse response = error.networkResponse;
+                            if (response != null) {
+                                if(Configuration.DEBUG)Log.e(TAG, "Actual error while fetching leaderboard is " + new String(response.data));
+                            }
+                        }
+                    });
+        }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            String secret="";
+            if (Preferences.isUserLoggedIn(getActivity()) && !TextUtils.isEmpty(Preferences.getUserEmail(getActivity()))) {
+                params.put("email", Preferences.getUserEmail(getActivity()));
+                secret=Preferences.getUserApiKey(getActivity());
+
+            } else {
+                params.put("email", "");
+                secret=Configuration.CANDEO_DEFAULT_SECRET;
+            }
+            String message = GET_PERFORMANCES_RELATIVE_API;
             params.put("message", message);
             if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
             String hash = Security.generateHmac(secret, message);

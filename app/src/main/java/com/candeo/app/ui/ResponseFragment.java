@@ -18,6 +18,7 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -174,7 +175,9 @@ public class ResponseFragment extends DialogFragment {
             payload.put("feedback",responseText);
             payload.put("user_id", Preferences.getUserRowId(getActivity()));
             payload.put("showcase_id",showcaseId);
-            CandeoApplication.getInstance().getAppRequestQueue().add(new SendResponseRequest(payload, url, relativeUrl));
+            SendResponseRequest sendResponseRequest= new SendResponseRequest(payload, url, relativeUrl);
+            sendResponseRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            CandeoApplication.getInstance().getAppRequestQueue().add(sendResponseRequest);
             if(state == Configuration.APPRECIATE || state == Configuration.SKIP)
             {
                 this.responseListener.onResponseClick(position);

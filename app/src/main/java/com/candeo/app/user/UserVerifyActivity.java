@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -41,6 +42,7 @@ public class UserVerifyActivity extends ActionBarActivity {
         Map<String ,Integer> payload = new HashMap<>();
         payload.put("token",code);
         UserVerifyRequest verifyRequest = new UserVerifyRequest(payload);
+        verifyRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         CandeoApplication.getInstance().getAppRequestQueue().add(verifyRequest);
     }
 

@@ -1,5 +1,6 @@
 package com.candeo.app.home;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -54,6 +56,8 @@ public class HomeFragment extends Fragment {
     private static final String TAG="Candeo - HomeFrag";
     private static final String HAS_USER_POSTED_RELATIVE_URL="/users/posted/%s";
     private static final String HAS_USER_POSTED_URL=Configuration.BASE_URL+"/api/v1"+HAS_USER_POSTED_RELATIVE_URL;
+    private final static String GET_LIMELIGHT_LIST_RELATIVE_API = "/contents/limelights/list/%s";
+    private final static String GET_LIMELIGHT_LIST_API = Configuration.BASE_URL + "/api/v1" + GET_LIMELIGHT_LIST_RELATIVE_API;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -118,6 +122,15 @@ public class HomeFragment extends Fragment {
             });
 
         return homeView;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        String id = TextUtils.isEmpty(Preferences.getUserRowId(activity)) ? "0" : Preferences.getUserRowId(activity);
+        FetchLimelightList fetchLimelightListRequest = new FetchLimelightList(id);
+        fetchLimelightListRequest.setShouldCache(false);
+        CandeoApplication.getInstance().getAppRequestQueue().add(fetchLimelightListRequest);
     }
 
     @Override
@@ -253,6 +266,59 @@ public class HomeFragment extends Fragment {
     private void toggleNoContent(boolean show)
     {
         noContent.setVisibility(show?View.VISIBLE:View.GONE);
+    }
+
+    private class FetchLimelightList extends JsonObjectRequest {
+        private String id;
+        public FetchLimelightList(String id) {
+            super(Method.GET,
+                    String.format(GET_LIMELIGHT_LIST_API, id),
+                    new JSONObject(),
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            onGetLimelightComplete(response);
+
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                            if(Configuration.DEBUG)Log.e(TAG, "Error occured");
+                            if(Configuration.DEBUG)Log.e(TAG, "localized error while fetching is limelight " + error.getLocalizedMessage());
+                            NetworkResponse response = error.networkResponse;
+                            if (response != null) {
+                                if(Configuration.DEBUG)Log.e(TAG, "Actual error while fetching limelight is " + new String(response.data));
+                            }
+
+                        }
+                    }
+            );
+            this.id=id;
+        }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            String secret="";
+            if (Preferences.isUserLoggedIn(getActivity()) && !TextUtils.isEmpty(Preferences.getUserEmail(getActivity()))) {
+                params.put("email", Preferences.getUserEmail(getActivity()));
+                secret=Preferences.getUserApiKey(getActivity());
+
+            } else {
+                params.put("email", "");
+                secret=Configuration.CANDEO_DEFAULT_SECRET;
+            }
+            String message = String.format(GET_LIMELIGHT_LIST_RELATIVE_API,id);
+            params.put("message", message);
+            if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
+            String hash = Security.generateHmac(secret, message);
+            if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
+            params.put("Authorization", "Token token=" + hash);
+            return params;
+        }
     }
 
 

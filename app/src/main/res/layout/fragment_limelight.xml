@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:candeo="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -126,8 +126,8 @@
                                 android:layout_height="100dp"
                                 android:layout_marginLeft="40dp"
                                 android:focusableInTouchMode="true"
-                                app:border_width="2dp"
-                                app:border_color="#ffffffff"
+                                candeo:border_width="2dp"
+                                candeo:border_color="#ffffffff"
                                 />
 
                             <Button
@@ -163,25 +163,27 @@
                                     android:textSize="15sp"
                                     />
 
-                                <TextView
+                                <com.candeo.app.ui.CustomTextView
                                     android:id="@+id/candeo_user_name"
                                     android:text="Partho Ghosh"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:layout_marginLeft="5dp"
+                                    candeo:fontName="caviar.ttf"
                                     android:textSize="15sp"
                                     />
 
                             </LinearLayout>
 
 
-                            <TextView
+                            <com.candeo.app.ui.CustomTextView
                                 android:id="@+id/candeo_showcase_title"
                                 android:text="My Awesome Creation My Awesome Creation My Awesome Creation "
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
+                                candeo:fontName="caviar.ttf"
                                 android:textSize="20sp"
                                 />
 

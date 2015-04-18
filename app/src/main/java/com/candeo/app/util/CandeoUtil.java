@@ -182,6 +182,7 @@ public class CandeoUtil {
             defaultFontTypefaceField.setAccessible(true);
             defaultFontTypefaceField.set(null, customFontTypeface);
         } catch (Exception e) {
+            Log.e("CandeoUtil", "error is "+e.getLocalizedMessage());
             if(Configuration.DEBUG)Log.e("CandeoUtil", "Can not set custom font " + customFontFileNameInAssets + " instead of " + defaultFontNameToOverride);
         }
 

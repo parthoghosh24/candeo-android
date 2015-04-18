@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.util.DisplayMetrics;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.candeo.app.network.Hurlstack;
 import com.candeo.app.util.CandeoUtil;
 
 import java.io.File;
@@ -36,7 +37,8 @@ public class CandeoApplication extends Application {
         File candeoBookDirectory = new File(Environment.getExternalStorageDirectory()+"/candeo/books");
         candeoBookDirectory.mkdirs();
 
-        appRequestQueue = Volley.newRequestQueue(getApplicationContext());
+
+        appRequestQueue = Volley.newRequestQueue(getApplicationContext(), new Hurlstack());
         if (sInstance == null)
         {
             sInstance = this;

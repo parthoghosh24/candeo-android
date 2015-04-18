@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -283,11 +284,14 @@ public class LoginActivity extends Activity implements UploadMediaListener {
             params.put("email",email);
             params.put("media_id",mediaId);
             if(Configuration.DEBUG)Log.e(TAG,"Getting Request Queue "+CandeoApplication.getInstance());
-            CandeoApplication.getInstance().getAppRequestQueue().add(new RegisterUserRequest(params));
+            RegisterUserRequest registerUserRequest= new RegisterUserRequest(params);
+            registerUserRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            CandeoApplication.getInstance().getAppRequestQueue().add(registerUserRequest);
         }
         else
         {
             Toast.makeText(getApplicationContext(),"Please upload a suitable image with Full Name",Toast.LENGTH_LONG).show();
+            signup.setEnabled(true);
         }
 
     }
@@ -317,11 +321,14 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                                 Map<String, String> loginParams = new HashMap<>();
                                 loginParams.put("id",id);
                                 loginParams.put("email",payload.get("email"));
-                                CandeoApplication.getInstance().getAppRequestQueue().add(new LoginUserRequest(loginParams));
+                                LoginUserRequest loginUserRequest= new LoginUserRequest(loginParams);
+                                loginUserRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                                CandeoApplication.getInstance().getAppRequestQueue().add(loginUserRequest);
                             }
                             catch (JSONException je)
                             {
                                 je.printStackTrace();
+                                signup.setEnabled(true);
                             }
 
                         }
@@ -330,6 +337,7 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             Toast.makeText(getApplicationContext(),"Sorry! This email has already been taken",Toast.LENGTH_LONG).show();
+                            signup.setEnabled(true);
                             NetworkResponse response = error.networkResponse;
                             if(response!=null)
                             {
@@ -372,6 +380,7 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             Toast.makeText(getApplicationContext(),"Please register first with this email",Toast.LENGTH_LONG).show();
+                            signup.setEnabled(true);
                             NetworkResponse response = error.networkResponse;
                             if(response!=null)
                             {

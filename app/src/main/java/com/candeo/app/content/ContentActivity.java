@@ -226,10 +226,6 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
-        Intent intent = new Intent(ContentActivity.this, HomeActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
     }
 
     @Override
@@ -475,11 +471,15 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(ContentActivity.this);
-            pDialog.setMessage("Loading Image...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
+            if(!isFinishing())
+            {
+                pDialog = new ProgressDialog(ContentActivity.this);
+                pDialog.setMessage("Loading Image...");
+                pDialog.setIndeterminate(false);
+                pDialog.setCancelable(true);
+                pDialog.show();
+            }
+
         }
 
         @Override
@@ -524,7 +524,11 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
                 imageView.startAnimation(in);
                 imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap,screenWidth,calculatedHeight,false));
             }
-            pDialog.dismiss();
+            if(!isFinishing())
+            {
+                pDialog.dismiss();
+            }
+
         }
     }
     @Override

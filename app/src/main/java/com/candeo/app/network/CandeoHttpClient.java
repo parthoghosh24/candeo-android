@@ -43,6 +43,7 @@ public class CandeoHttpClient {
         connection.setRequestMethod("POST");
         connection.setDoInput(true);
         connection.setDoOutput(true);//Required for POST
+        connection.setConnectTimeout(50000);
         connection.setRequestProperty("Connection", "Keep-Alive");
         connection.setRequestProperty("Content-Type","multipart/form-data; boundary="+boundary);
         connection.setRequestProperty("email", Preferences.getUserEmail(mContext));
@@ -84,6 +85,7 @@ public class CandeoHttpClient {
     public void finishMultipart() throws IOException
     {
         outputStream.write((delimiter+boundary+delimiter+"\r\n").getBytes());
+
     }
 
     public String getResponse() throws IOException
@@ -106,6 +108,7 @@ public class CandeoHttpClient {
         }
         iStream.close();
         bInputStream.close();
+        outputStream.close();
         return new String(buffer.toByteArray(),"UTF-8");
     }
 

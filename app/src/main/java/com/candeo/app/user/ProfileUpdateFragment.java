@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -120,7 +121,9 @@ public class ProfileUpdateFragment extends DialogFragment implements UploadMedia
                 payloadMap.put("name",userName.getText().toString());
                 payloadMap.put("bio",bio.getText().toString());
                 payloadMap.put("media_id",mediaId);
-                CandeoApplication.getInstance().getAppRequestQueue().add(new UpdateUserProfileRequest(payloadMap));
+                UpdateUserProfileRequest updateUserProfileRequest= new UpdateUserProfileRequest(payloadMap);
+                updateUserProfileRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                CandeoApplication.getInstance().getAppRequestQueue().add(updateUserProfileRequest);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

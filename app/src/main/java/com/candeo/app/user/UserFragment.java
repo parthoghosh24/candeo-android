@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -32,6 +33,7 @@ import com.candeo.app.Configuration;
 import com.candeo.app.R;
 import com.candeo.app.adapters.GeneralUserPagerAdapter;
 import com.candeo.app.adapters.UserContentAdapter;
+import com.candeo.app.algorithms.Security;
 import com.candeo.app.home.HomeActivity;
 import com.candeo.app.ui.SlidingTabLayout;
 import com.candeo.app.util.CandeoUtil;
@@ -44,6 +46,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -82,6 +85,8 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
     private LinearLayout updateUserButton;
     private TextView updateProfileText;
     private UserProfileUpdateListener userProfileUpdateListener=null;
+    private final static String GET_USER_RELATIVE_API = "/users/%s";
+    private final static String GET_USER_API = Configuration.BASE_URL + "/api/v1" + GET_USER_RELATIVE_API;
 
     private final static String TAG="Candeo - User Fragment";
 
@@ -123,6 +128,18 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
             {
                 new LoadImageTask().execute(params.get("avatarUrl"));
             }
+
+        }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if(Preferences.isUserLoggedIn(activity))
+        {
+            GetUserRequest userRequest = new GetUserRequest(Preferences.getUserRowId(activity));
+            userRequest.setShouldCache(false);
+            CandeoApplication.getInstance().getAppRequestQueue().add(userRequest);
 
         }
     }
@@ -305,6 +322,49 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
     private void toggleLoading(boolean show)
     {
         loadingContent.setVisibility(show?View.VISIBLE:View.GONE);
+    }
+
+    private class GetUserRequest extends JsonObjectRequest {
+        private String id;
+        public GetUserRequest(String id) {
+            super(Method.GET,
+                    String.format(GET_USER_API, id),
+                    new JSONObject(),
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            onGetUserComplete(response);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            if(Configuration.DEBUG)Log.e(TAG, "error is " + error.getLocalizedMessage());
+                        }
+                    });
+            this.id=id;
+        }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            String secret="";
+            if (Preferences.isUserLoggedIn(getActivity()) && !TextUtils.isEmpty(Preferences.getUserEmail(getActivity()))) {
+                params.put("email", Preferences.getUserEmail(getActivity()));
+                secret=Preferences.getUserApiKey(getActivity());
+
+            } else {
+                params.put("email", "");
+                secret=Configuration.CANDEO_DEFAULT_SECRET;
+            }
+            String message = String.format(GET_USER_RELATIVE_API,id);
+            params.put("message", message);
+            if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
+            String hash = Security.generateHmac(secret, message);
+            if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
+            params.put("Authorization", "Token token=" + hash);
+            return params;
+        }
     }
 
 }

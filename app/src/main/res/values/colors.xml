@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="candeo_primary">#f6353535</color>
-    <color name="candeo_primary_dark">#fa181818</color>
+    <color name="candeo_primary">#ff8a8a8a</color>
+    <color name="candeo_primary_dark">#ff181818</color>
     <color name="candeo_accent_light">#fffafafa</color>
     <color name="candeo_translucent_white">#32fafafa</color>
     <color name="candeo_white">#fffafafa</color>
