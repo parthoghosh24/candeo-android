@@ -95,14 +95,17 @@ public class HomeActivity extends ActionBarActivity {
                         case 0:
                             getSupportActionBar().show();
                             getSupportActionBar().setTitle("Performances");
+                            leaderBoardFragment.requestRefresh(HomeActivity.this);
                             break;
                         case 1:
                             getSupportActionBar().hide();
                             if (Configuration.DEBUG) Log.e(TAG, "Limelight request fetched");
+                            homeFragment.requestRefresh(HomeActivity.this);
                             break;
                         case 2:
                             getSupportActionBar().show();
                             getSupportActionBar().setTitle("My Profile");
+                            userFragment.requestRefresh(HomeActivity.this);
                             break;
                     }
                 }
@@ -122,6 +125,18 @@ public class HomeActivity extends ActionBarActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        switch (homePager.getCurrentItem())
+        {
+            case 0: //Performances
+                leaderBoardFragment.requestRefresh(this);
+                break;
+            case 1: //Limelight
+                homeFragment.requestRefresh(this);
+                break;
+            case 2: //User
+                userFragment.requestRefresh(this);
+                break;
+        }
 
     }
 

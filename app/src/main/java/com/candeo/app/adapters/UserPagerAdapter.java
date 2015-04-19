@@ -131,9 +131,13 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
             {
                 holder.mediaIcon.setText(Configuration.FA_AUDIO);
             }
-            else if(Configuration.IMAGE == mediaType)
+            if(Configuration.IMAGE == mediaType)
             {
                 holder.mediaIcon.setText(Configuration.FA_IMAGE);
+            }
+            if(Configuration.TEXT == mediaType)
+            {
+                holder.mediaIcon.setText(Configuration.FA_TEXT);
             }
             holder.view.setTag(list.get(position).get("id"));
             holder.view.setOnClickListener(new View.OnClickListener() {

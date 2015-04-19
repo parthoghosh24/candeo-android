@@ -23,6 +23,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
@@ -317,31 +318,46 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
         postIt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                postIt.setEnabled(false);
                 if(Configuration.SHOWCASE == contentType)
                 {
-                  if(!hasMedia || TextUtils.isEmpty(showcaseTitle.getText()))
+                  if(TextUtils.isEmpty(showcaseTitle.getText()))
                   {
-                      Toast.makeText(getApplicationContext(),"Media and Title mandatory for showcase",Toast.LENGTH_LONG).show();
+                      Toast.makeText(getApplicationContext(),"Title mandatory for showcase",Toast.LENGTH_LONG).show();
                   }
                   else
                   {
-                      if(Configuration.DEBUG)Log.e(TAG,"I AM GETTING CALLED.......");
-                      Map<String, String> payload = new HashMap<>();
-                      payload.put("type",Integer.toString(Configuration.SHOWCASE));
-                      payload.put("media_id",mediaId);
-                      payload.put("user_id",Preferences.getUserRowId(getApplicationContext()));
-                      payload.put("title",showcaseTitle.getText().toString());
-                      CandeoUtil.showProgress(PostActivity.this,"Creating...",Configuration.FA_MAGIC);
-                      PostContentRequest postContentRequest= new PostContentRequest(payload);
-                      postContentRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-                      CandeoApplication.getInstance().getAppRequestQueue().add(postContentRequest);
+                      if(!hasMedia && TextUtils.isEmpty(description.getText()))
+                      {
+                          Toast.makeText(getApplicationContext(),"Please provide text for text content!!!",Toast.LENGTH_LONG).show();
+
+                      }
+                      else
+                      {
+                          postIt.setEnabled(false);
+                          if(Configuration.DEBUG)Log.e(TAG,"I AM GETTING CALLED.......");
+                          Map<String, String> payload = new HashMap<>();
+                          payload.put("type",Integer.toString(Configuration.SHOWCASE));
+                          if(hasMedia)
+                          {
+                              payload.put("media_id",mediaId);
+                          }
+                          payload.put("user_id",Preferences.getUserRowId(getApplicationContext()));
+                          payload.put("title",showcaseTitle.getText().toString());
+                          payload.put("description",description.getText().toString());
+                          CandeoUtil.showProgress(PostActivity.this,"Creating...",Configuration.FA_MAGIC);
+                          PostContentRequest postContentRequest= new PostContentRequest(payload);
+                          postContentRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                          CandeoApplication.getInstance().getAppRequestQueue().add(postContentRequest);
+                      }
+
+
                   }
                 }
                 else
                 {
                     if(hasMedia || !TextUtils.isEmpty(description.getText()))
                     {
+                        postIt.setEnabled(false);
                         Map<String, String> payload = new HashMap<>();
                         payload.put("type",Integer.toString(Configuration.INSPIRATION));
                         if(hasMedia)
@@ -378,7 +394,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
             mediaChooser.setVisibility(View.VISIBLE);
             mediaChooser.setAdapter(new ShowcaseMediaChooserAdapter(PostActivity.this));
             mediaChooserText.setVisibility(View.VISIBLE);
-            description.setVisibility(View.GONE);
+            description.setVisibility(View.VISIBLE);
             mediaButtonsForInspire.setVisibility(View.GONE);
             setTitle("Showcase your talent");
 
@@ -394,6 +410,48 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
             mediaChooserText.setVisibility(View.GONE);
             setTitle("Inspire the world");
         }
+
+        mediaChooser.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position)
+                {
+                    case 0 : // Audio
+                    case 1 : // Image
+                        description.setHint("Provide a description (200 chars - Optional)");
+                        setDescriptionMaxLength(200);
+                        break;
+                    case 2 : // Text
+                        hasMedia=false;
+                        mediaId=null;
+                        imagePreview.setVisibility(View.GONE);
+                        audioPreview.setVisibility(View.GONE);
+                        description.setHint("Write something beautiful");
+                        description.setFilters(new InputFilter[]{});
+                        break;
+                }
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+    }
+
+    private void setDescriptionMaxLength(int length)
+    {
+        InputFilter[] FilterArray = new InputFilter[1];
+        FilterArray[0] = new InputFilter.LengthFilter(length);
+        description.setFilters(FilterArray);
 
     }
 
@@ -887,7 +945,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
@@ -903,10 +961,9 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
             content.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
             switch (position)
             {
-                case 0:
-
+                case 0: //Audio
                     icon.setText(Configuration.FA_AUDIO);
-                    content.setText("Record or upload awesome your created or owned song, instrumental, poem, sound or even joke...");
+                    content.setText("Record or upload your created music, song, instrumental, poem, sound or even joke...");
                     view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -948,9 +1005,9 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                     });
                     break;
 
-                case 1:
+                case 1: //Image
                     icon.setText(Configuration.FA_IMAGE);
-                    content.setText("Click or upload your photographic, artistic and painting talents owned or created by you.");
+                    content.setText("Click or upload your photographic, artistic and painting talent owned or created by you.");
                     view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -993,9 +1050,18 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                     });
                     break;
 
+                case 2://Text
+                    icon.setText(Configuration.FA_TEXT);
+                    content.setText("Are you good with words? Showcase your great short story, poem or writing genius here.");
+                    break;
+
             }
             return view;
         }
+
+
+
+
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {

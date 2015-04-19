@@ -142,7 +142,26 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                 holder.candeoTopContent1AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/applause.ttf"));
                 holder.candeoTopContent1AppreciateIcon.setText(Configuration.FA_APPRECIATE);
                 holder.candeoTopContent1MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(), "fonts/fa.ttf"));
-                holder.candeoTopContent1MediaIcon.setText(Configuration.FA_AUDIO);
+                if(Configuration.TEXT == Integer.parseInt(candeoContent1.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent1MediaIcon.setText(Configuration.FA_TEXT);
+                }
+                if(Configuration.AUDIO == Integer.parseInt(candeoContent1.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent1MediaIcon.setText(Configuration.FA_AUDIO);
+                }
+                else if(Configuration.IMAGE == Integer.parseInt(candeoContent1.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent1MediaIcon.setText(Configuration.FA_AUDIO);
+                }
+                else if(Configuration.VIDEO == Integer.parseInt(candeoContent1.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent1MediaIcon.setText(Configuration.FA_VIDEO);
+                }
+                else if(Configuration.BOOK == Integer.parseInt(candeoContent1.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent1MediaIcon.setText(Configuration.FA_BOOK);
+                }
                 holder.candeoTopContent1Title.setText(candeoContent1.getString("showcase_title"));
                 holder.candeoTopContent1AppreciateCount.setText(candeoContent1.getString("showcase_total_appreciations"));
                 holder.candeoTopContent1.setTag(candeoContent1.getString("showcase_id"));
@@ -177,7 +196,26 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                 holder.candeoTopContent2AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/applause.ttf"));
                 holder.candeoTopContent2AppreciateIcon.setText(Configuration.FA_APPRECIATE);
                 holder.candeoTopContent2MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/fa.ttf"));
-                holder.candeoTopContent2MediaIcon.setText(Configuration.FA_AUDIO);
+                if(Configuration.TEXT == Integer.parseInt(candeoContent2.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent2MediaIcon.setText(Configuration.FA_TEXT);
+                }
+                if(Configuration.AUDIO == Integer.parseInt(candeoContent2.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent2MediaIcon.setText(Configuration.FA_AUDIO);
+                }
+                else if(Configuration.IMAGE == Integer.parseInt(candeoContent2.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent2MediaIcon.setText(Configuration.FA_AUDIO);
+                }
+                else if(Configuration.VIDEO == Integer.parseInt(candeoContent2.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent2MediaIcon.setText(Configuration.FA_VIDEO);
+                }
+                else if(Configuration.BOOK == Integer.parseInt(candeoContent2.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent2MediaIcon.setText(Configuration.FA_BOOK);
+                }
                 holder.candeoTopContent2Title.setText(candeoContent2.getString("showcase_title"));
                 holder.candeoTopContent2AppreciateCount.setText(candeoContent2.getString("showcase_total_appreciations"));
                 holder.candeoTopContent2.setTag(candeoContent2.getString("showcase_id"));
@@ -210,18 +248,36 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                 holder.candeoTopContent3AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/applause.ttf"));
                 holder.candeoTopContent3AppreciateIcon.setText(Configuration.FA_APPRECIATE);
                 holder.candeoTopContent3MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/fa.ttf"));
-                holder.candeoTopContent3MediaIcon.setText(Configuration.FA_AUDIO);
+                if(Configuration.TEXT == Integer.parseInt(candeoContent3.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent3MediaIcon.setText(Configuration.FA_TEXT);
+                }
+                if(Configuration.AUDIO == Integer.parseInt(candeoContent3.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent3MediaIcon.setText(Configuration.FA_AUDIO);
+                }
+                else if(Configuration.IMAGE == Integer.parseInt(candeoContent3.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent3MediaIcon.setText(Configuration.FA_AUDIO);
+                }
+                else if(Configuration.VIDEO == Integer.parseInt(candeoContent3.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent3MediaIcon.setText(Configuration.FA_VIDEO);
+                }
+                else if(Configuration.BOOK == Integer.parseInt(candeoContent3.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent3MediaIcon.setText(Configuration.FA_BOOK);
+                }
                 holder.candeoTopContent3AppreciateCount.setText(candeoContent3.getString("showcase_total_appreciations"));
                 holder.candeoTopContent3Title.setText(candeoContent3.getString("showcase_title"));
                 holder.candeoTopContent3.setTag(candeoContent3.getString("showcase_id"));
                 holder.candeoTopContent3.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(holder.candeoTopContent3.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopContent3.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent3.getTag().toString()) )
-                        {
-                            Intent contentIntent= new Intent(mContext, ContentActivity.class);
-                            contentIntent.putExtra("id",holder.candeoTopContent3.getTag().toString());
-                            contentIntent.putExtra("type",Configuration.SHOWCASE);
+                        if (holder.candeoTopContent3.getTag() != null && !TextUtils.isEmpty(holder.candeoTopContent3.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent3.getTag().toString())) {
+                            Intent contentIntent = new Intent(mContext, ContentActivity.class);
+                            contentIntent.putExtra("id", holder.candeoTopContent3.getTag().toString());
+                            contentIntent.putExtra("type", Configuration.SHOWCASE);
                             mContext.startActivity(contentIntent);
                         }
 
@@ -241,21 +297,39 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                     holder.candeoTopContentImage4.setImageUrl(Configuration.BASE_URL+candeoContent4.getString("bg_url"),imageLoader);
                 }
 
-                holder.candeoTopContent4AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/applause.ttf"));
+                holder.candeoTopContent4AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(), "fonts/applause.ttf"));
                 holder.candeoTopContent4AppreciateIcon.setText(Configuration.FA_APPRECIATE);
-                holder.candeoTopContent4MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/fa.ttf"));
-                holder.candeoTopContent4MediaIcon.setText(Configuration.FA_AUDIO);
+                holder.candeoTopContent4MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(), "fonts/fa.ttf"));
+                if(Configuration.TEXT == Integer.parseInt(candeoContent4.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent4MediaIcon.setText(Configuration.FA_TEXT);
+                }
+                if(Configuration.AUDIO == Integer.parseInt(candeoContent4.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent4MediaIcon.setText(Configuration.FA_AUDIO);
+                }
+                else if(Configuration.IMAGE == Integer.parseInt(candeoContent4.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent4MediaIcon.setText(Configuration.FA_AUDIO);
+                }
+                else if(Configuration.VIDEO == Integer.parseInt(candeoContent4.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent4MediaIcon.setText(Configuration.FA_VIDEO);
+                }
+                else if(Configuration.BOOK == Integer.parseInt(candeoContent4.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent4MediaIcon.setText(Configuration.FA_BOOK);
+                }
                 holder.candeoTopContent4AppreciateCount.setText(candeoContent4.getString("showcase_total_appreciations"));
                 holder.candeoTopContent4Title.setText(candeoContent4.getString("showcase_title"));
                 holder.candeoTopContent4.setTag(candeoContent4.getString("showcase_id"));
                 holder.candeoTopContent4.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(holder.candeoTopContent4.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopContent4.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent4.getTag().toString()) )
-                        {
-                            Intent contentIntent= new Intent(mContext, ContentActivity.class);
-                            contentIntent.putExtra("id",holder.candeoTopContent4.getTag().toString());
-                            contentIntent.putExtra("type",Configuration.SHOWCASE);
+                        if (holder.candeoTopContent4.getTag() != null && !TextUtils.isEmpty(holder.candeoTopContent4.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent4.getTag().toString())) {
+                            Intent contentIntent = new Intent(mContext, ContentActivity.class);
+                            contentIntent.putExtra("id", holder.candeoTopContent4.getTag().toString());
+                            contentIntent.putExtra("type", Configuration.SHOWCASE);
                             mContext.startActivity(contentIntent);
                         }
 
@@ -274,10 +348,29 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                     holder.candeoTopContentImage5.setImageUrl(Configuration.BASE_URL+candeoContent5.getString("bg_url"),imageLoader);
                 }
 
-                holder.candeoTopContent5AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/applause.ttf"));
+                holder.candeoTopContent5AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(), "fonts/applause.ttf"));
                 holder.candeoTopContent5AppreciateIcon.setText(Configuration.FA_APPRECIATE);
-                holder.candeoTopContent5MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/fa.ttf"));
-                holder.candeoTopContent5MediaIcon.setText(Configuration.FA_AUDIO);
+                holder.candeoTopContent5MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(), "fonts/fa.ttf"));
+                if(Configuration.TEXT == Integer.parseInt(candeoContent4.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent5MediaIcon.setText(Configuration.FA_TEXT);
+                }
+                if(Configuration.AUDIO == Integer.parseInt(candeoContent5.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent5MediaIcon.setText(Configuration.FA_AUDIO);
+                }
+                else if(Configuration.IMAGE == Integer.parseInt(candeoContent5.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent5MediaIcon.setText(Configuration.FA_AUDIO);
+                }
+                else if(Configuration.VIDEO == Integer.parseInt(candeoContent5.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent5MediaIcon.setText(Configuration.FA_VIDEO);
+                }
+                else if(Configuration.BOOK == Integer.parseInt(candeoContent5.getString("showcase_media_type")))
+                {
+                    holder.candeoTopContent5MediaIcon.setText(Configuration.FA_BOOK);
+                }
                 holder.candeoTopContent5AppreciateCount.setText(candeoContent5.getString("showcase_total_appreciations"));
                 holder.candeoTopContent5Title.setText(candeoContent5.getString("showcase_title"));
                 holder.candeoTopContent5.setTag(candeoContent5.getString("showcase_id"));
@@ -380,6 +473,10 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
             holder.appreciationValue.setText(morePerformance.get("showcase_total_appreciations"));
             holder.rankValue.setText(morePerformance.get("showcase_rank"));
             holder.date.setText(morePerformance.get("showcase_user_name"));
+            if(Configuration.TEXT == Integer.parseInt(morePerformance.get("showcase_media_type")))
+            {
+                holder.mediaIcon.setText(Configuration.FA_TEXT);
+            }
             if(Configuration.AUDIO == Integer.parseInt(morePerformance.get("showcase_media_type")))
             {
                 holder.mediaIcon.setText(Configuration.FA_AUDIO);

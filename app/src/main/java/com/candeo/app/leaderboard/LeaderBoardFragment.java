@@ -1,5 +1,6 @@
 package com.candeo.app.leaderboard;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -108,6 +109,22 @@ public class LeaderBoardFragment extends Fragment {
             }
         });
 
+
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        requestRefresh(activity);
+    }
+
+
+    public void requestRefresh(Activity activity)
+    {
+
+        GetPerformanceRequest getPerformanceRequest = new GetPerformanceRequest();
+        getPerformanceRequest.setShouldCache(false);
+        CandeoApplication.getInstance().getAppRequestQueue().add(getPerformanceRequest);
 
     }
 

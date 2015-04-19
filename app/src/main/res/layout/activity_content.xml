@@ -52,7 +52,8 @@
                         android:id="@+id/candeo_content_media_control"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:descendantFocusability="blocksDescendants">
+                        android:descendantFocusability="blocksDescendants"
+                        android:visibility="gone">
 
                         <TextView
                             android:id="@+id/candeo_media_play"
@@ -65,6 +66,28 @@
                             android:background="@android:color/transparent"/>
 
                      </RelativeLayout>
+                    <RelativeLayout
+                        android:id="@+id/candeo_content_writing_holder"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:minHeight="300dp"
+                        android:padding="5dp"
+                        android:background="@color/candeo_translucent_black"
+                        android:descendantFocusability="blocksDescendants">
+
+                        <com.candeo.app.ui.CustomTextView
+                            android:id="@+id/candeo_content_writing"
+                            android:layout_width="match_parent"
+                            android:layout_height="300dp"
+                            android:layout_centerInParent="true"
+                            android:textSize="22sp"
+                            android:maxLines="50"
+                            candeo:fontName="caviar_bold.ttf"
+                            android:scrollbars="vertical"
+                            android:textColor="@android:color/white"
+                            android:background="@android:color/transparent"/>
+
+                    </RelativeLayout>
 
 
 
@@ -135,6 +158,15 @@
                             android:text="Title"
                             candeo:fontName="caviar.ttf"
                             android:textStyle="bold"
+                            android:textSize="15sp"/>
+
+                        <com.candeo.app.ui.CustomTextView
+                            android:id="@+id/candeo_content_desc_text"
+                            android:layout_width="wrap_content"
+                            android:maxWidth="250dp"
+                            android:layout_height="match_parent"
+                            android:text="Desc"
+                            candeo:fontName="caviar_bold.ttf"
                             android:textSize="15sp"/>
 
                     </LinearLayout>

@@ -135,6 +135,11 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        requestRefresh(activity);
+    }
+
+    public void requestRefresh(Activity activity)
+    {
         if(Preferences.isUserLoggedIn(activity))
         {
             GetUserRequest userRequest = new GetUserRequest(Preferences.getUserRowId(activity));
@@ -143,7 +148,6 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
 
         }
     }
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

@@ -86,6 +86,7 @@
                         android:layout_below="@id/candeo_post_top_buttons"
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
+                        android:background="@color/candeo_translucent_black_light"
                         />
                     <TextView
                         android:id="@+id/candeo_showcase_media_chooser_text"
@@ -160,12 +161,12 @@
                         android:layout_marginTop="20dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="top|left"
                         android:singleLine="false"
                         android:lines="10"
-                        android:maxLength="500"
+                        android:gravity="top|left"
+                        android:maxLength="200"
                         android:background="@android:color/transparent"
-                        android:hint="Inspire the world in 500 chars"/>
+                        android:hint="Provide a description (200 chars - Optional)"/>
 
                     <TextView
                         android:id="@+id/candeo_copyright_text"
@@ -210,4 +211,4 @@
 
 
 
-<!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/src/main/res/layout/activity_post.xml -->
+<!-- From: file:/home/dholu/projects/candeo-android/app/src/main/res/layout/activity_post.xml -->

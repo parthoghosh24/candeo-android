@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +35,7 @@ import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
 import com.candeo.app.home.HomeActivity;
+import com.candeo.app.ui.CustomTextView;
 import com.candeo.app.ui.ResponseFragment;
 import com.candeo.app.ui.ScreenReciever;
 import com.candeo.app.user.LoginActivity;
@@ -69,6 +71,7 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
     private CircleImageView userAvatar;
     private TextView userName;
     private TextView title;
+    private TextView contentDescription;
     private TextView appreciateIcon;
     private TextView appreciateCount;
     private TextView skipIcon;
@@ -79,6 +82,8 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
     private TextView createdAt;
     private View loadingContent;
     private RelativeLayout candeoMediaControl;
+    private RelativeLayout candeoWriterHolder;
+    private CustomTextView candeoWriting;
     private String id;
     private BroadcastReceiver mScreenReceiver;
 
@@ -94,10 +99,12 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
         toolbar = (Toolbar)findViewById(R.id.candeo_content_toolbar);
         loadingContent = findViewById(R.id.candeo_loading_content);
         candeoMediaControl = (RelativeLayout)findViewById(R.id.candeo_content_media_control);
-        ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(getAssets(),"fonts/fa.ttf"));
+        ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
         ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setText(Configuration.FA_MAGIC);
         ((TextView)loadingContent.findViewById(R.id.candeo_progress_text)).setText("Loading Content...");
         candeoContentHolder =(FrameLayout)findViewById(R.id.candeo_content_viewer_holder);
+        candeoWriterHolder=(RelativeLayout)findViewById(R.id.candeo_content_writing_holder);
+        candeoWriting=(CustomTextView)findViewById(R.id.candeo_content_writing);
         videoView =(VideoView)findViewById(R.id.candeo_video_viewer);
         play = (TextView)findViewById(R.id.candeo_media_play);
         play.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
@@ -112,6 +119,7 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
         userAvatar=(CircleImageView)findViewById(R.id.candeo_content_owner_avatar);
         userName =(TextView)findViewById(R.id.candeo_content_owner_name);
         title=(TextView)findViewById((R.id.candeo_content_title_text));
+        contentDescription=(TextView)findViewById(R.id.candeo_content_desc_text);
         appreciateIcon=(TextView)findViewById(R.id.candeo_content_appreciate_icon);
         appreciateIcon.setTypeface(CandeoUtil.loadFont(getAssets(),"fonts/applause.ttf"));
         appreciateIcon.setText(Configuration.FA_APPRECIATE);
@@ -272,24 +280,42 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
         protected void onPostExecute(JSONObject jsonObject) {
                 loadingContent.setVisibility(View.GONE);
                 int type = jsonObject.optInt("media_type");
+
                 if(Configuration.DEBUG)Log.e(TAG,"AND THE CONTENT IS: "+jsonObject.toString());
                 contentViewer.setTag(type);
-                if(type>0)
-                {
+
                     final String mediaUrl=jsonObject.optString("media_url");
                     if(Configuration.DEBUG)Log.e(TAG,"MEDIA URL IS "+mediaUrl);
                     final String bgUrl =jsonObject.optString("bg_url");
                     switch (type)
                     {
+                        case 0: //Text
+                            candeoMediaControl.setVisibility(View.GONE);
+                            candeoContentHolder.setVisibility(View.VISIBLE);
+                            candeoWriterHolder.setVisibility(View.VISIBLE);
+                            candeoWriting.setText(jsonObject.optString("description"));
+                            candeoWriting.setMovementMethod(new ScrollingMovementMethod());
+                            contentDescription.setVisibility(View.GONE);
+                            imageView.setVisibility(View.GONE);
+                            launchBook.setVisibility(View.GONE);
+                            play.setVisibility(View.GONE);
+                            new LoadImageTask(bgUrl,bgImageView).execute();
+                            break;
                         case 1: //audio
+                            candeoWriterHolder.setVisibility(View.GONE);
+                            candeoMediaControl.setVisibility(View.VISIBLE);
                             candeoContentHolder.setVisibility(View.VISIBLE);
                             imageView.setVisibility(View.GONE);
                             launchBook.setVisibility(View.GONE);
+                            contentDescription.setVisibility(View.VISIBLE);
+                            contentDescription.setText(jsonObject.optString("description"));
                             new LoadImageTask(bgUrl,bgImageView).execute();
                             playAudio(mediaUrl);
                             break;
                         case 2: //video
                             candeoContentHolder.setVisibility(View.VISIBLE);
+                            contentDescription.setVisibility(View.VISIBLE);
+                            contentDescription.setText(jsonObject.optString("description"));
                             videoView.setVisibility(View.VISIBLE);
                             play.setVisibility(View.VISIBLE);
                             play.setText("\uf04c");
@@ -301,7 +327,11 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
 
                         case 3:
                             //Image
+                            contentDescription.setVisibility(View.VISIBLE);
+                            contentDescription.setText(jsonObject.optString("description"));
                             candeoContentHolder.setVisibility(View.GONE);
+                            candeoWriterHolder.setVisibility(View.GONE);
+                            candeoMediaControl.setVisibility(View.GONE);
                             play.setVisibility(View.GONE);
                             imageView.setVisibility(View.VISIBLE);
                             launchBook.setVisibility(View.GONE);
@@ -325,7 +355,7 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
 
 
                     }
-                }
+
                 new LoadImageTask(jsonObject.optString("user_avatar_url"),userAvatar).execute();
                 userName.setText(jsonObject.optString("user_name"));
                 userAvatar.setTag(jsonObject.optString("user_id"));

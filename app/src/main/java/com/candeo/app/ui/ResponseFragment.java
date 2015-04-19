@@ -69,7 +69,8 @@ public class ResponseFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mContext=getActivity();
-        return super.onCreateView(inflater, container, savedInstanceState);
+        dialog=inflater.inflate(R.layout.response_layout, container, false);
+        return dialog;
     }
 
     @Override
@@ -82,11 +83,11 @@ public class ResponseFragment extends DialogFragment {
         showcaseId=getArguments().getString("showcaseId");
         state = getArguments().getInt("responseType");
 
-        contextThemeWrapper = new ContextThemeWrapper(getActivity(),R.style.Theme_AppCompat_Light_Dialog);
-        LayoutInflater inflater = getActivity().getLayoutInflater().cloneInContext(contextThemeWrapper);
-        AlertDialog.Builder builder = new AlertDialog.Builder(contextThemeWrapper);
+//        contextThemeWrapper = new ContextThemeWrapper(getActivity(),R.style.Theme_AppCompat_Light_Dialog);
+//        LayoutInflater inflater = getActivity().getLayoutInflater().cloneInContext(contextThemeWrapper);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(title);
-        dialog = inflater.inflate(R.layout.response_layout, null);
+//        dialog = inflater.inflate(R.layout.response_layout, null);
         picker = (NumberPicker)dialog.findViewById(R.id.candeo_response_chooser);
         picker.setMinValue(0);
         picker.setMaxValue(choices.length - 1);

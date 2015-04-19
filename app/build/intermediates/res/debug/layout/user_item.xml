@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:candeo="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="150dp"
     android:layout_height="150dp"
@@ -26,12 +27,13 @@
                     app:border_color="#ffffffff"
                     />
 
-                <TextView
+                <com.candeo.app.ui.CustomTextView
                     android:id="@+id/candeo_user_name"
                     android:text="Partho Ghosh"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    candeo:fontName="caviar.ttf"
                     android:textSize="15sp"
                     android:textColor="@color/candeo_primary_dark"
                     />
@@ -42,4 +44,4 @@
 
 
 
-</LinearLayout><!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/src/main/res/layout/user_item.xml -->
+</LinearLayout><!-- From: file:/home/dholu/projects/candeo-android/app/src/main/res/layout/user_item.xml -->

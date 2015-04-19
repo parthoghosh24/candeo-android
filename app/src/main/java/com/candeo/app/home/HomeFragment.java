@@ -127,6 +127,13 @@ public class HomeFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        requestRefresh(activity);
+
+    }
+
+
+    public void requestRefresh(Activity activity)
+    {
         String id = TextUtils.isEmpty(Preferences.getUserRowId(activity)) ? "0" : Preferences.getUserRowId(activity);
         FetchLimelightList fetchLimelightListRequest = new FetchLimelightList(id);
         fetchLimelightListRequest.setShouldCache(false);

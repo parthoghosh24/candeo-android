@@ -56,20 +56,20 @@ public class TutorialPagerAdapter extends PagerAdapter
                 break;
 
             case 1:
-                icon1.setTextSize(TypedValue.COMPLEX_UNIT_SP,60);
+                icon1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 60);
                 icon2.setVisibility(View.GONE);
-                icon1.setText(Configuration.FA_AUDIO+" "+Configuration.FA_IMAGE);
+                icon1.setText(Configuration.FA_AUDIO+" "+Configuration.FA_IMAGE+" "+Configuration.FA_TEXT);
                 content.setText("Choose your favorite medium to showcase your talent and rock out.");
                 break;
 
             case 2:
-                icon1.setTextSize(TypedValue.COMPLEX_UNIT_SP,60);
-                icon1.setTypeface(CandeoUtil.loadFont(activity.getAssets(),"fonts/applause.ttf"));
+                icon1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 60);
+                icon1.setTypeface(CandeoUtil.loadFont(activity.getAssets(), "fonts/applause.ttf"));
                 icon1.setText(Configuration.FA_APPRECIATE);
                 icon2.setVisibility(View.VISIBLE);
-                icon2.setTextSize(TypedValue.COMPLEX_UNIT_SP,60);
-                icon2.setTypeface(CandeoUtil.loadFont(activity.getAssets(),"fonts/response.ttf"));
-                icon2.setText(" "+Configuration.FA_INSPIRE);
+                icon2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 60);
+                icon2.setTypeface(CandeoUtil.loadFont(activity.getAssets(), "fonts/response.ttf"));
+                icon2.setText(" " + Configuration.FA_INSPIRE);
                 content.setText("Earn appreciations and get ranked every week. Inspire and make the world a better place.");
                 break;
 

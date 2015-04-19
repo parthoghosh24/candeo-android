@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/tools"
+    xmlns:candeo="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="300dp">
@@ -10,10 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        app:cardCornerRadius="4dp"
-        app:cardUseCompatPadding="true"
+        candeo:cardCornerRadius="4dp"
+        candeo:cardUseCompatPadding="true"
         android:layout_margin="3dp"
-        app:cardElevation="5dp">
+        candeo:cardElevation="5dp">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -121,14 +122,15 @@
                             android:layout_width="60dp"
                             android:layout_height="60dp"
                             android:focusableInTouchMode="true"
-                            app:border_width="2dp"
-                            app:border_color="#ffffffff"
+                            candeo:border_width="2dp"
+                            candeo:border_color="#ffffffff"
                             android:visibility="gone"
                             />
 
-                        <TextView
+                        <com.candeo.app.ui.CustomTextView
                             android:id="@+id/candeo_showcase_title"
                             android:text="My Awesome Creation My Awesome Creation My Awesome Creation "
+                            candeo:fontName="caviar.ttf"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
@@ -158,18 +160,20 @@
                         android:padding="5dp"
                         android:gravity="left">
 
-                        <TextView
+                        <com.candeo.app.ui.CustomTextView
                             android:id="@+id/candeo_content_rank_icon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="RANK #"
+                            candeo:fontName="caviar.ttf"
                             android:textSize="16sp"/>
 
-                        <TextView
+                        <com.candeo.app.ui.CustomTextView
                             android:id="@+id/candeo_content_rank_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="1"
+                            candeo:fontName="caviar.ttf"
                             android:textSize="16sp"/>
 
 
@@ -182,11 +186,12 @@
                         android:padding="5dp"
                         android:gravity="right">
 
-                        <TextView
+                        <com.candeo.app.ui.CustomTextView
                             android:id="@+id/candeo_showcase_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="24-August-2015"
+                            candeo:fontName="caviar.ttf"
                             android:textSize="16sp"/>
 
 
