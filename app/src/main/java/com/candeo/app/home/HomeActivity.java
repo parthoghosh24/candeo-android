@@ -69,6 +69,9 @@ public class HomeActivity extends ActionBarActivity {
             homeFragment = new HomeFragment();
             leaderBoardFragment = new LeaderBoardFragment();
             userFragment = new UserFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("id",Preferences.getUserRowId(this));
+            userFragment.setArguments(bundle);
             tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), homeFragment, leaderBoardFragment, userFragment);
             homePager.setAdapter(tabPagerAdapter);
             homePager.setOffscreenPageLimit(2);

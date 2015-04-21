@@ -66,14 +66,15 @@ public class HomeFragment extends Fragment {
             homeView= inflater.inflate(R.layout.fragment_home, container, false);
             loadingContent = homeView.findViewById(R.id.candeo_data_loading);
             noContent = homeView.findViewById(R.id.candeo_no_content);
+            if(Configuration.DEBUG)Log.e(TAG,"NO CONTENT "+noContent);
             ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/applause.ttf"));
             ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setText(Configuration.FA_APPRECIATE);
             ((TextView)loadingContent.findViewById(R.id.candeo_progress_text)).setText("Fetching Showcases...");
             ((TextView)noContent.findViewById(R.id.candeo_no_content_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/applause.ttf"));
             ((TextView)noContent.findViewById(R.id.candeo_no_content_icon)).setText(Configuration.FA_APPRECIATE);
             ((TextView)noContent.findViewById(R.id.candeo_no_content_text)).setText("No More Showcases to fetch right now");
-            toggleLoading(true);
-            toggleNoContent(false);
+            CandeoUtil.toggleView(loadingContent,true);
+            CandeoUtil.toggleView(noContent,false);
             parentHomePager=(ViewPager)getActivity().findViewById(R.id.home_pager);
             showcasePager = (NonSwipeablePager)homeView.findViewById(R.id.candeo_showcase_pager);
             showcasePager.setPageTransformer(true, new ShowcaseTransformer());
@@ -120,14 +121,13 @@ public class HomeFragment extends Fragment {
 
                 }
             });
-
+        requestRefresh(getActivity());
         return homeView;
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        requestRefresh(activity);
 
     }
 
@@ -170,22 +170,23 @@ public class HomeFragment extends Fragment {
             HashMap<String, String> limelightMap = new HashMap<>();
             limelightMap.put("id","-1"); //End marker
             showcases.add(limelightMap);
+            CandeoUtil.toggleView(noContent,true);
             if(showcases!=null && showcases.size()>0)
             {
                 if(Configuration.DEBUG)Log.e(TAG,"fm "+getActivity());
                pagerAdapter = new LimelightAdapter(showcasePager,getActivity().getSupportFragmentManager(),showcases);
                 showcasePager.setAdapter(pagerAdapter);
 //               pagerAdapter.notifyDataSetChanged();
-                toggleLoading(false);
-                toggleNoContent(false);
+                CandeoUtil.toggleView(loadingContent,false);
+                CandeoUtil.toggleView(noContent,false);
             }
         }
         catch (NullPointerException|JSONException jse)
         {
             jse.printStackTrace();
             if(Configuration.DEBUG)Log.e(TAG,"Error is "+jse.getLocalizedMessage());
-            toggleLoading(false);
-            toggleNoContent(true);
+            CandeoUtil.toggleView(loadingContent,false);
+            CandeoUtil.toggleView(noContent,true);
         }
 
 
@@ -264,17 +265,6 @@ public class HomeFragment extends Fragment {
         }
     }
 
-
-    private void toggleLoading(boolean show)
-    {
-        loadingContent.setVisibility(show?View.VISIBLE:View.GONE);
-    }
-
-    private void toggleNoContent(boolean show)
-    {
-        noContent.setVisibility(show?View.VISIBLE:View.GONE);
-    }
-
     private class FetchLimelightList extends JsonObjectRequest {
         private String id;
         public FetchLimelightList(String id) {
@@ -299,6 +289,12 @@ public class HomeFragment extends Fragment {
                             if (response != null) {
                                 if(Configuration.DEBUG)Log.e(TAG, "Actual error while fetching limelight is " + new String(response.data));
                             }
+                            if(noContent!=null && loadingContent!=null)
+                            {
+                                CandeoUtil.toggleView(noContent,true);
+                                CandeoUtil.toggleView(loadingContent,false);
+                            }
+
 
                         }
                     }

@@ -24,6 +24,7 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -76,6 +77,8 @@ public class ProfileUpdateFragment extends DialogFragment implements UploadMedia
     private static final int REQUEST_IMAGE_CAMERA=100;
     private static final int PICK_IMAGE_FILE=200;
     private Context mContext;
+    private Button update,cancel;
+
 
 
     @Override
@@ -83,22 +86,17 @@ public class ProfileUpdateFragment extends DialogFragment implements UploadMedia
                              Bundle savedInstanceState) {
         uploadMediaListener=this;
         mContext=getActivity();
-        // Inflate the layout for this fragment
-        return super.onCreateView(inflater,container,savedInstanceState);
+        dialog= inflater.inflate(R.layout.fragment_profile_update,container,false);
+        initWidgets();
+        return dialog;
 
     }
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        contextThemeWrapper = new ContextThemeWrapper(getActivity(),R.style.Theme_AppCompat_Light_Dialog);
-        LayoutInflater inflater = getActivity().getLayoutInflater().cloneInContext(contextThemeWrapper);
-        AlertDialog.Builder builder = new AlertDialog.Builder(contextThemeWrapper);
-        builder.setTitle("Update Profile");
+    private void initWidgets()
+    {
         name=getArguments().getString("name");
         avatarUrl=getArguments().getString("avatarUrl");
         userBio=getArguments().getString("bio");
-        dialog = inflater.inflate(R.layout.fragment_profile_update, null);
         userAvatar=(ImageView)dialog.findViewById(R.id.candeo_user_profile_image);
         userAvatar.setImageURI(Uri.parse("android.resource://" + getActivity().getPackageName() + "/" + R.raw.default_avatar));
         userAvatar.setOnClickListener(new View.OnClickListener() {
@@ -112,10 +110,10 @@ public class ProfileUpdateFragment extends DialogFragment implements UploadMedia
         userName.setText(name);
         bio=(EditText)dialog.findViewById(R.id.candeo_user_bio);
         bio.setText(userBio);
-        builder.setView(dialog);
-        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+        update=(Button)dialog.findViewById(R.id.candeo_response_update);
+        update.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View v) {
                 HashMap<String, String> payloadMap = new HashMap<>();
                 payloadMap.put("id",Preferences.getUserRowId(getActivity()));
                 payloadMap.put("name",userName.getText().toString());
@@ -126,15 +124,13 @@ public class ProfileUpdateFragment extends DialogFragment implements UploadMedia
                 CandeoApplication.getInstance().getAppRequestQueue().add(updateUserProfileRequest);
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        cancel=(Button)dialog.findViewById(R.id.candeo_response_cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+            public void onClick(View v) {
+                dismiss();
             }
         });
-        AlertDialog responseDialog = builder.create();
-        responseDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        return responseDialog;
     }
 
     @Override
@@ -432,6 +428,7 @@ public class ProfileUpdateFragment extends DialogFragment implements UploadMedia
                                         params.put("bio",bio.getText().toString());
                                         params.put("avatarUrl",url);
                                         userProfileUpdateListener.onProfileUpdate(params);
+                                        dismiss();
                                     }
 
                                 }
@@ -439,6 +436,8 @@ public class ProfileUpdateFragment extends DialogFragment implements UploadMedia
                             catch (JSONException je)
                             {
                                 je.printStackTrace();
+                                dismiss();
+                                Toast.makeText(mContext,"Sorry! Something went wrong",Toast.LENGTH_SHORT).show();
                             }
 
                         }
@@ -447,6 +446,7 @@ public class ProfileUpdateFragment extends DialogFragment implements UploadMedia
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             Toast.makeText(mContext, "Sorry! This email has already been taken", Toast.LENGTH_LONG).show();
+                            dismiss();
                             NetworkResponse response = error.networkResponse;
                             if(response!=null)
                             {

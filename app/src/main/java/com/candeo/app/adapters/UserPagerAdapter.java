@@ -55,6 +55,7 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
 
     public UserPagerAdapter(int type, Context mContext)
     {
+        if(Configuration.DEBUG)Log.e("userpageradapter","in here");
         in = AnimationUtils.loadAnimation(mContext.getApplicationContext(), android.R.anim.fade_in);
         this.type=type;
         this.mContext=mContext;
@@ -98,6 +99,7 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
 
         if(type==FANS || type==PROMOTED)
         {
+            if(Configuration.DEBUG)Log.e("useradapter","In promoted");
             holder.view.setTag(list.get(position).get("id"));
             holder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -179,9 +181,13 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
             {
                 holder.mediaIcon.setText(Configuration.FA_AUDIO);
             }
-            else if(Configuration.IMAGE == mediaType)
+            if(Configuration.IMAGE == mediaType)
             {
                 holder.mediaIcon.setText(Configuration.FA_IMAGE);
+            }
+            if(Configuration.TEXT == mediaType)
+            {
+                holder.mediaIcon.setText(Configuration.FA_TEXT);
             }
             holder.view.setTag(list.get(position).get("id"));
             holder.view.setOnClickListener(new View.OnClickListener() {

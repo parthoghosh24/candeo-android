@@ -45,7 +45,9 @@ public class SocialFragment extends Fragment {
     private LinearLayoutManager fansLinearLayoutManager;
     private LinearLayoutManager promotedLinearLayoutManager;
     private View noFans;
+    private View loadingFans;
     private View noPromoted;
+    private View loadingPromoted;
     private static final String GET_USER_FANS_RELATIVE_API="/users/%s/fans/%s";
     private static final String GET_USER_FANS_API=Configuration.BASE_URL+"/api/v1"+GET_USER_FANS_RELATIVE_API;
     private static final String GET_USER_PROMOTED_RELATIVE_API="/users/%s/promoted/%s";
@@ -82,7 +84,17 @@ public class SocialFragment extends Fragment {
         promotedLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         promoted.setLayoutManager(promotedLinearLayoutManager);
         noFans=mRoot.findViewById(R.id.candeo_user_social_no_fans);
+        loadingFans=mRoot.findViewById(R.id.candeo_fans_loading_content);
+        ((TextView)loadingFans.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
+        ((TextView)loadingFans.findViewById(R.id.candeo_progress_icon)).setText(Configuration.FA_USERS);
+        ((TextView)loadingFans.findViewById(R.id.candeo_progress_icon)).setTextColor(getActivity().getResources().getColor(R.color.candeo_light_gray));
+        ((TextView)loadingFans.findViewById(R.id.candeo_progress_text)).setText("Loading Fans...");
         noPromoted=mRoot.findViewById(R.id.candeo_user_social_no_promoted);
+        loadingPromoted=mRoot.findViewById(R.id.candeo_promoted_loading_content);
+        ((TextView)loadingPromoted.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
+        ((TextView)loadingPromoted.findViewById(R.id.candeo_progress_icon)).setText(Configuration.FA_USERS);
+        ((TextView)loadingPromoted.findViewById(R.id.candeo_progress_icon)).setTextColor(getActivity().getResources().getColor(R.color.candeo_light_gray));
+        ((TextView)loadingPromoted.findViewById(R.id.candeo_progress_text)).setText("Loading Promoted...");
         ((TextView)noFans.findViewById(R.id.candeo_no_content_single_line_mid)).setText("fans following");
         ((TextView)noPromoted.findViewById(R.id.candeo_no_content_single_line_mid)).setText("stars promoted");
         CandeoUtil.toggleView(noFans,true);
@@ -136,7 +148,13 @@ public class SocialFragment extends Fragment {
                 }
             }
         });
+        fansAdapter=null;
+        CandeoUtil.toggleView(noFans, false);
+        CandeoUtil.toggleView(loadingFans,true);
         CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserFans(userId,"now"));
+        promotedAdapter=null;
+        CandeoUtil.toggleView(noPromoted, false);
+        CandeoUtil.toggleView(loadingPromoted,true);
         CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserPromoted(userId,"now"));
 
 
@@ -145,19 +163,21 @@ public class SocialFragment extends Fragment {
     private void loadFansMore()
     {
         if(Configuration.DEBUG)Log.e(TAG,"last fans timestamp "+lastFansTimestamp);
+        CandeoUtil.toggleView(noFans, false);
         CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserFans(userId,lastFansTimestamp));
     }
 
     private void loadPromotedMore()
     {
         if(Configuration.DEBUG)Log.e(TAG,"last promoted timestamp "+lastPromotedTimestamp);
+        CandeoUtil.toggleView(noPromoted, false);
         CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserPromoted(userId,lastPromotedTimestamp));
     }
 
     private class GetUserFans extends JsonObjectRequest
     {
         private String id, lastTimeStamp;
-        public GetUserFans(String id, String lastTimeStamp)
+        public GetUserFans(String id, final String lastTimeStamp)
         {
             super(Method.GET,
                     String.format(GET_USER_FANS_API,id,lastTimeStamp),
@@ -170,6 +190,11 @@ public class SocialFragment extends Fragment {
                                 try {
 
                                     JSONArray array = response.getJSONArray("fans");
+                                    if(lastTimeStamp.equalsIgnoreCase("now"))
+                                    {
+                                        CandeoUtil.toggleView(noFans, true);
+                                    }
+                                    CandeoUtil.toggleView(loadingFans,false);
                                     fansList.clear();
                                     if(array.length()>0)
                                     {
@@ -206,6 +231,8 @@ public class SocialFragment extends Fragment {
                                 }
                                 catch (JSONException jse)
                                 {
+                                    CandeoUtil.toggleView(noFans, true);
+                                    CandeoUtil.toggleView(loadingFans,false);
                                     jse.printStackTrace();
                                 }
 
@@ -216,6 +243,7 @@ public class SocialFragment extends Fragment {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             if(Configuration.DEBUG)Log.e(TAG, "error is " + error.getLocalizedMessage());
+                            CandeoUtil.toggleView(loadingFans,false);
                             if(fansList.size()==0)
                             {
                                 CandeoUtil.toggleView(noFans,true);
@@ -251,7 +279,7 @@ public class SocialFragment extends Fragment {
     private class GetUserPromoted extends JsonObjectRequest
     {
         private String id, lastTimeStamp;
-        public GetUserPromoted(String id, String lastTimeStamp)
+        public GetUserPromoted(String id, final String lastTimeStamp)
         {
             super(Method.GET,
                     String.format(GET_USER_PROMOTED_API,id,lastTimeStamp),
@@ -265,6 +293,11 @@ public class SocialFragment extends Fragment {
 
                                 try {
                                     JSONArray array = response.getJSONArray("promoted");
+                                    if(lastTimeStamp.equalsIgnoreCase("now"))
+                                    {
+                                        CandeoUtil.toggleView(noPromoted, true);
+                                    }
+                                    CandeoUtil.toggleView(loadingPromoted,false);
                                     promotedList.clear();
                                     if(Configuration.DEBUG)Log.e(TAG,"Promoted count "+array.length());
                                     if(array.length()>0)
@@ -288,6 +321,7 @@ public class SocialFragment extends Fragment {
                                         boolean append;
                                         if(promotedAdapter == null)
                                         {
+                                            if(Configuration.DEBUG)Log.e(TAG,"Initiation promoted adapter");
                                             promotedAdapter= new UserPagerAdapter(UserPagerAdapter.PROMOTED,getActivity());
                                             append=false;
                                         }
@@ -295,7 +329,7 @@ public class SocialFragment extends Fragment {
                                         {
                                             append=true;
                                         }
-                                        promotedAdapter.addAllToList(fansList,append);
+                                        promotedAdapter.addAllToList(promotedList,append);
                                         promotedAdapter.notifyDataSetChanged();
                                         promoted.setVisibility(View.VISIBLE);
                                         promoted.setAdapter(promotedAdapter);
@@ -304,6 +338,8 @@ public class SocialFragment extends Fragment {
                                 catch (JSONException jse)
                                 {
                                     jse.printStackTrace();
+                                    CandeoUtil.toggleView(noPromoted, true);
+                                    CandeoUtil.toggleView(loadingPromoted,false);
                                 }
                             }
                         }
@@ -312,6 +348,7 @@ public class SocialFragment extends Fragment {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             if(Configuration.DEBUG)Log.e(TAG, "error is " + error.getLocalizedMessage());
+                            CandeoUtil.toggleView(loadingPromoted,false);
                             if(promotedList.size()==0)
                             {
                                 CandeoUtil.toggleView(noPromoted,true);

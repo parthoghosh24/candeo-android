@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:candeo="http://schemas.android.com/tools"
+    xmlns:candeo="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="150dp"
     android:layout_height="150dp"
@@ -23,8 +22,8 @@
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:focusableInTouchMode="true"
-                    app:border_width="2dp"
-                    app:border_color="#ffffffff"
+                    candeo:border_width="2dp"
+                    candeo:border_color="#ffffffff"
                     />
 
                 <com.candeo.app.ui.CustomTextView

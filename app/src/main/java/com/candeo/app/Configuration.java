@@ -60,7 +60,7 @@ public class Configuration {
     public static final String FA_EYE="\uf06e";
     public static final String FA_CIRCLE="\uf111";
     public static final String FA_CIRCLE_O="\uf10c";
-    public static final String FA_PENCIL="\uf040";
+    public static final String FA_PENCIL="\uf14b";
     public static final String FA_TEXT="\uf040";
 
 

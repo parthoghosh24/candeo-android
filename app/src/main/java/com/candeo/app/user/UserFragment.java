@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -135,14 +136,13 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        requestRefresh(activity);
     }
 
     public void requestRefresh(Activity activity)
     {
         if(Preferences.isUserLoggedIn(activity))
         {
-            GetUserRequest userRequest = new GetUserRequest(Preferences.getUserRowId(activity));
+            GetUserRequest userRequest = new GetUserRequest(userId);
             userRequest.setShouldCache(false);
             CandeoApplication.getInstance().getAppRequestQueue().add(userRequest);
 
@@ -173,7 +173,12 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
                 try {
                     JSONObject user =response.getJSONObject("user");
                     userId = user.getString("id");
+                    if(Configuration.DEBUG)Log.e(TAG,"USER ID IS "+userId);
                     name=user.getString("name");
+                    if(getActivity() instanceof UserActivity)
+                    {
+                        ((UserActivity)getActivity()).getSupportActionBar().setTitle(name);
+                    }
                     bio=user.getString("about");
                     avatarUrl=user.getString("avatar_path");
                     userName.setText(name);
@@ -236,6 +241,7 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
     private void initWidgets()
     {
         loadingContent = root.findViewById(R.id.candeo_data_loading);
+        userId=getArguments().getString("id");
         ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/fa.ttf"));
         ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setText(Configuration.FA_USER);
         ((TextView)loadingContent.findViewById(R.id.candeo_progress_text)).setText("Loading User...");
@@ -272,6 +278,7 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
                 bundle.putString("avatarUrl",avatarUrl);
                 profileUpdateFragment.setArguments(bundle);
                 profileUpdateFragment.setUpdateProfileListener(userProfileUpdateListener);
+                profileUpdateFragment.setStyle(DialogFragment.STYLE_NO_TITLE,android.R.style.Theme_Holo_Light_Dialog);
                 profileUpdateFragment.show(getActivity().getSupportFragmentManager(), "Update Profile");
             }
         });
@@ -293,6 +300,7 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
         {
             notLoggedIn.setVisibility(View.VISIBLE);
         }
+        requestRefresh(getActivity());
 
     }
 

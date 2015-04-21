@@ -47,7 +47,9 @@ public class DiscoveryFragment extends Fragment {
     private LinearLayoutManager appreciationsLinearLayoutManager;
     private LinearLayoutManager inspirationsLinearLayoutManager;
     private View noAppreciations;
+    private View loadingAppreciations;
     private View noInspirations;
+    private View loadingInspirations;
     private static final String GET_USER_APPRECIATIONS_RELATIVE_API="/users/%s/appreciations/%s";
     private static final String GET_USER_APPRECIATIONS_API=Configuration.BASE_URL+"/api/v1"+GET_USER_APPRECIATIONS_RELATIVE_API;
     private static final String GET_USER_INSPIRATIONS_RELATIVE_API="/users/%s/inspirations/%s";
@@ -85,6 +87,16 @@ public class DiscoveryFragment extends Fragment {
         ((TextView)noAppreciations.findViewById(R.id.candeo_no_content_single_line_mid)).setText(Configuration.FA_APPRECIATE);
         ((TextView)noInspirations.findViewById(R.id.candeo_no_content_single_line_mid)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/response.ttf"));
         ((TextView)noInspirations.findViewById(R.id.candeo_no_content_single_line_mid)).setText(Configuration.FA_INSPIRE);
+        loadingAppreciations=mRoot.findViewById(R.id.candeo_appreciations_loading_content);
+        ((TextView)loadingAppreciations.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/applause.ttf"));
+        ((TextView)loadingAppreciations.findViewById(R.id.candeo_progress_icon)).setText(Configuration.FA_APPRECIATE);
+        ((TextView)loadingAppreciations.findViewById(R.id.candeo_progress_icon)).setTextColor(getActivity().getResources().getColor(R.color.candeo_light_gray));
+        ((TextView)loadingAppreciations.findViewById(R.id.candeo_progress_text)).setText("Loading Appreciations...");
+        loadingInspirations=mRoot.findViewById(R.id.candeo_inspirations_loading_content);
+        ((TextView)loadingInspirations.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/response.ttf"));
+        ((TextView)loadingInspirations.findViewById(R.id.candeo_progress_icon)).setText(Configuration.FA_INSPIRE);
+        ((TextView)loadingInspirations.findViewById(R.id.candeo_progress_icon)).setTextColor(getActivity().getResources().getColor(R.color.candeo_light_gray));
+        ((TextView)loadingInspirations.findViewById(R.id.candeo_progress_text)).setText("Loading Inspirations...");
         CandeoUtil.toggleView(noAppreciations, true);
         CandeoUtil.toggleView(noInspirations, true);
         appreciationList = new ArrayList<>();
@@ -125,7 +137,13 @@ public class DiscoveryFragment extends Fragment {
                 }
             }
         });
+        appreciationsAdapter=null;
+        CandeoUtil.toggleView(noAppreciations, false);
+        CandeoUtil.toggleView(loadingAppreciations,true);
         CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserAppreciations(userId,"now"));
+        inspirationsAdapter=null;
+        CandeoUtil.toggleView(noInspirations, false);
+        CandeoUtil.toggleView(loadingInspirations,true);
         CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserInspirations(userId,"now"));
 
 
@@ -134,12 +152,14 @@ public class DiscoveryFragment extends Fragment {
     private void loadAppreciationsMore()
     {
         if(Configuration.DEBUG)Log.e(TAG,"last appreciations timestamp "+lastAppreciationTimestamp);
+        CandeoUtil.toggleView(noAppreciations, false);
         CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserAppreciations(userId,lastAppreciationTimestamp));
     }
 
     private void loadInspirationsMore()
     {
         if(Configuration.DEBUG)Log.e(TAG,"last inspirations timestamp "+lastInspirationTimestamp);
+        CandeoUtil.toggleView(noInspirations, false);
         CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserInspirations(userId,lastInspirationTimestamp));
     }
 
@@ -148,7 +168,7 @@ public class DiscoveryFragment extends Fragment {
     {
         private String id;
         private String lastTimeStamp;
-        public GetUserAppreciations(String id, String lastTimeStamp)
+        public GetUserAppreciations(String id, final String lastTimeStamp)
         {
             super(Method.GET,
                     String.format(GET_USER_APPRECIATIONS_API,id,lastTimeStamp),
@@ -162,6 +182,11 @@ public class DiscoveryFragment extends Fragment {
 
                                     JSONArray array = response.getJSONArray("appreciations");
                                     appreciationList.clear();
+                                    if(lastTimeStamp.equalsIgnoreCase("now"))
+                                    {
+                                        CandeoUtil.toggleView(noAppreciations,true);
+                                    }
+                                    CandeoUtil.toggleView(loadingAppreciations,false);
                                     if(array.length()>0)
                                     {
                                         CandeoUtil.toggleView(noAppreciations,false);
@@ -215,6 +240,8 @@ public class DiscoveryFragment extends Fragment {
                                 catch (JSONException jse)
                                 {
                                     jse.printStackTrace();
+                                    CandeoUtil.toggleView(noAppreciations,true);
+                                    CandeoUtil.toggleView(loadingAppreciations,false);
                                 }
 
                             }
@@ -224,9 +251,11 @@ public class DiscoveryFragment extends Fragment {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             if(Configuration.DEBUG)Log.e(TAG, "error is " + error.getLocalizedMessage());
+                            CandeoUtil.toggleView(loadingAppreciations,false);
                             if(appreciationList.size()==0)
                             {
                                 CandeoUtil.toggleView(noAppreciations,true);
+
                             }
                         }
                     });
@@ -259,7 +288,7 @@ public class DiscoveryFragment extends Fragment {
     {
         private String id;
         private String lastTimeStamp;
-        public GetUserInspirations(String id, String lastTimeStamp)
+        public GetUserInspirations(String id, final String lastTimeStamp)
         {
             super(Method.GET,
                     String.format(GET_USER_INSPIRATIONS_API,id,lastTimeStamp),
@@ -270,12 +299,16 @@ public class DiscoveryFragment extends Fragment {
                             if(response!=null)
                             {
 
-                                CandeoUtil.toggleView(noInspirations,false);
 
                                 try {
                                     JSONArray array = response.getJSONArray("inspirations");
                                     inspirationList.clear();
                                     if(Configuration.DEBUG)Log.e(TAG,"INSPIRATIONS SIZE "+array.length());
+                                    if(lastTimeStamp.equalsIgnoreCase("now"))
+                                    {
+                                        CandeoUtil.toggleView(noInspirations,true);
+                                    }
+                                    CandeoUtil.toggleView(loadingInspirations,false);
                                     if(array.length()>0)
                                     {
                                         CandeoUtil.toggleView(noInspirations,false);
@@ -319,13 +352,15 @@ public class DiscoveryFragment extends Fragment {
                                         {
                                             append=true;
                                         }
-                                        inspirationsAdapter.addAllToList(appreciationList,append);
+                                        inspirationsAdapter.addAllToList(inspirationList,append);
                                         inspirations.setVisibility(View.VISIBLE);
                                         inspirations.setAdapter(inspirationsAdapter);
                                     }
                                 }
                                 catch (JSONException jse)
                                 {
+                                    CandeoUtil.toggleView(noInspirations,true);
+                                    CandeoUtil.toggleView(loadingInspirations,false);
                                     jse.printStackTrace();
                                 }
                             }
@@ -335,6 +370,7 @@ public class DiscoveryFragment extends Fragment {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             if(Configuration.DEBUG)Log.e(TAG, "error is " + error.getLocalizedMessage());
+                            CandeoUtil.toggleView(loadingInspirations,false);
                             if(inspirationList.size()==0)
                             {
                                 CandeoUtil.toggleView(noInspirations,true);

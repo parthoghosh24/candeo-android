@@ -108,14 +108,13 @@ public class LeaderBoardFragment extends Fragment {
                 }
             }
         });
-
+        requestRefresh(getActivity());
 
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        requestRefresh(activity);
     }
 
 

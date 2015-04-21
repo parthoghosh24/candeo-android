@@ -29,6 +29,13 @@
                 android:layout_height="100dp"
                 android:id="@+id/candeo_user_social_no_fans"/>
 
+            <include layout="@layout/loading_content"
+                android:id="@+id/candeo_fans_loading_content"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:visibility="gone"
+                />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/candeo_user_social_fans"
                 android:layout_width="match_parent"
@@ -48,6 +55,13 @@
                 android:layout_height="100dp"
                 android:id="@+id/candeo_user_social_no_promoted"/>
 
+            <include layout="@layout/loading_content"
+                android:id="@+id/candeo_promoted_loading_content"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:visibility="gone"
+                />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/candeo_user_social_promoted"
                 android:layout_width="match_parent"
@@ -61,4 +75,4 @@
 </ScrollView>
 
 
-<!-- From: file:/home/dholu/projects/candeo-android/app/src/main/res/layout/fragment_social.xml -->
+<!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/src/main/res/layout/fragment_social.xml -->

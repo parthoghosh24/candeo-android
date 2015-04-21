@@ -36,6 +36,7 @@ public class CreatedFragment extends Fragment {
 
 
     private View noUserCreatedContent;
+    private View loadingContent;
     private static final String TAG="Candeo-User Creation";
     private View mRoot;
     private LinearLayoutManager creationsLinearLayoutManager;
@@ -66,12 +67,19 @@ public class CreatedFragment extends Fragment {
         creations.setLayoutManager(creationsLinearLayoutManager);
         noUserCreatedContent = mRoot.findViewById(R.id.candeo_user_no_created_content);
         noUserCreatedContent.setBackgroundColor(getActivity().getResources().getColor(R.color.background_floating_material_light));
+        loadingContent=mRoot.findViewById(R.id.candeo_loading_content);
+        ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
+        ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setText(Configuration.FA_MAGIC);
+        ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setTextColor(getActivity().getResources().getColor(R.color.candeo_light_gray));
+        ((TextView)loadingContent.findViewById(R.id.candeo_progress_text)).setText("Loading Content...");
+        ((TextView)loadingContent.findViewById(R.id.candeo_progress_text)).setTextColor(getActivity().getResources().getColor(R.color.candeo_light_gray));
         ((TextView)noUserCreatedContent.findViewById(R.id.candeo_no_content_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
         ((TextView)noUserCreatedContent.findViewById(R.id.candeo_no_content_icon)).setText(Configuration.FA_MAGIC);
         ((TextView)noUserCreatedContent.findViewById(R.id.candeo_no_content_icon)).setTextColor(getActivity().getResources().getColor(R.color.candeo_light_gray));
         ((TextView)noUserCreatedContent.findViewById(R.id.candeo_no_content_text)).setText("No content created yet.");
         ((TextView)noUserCreatedContent.findViewById(R.id.candeo_no_content_text)).setTextColor(getActivity().getResources().getColor(R.color.candeo_light_gray));
         CandeoUtil.toggleView(noUserCreatedContent, true);
+        CandeoUtil.toggleView(loadingContent,false);
         creationList = new ArrayList<>();
         creations.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -92,6 +100,9 @@ public class CreatedFragment extends Fragment {
                 }
             }
         });
+        creationsAdapter=null;
+        CandeoUtil.toggleView(noUserCreatedContent, false);
+        CandeoUtil.toggleView(loadingContent,true);
         CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserCreations(userId,"now"));
 
     }
@@ -99,13 +110,14 @@ public class CreatedFragment extends Fragment {
     private void loadMore()
     {
         if(Configuration.DEBUG)Log.e(TAG,"last timestamp "+lastTimestamp);
+        CandeoUtil.toggleView(noUserCreatedContent, false);
         CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserCreations(userId,lastTimestamp));
     }
 
     private class GetUserCreations extends JsonObjectRequest
     {
         private String id, lastTimeStamp;
-        public GetUserCreations(String id, String lastTimeStamp)
+        public GetUserCreations(String id, final String lastTimeStamp)
         {
             super(Method.GET,
                     String.format(GET_USER_CREATIONS_API,id,lastTimeStamp),
@@ -119,9 +131,15 @@ public class CreatedFragment extends Fragment {
 
                                     JSONArray array = response.getJSONArray("showcases");
                                     creationList.clear();
+                                    if(lastTimeStamp.equalsIgnoreCase("now"))
+                                    {
+                                        CandeoUtil.toggleView(noUserCreatedContent,true);
+                                    }
+                                    CandeoUtil.toggleView(loadingContent,false);
                                     if(array.length()>0)
                                     {
                                         CandeoUtil.toggleView(noUserCreatedContent,false);
+                                        CandeoUtil.toggleView(loadingContent,false);
                                         for(int index=0; index<array.length();++index)
                                         {
                                             JSONObject object= array.getJSONObject(index);
@@ -172,6 +190,8 @@ public class CreatedFragment extends Fragment {
                                 {
                                     if(Configuration.DEBUG)Log.e(TAG,"Something wrong happened");
                                     jse.printStackTrace();
+                                    CandeoUtil.toggleView(noUserCreatedContent,false);
+                                    CandeoUtil.toggleView(loadingContent,false);
                                 }
 
                             }
@@ -181,6 +201,7 @@ public class CreatedFragment extends Fragment {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             if(Configuration.DEBUG)Log.e(TAG, "error is " + error.getLocalizedMessage());
+                            CandeoUtil.toggleView(loadingContent,false);
                             if(creationList.size()==0)
                             {
                                 CandeoUtil.toggleView(noUserCreatedContent,true);

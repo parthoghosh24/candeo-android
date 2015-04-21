@@ -9,6 +9,11 @@
     <include layout="@layout/no_content"
         android:id="@+id/candeo_user_no_created_content"/>
 
+    <include layout="@layout/loading_content"
+        android:id="@+id/candeo_loading_content"
+        android:visibility="gone"
+        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

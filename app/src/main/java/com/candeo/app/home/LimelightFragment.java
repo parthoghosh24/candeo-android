@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -194,15 +195,15 @@ public class LimelightFragment extends Fragment{
 
                     ResponseFragment response = new ResponseFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("introText", "I find this");
+                    bundle.putString("introText", "This was");
                     bundle.putStringArray("choices", Configuration.APPRECIATE_LIST);
-                    bundle.putString("title", "Appreciate Showcase");
                     bundle.putString("positiveText", "Appreciate");
                     bundle.putString("showcaseId",showcaseHolder.getTag().toString());
                     bundle.putInt("position",position);
                     bundle.putInt("responseType",Configuration.APPRECIATE);
                     response.setArguments(bundle);
                     response.setResponseListener(listener);
+                    response.setStyle(DialogFragment.STYLE_NO_TITLE,android.R.style.Theme_Holo_Light_Dialog);
                     response.show(getActivity().getSupportFragmentManager(), "Appreciate");
                 }
         }
@@ -230,13 +231,13 @@ public class LimelightFragment extends Fragment{
                 Bundle bundle = new Bundle();
                 bundle.putString("introText", "");
                 bundle.putStringArray("choices", Configuration.SKIP_LIST);
-                bundle.putString("title", "Skip Showcase");
                 bundle.putString("positiveText", "Skip");
                 bundle.putString("showcaseId",showcaseHolder.getTag().toString());
                 bundle.putInt("position", position);
                 bundle.putInt("responseType",Configuration.SKIP);
                 response.setArguments(bundle);
                 response.setResponseListener(listener);
+                response.setStyle(DialogFragment.STYLE_NO_TITLE,android.R.style.Theme_Holo_Light_Dialog);
                 response.show(getActivity().getSupportFragmentManager(), "Skip");
             }
         }

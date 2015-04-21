@@ -1,10 +1,12 @@
 package com.candeo.app.ui;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -14,6 +16,8 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
@@ -34,6 +38,7 @@ import com.candeo.app.util.Preferences;
 
 import org.json.JSONObject;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,17 +69,19 @@ public class ResponseFragment extends DialogFragment {
     private View dialog;
     private String showcaseId;
     private Context mContext;
+    private Button ok,cancel;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mContext=getActivity();
-        dialog=inflater.inflate(R.layout.response_layout, container, false);
+        dialog=inflater.inflate(R.layout.response_layout,container,false);
+        initWidgets();
         return dialog;
     }
 
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    private void initWidgets()
+    {
         title = getArguments().getString("title");
         introText=getArguments().getString("introText");
         choices=getArguments().getStringArray("choices");
@@ -82,13 +89,8 @@ public class ResponseFragment extends DialogFragment {
         position = getArguments().getInt("position");
         showcaseId=getArguments().getString("showcaseId");
         state = getArguments().getInt("responseType");
-
-//        contextThemeWrapper = new ContextThemeWrapper(getActivity(),R.style.Theme_AppCompat_Light_Dialog);
-//        LayoutInflater inflater = getActivity().getLayoutInflater().cloneInContext(contextThemeWrapper);
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(title);
-//        dialog = inflater.inflate(R.layout.response_layout, null);
         picker = (NumberPicker)dialog.findViewById(R.id.candeo_response_chooser);
+        setNumberPickerTextColor(picker,getResources().getColor(R.color.candeo_primary));
         picker.setMinValue(0);
         picker.setMaxValue(choices.length - 1);
         picker.setDisplayedValues(choices);
@@ -108,17 +110,55 @@ public class ResponseFragment extends DialogFragment {
             (dialog.findViewById(R.id.candeo_response_title)).setVisibility(View.VISIBLE);
             ((TextView)dialog.findViewById(R.id.candeo_response_title)).setText(introText);
         }
-        builder.setView(dialog);
-        builder.setPositiveButton(positiveText, new ResponseDialogListener(this.responseListener,this.inspirationListener,(TextView) dialog.findViewById(R.id.candeo_response_body)));
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        ok=(Button)dialog.findViewById(R.id.candeo_response_ok);
+        ok.setOnClickListener( new ResponseDialogListener(this.responseListener,this.inspirationListener,(TextView) dialog.findViewById(R.id.candeo_response_body)));
+        cancel=(Button)dialog.findViewById(R.id.candeo_response_cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+            public void onClick(View v) {
+                dismiss();
             }
         });
-        AlertDialog responseDialog = builder.create();
-        responseDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        return responseDialog;
+        if(state == Configuration.INSPIRE)
+        {
+            ok.setText("GET INSPIRED");
+        }
+        if(state == Configuration.SKIP)
+        {
+            ok.setText("SKIP");
+        }
+        if(state == Configuration.APPRECIATE)
+        {
+            ok.setText("APPRECIATE");
+        }
+    }
+
+
+    private void setNumberPickerTextColor(NumberPicker numberPicker, int color)
+    {
+        final int count = numberPicker.getChildCount();
+        for(int i = 0; i < count; i++){
+            View child = numberPicker.getChildAt(i);
+            if(child instanceof EditText){
+                try{
+                    Field selectorWheelPaintField = numberPicker.getClass()
+                            .getDeclaredField("mSelectorWheelPaint");
+                    selectorWheelPaintField.setAccessible(true);
+                    ((Paint)selectorWheelPaintField.get(numberPicker)).setColor(color);
+                    ((EditText)child).setTextColor(color);
+                    numberPicker.invalidate();
+                }
+                catch(NoSuchFieldException e){
+                    Log.w("setNumberPickerTextColor", e);
+                }
+                catch(IllegalAccessException e){
+                    Log.w("setNumberPickerTextColor", e);
+                }
+                catch(IllegalArgumentException e){
+                    Log.w("setNumberPickerTextColor", e);
+                }
+            }
+        }
     }
 
     public void setResponseListener(ResponseListener responseListener)
@@ -132,12 +172,10 @@ public class ResponseFragment extends DialogFragment {
     }
     @Override
     public void onDestroy() {
-        contextThemeWrapper = new ContextThemeWrapper(getActivity(),R.style.AppTheme_NoActionBar);
-        getActivity().getLayoutInflater().cloneInContext(contextThemeWrapper);
         super.onDestroy();
     }
 
-    private class ResponseDialogListener implements DialogInterface.OnClickListener
+    private class ResponseDialogListener implements View.OnClickListener
     {
         private ResponseListener responseListener;
         private InspirationListener inspirationListener;
@@ -152,10 +190,9 @@ public class ResponseFragment extends DialogFragment {
         }
 
         @Override
-        public void onClick(DialogInterface dialog, int which) {
-
+        public void onClick(View v) {
             //Success pressed
-            dialog.dismiss();
+            dismiss();
             String url = APPRECIATE_URL;
             String relativeUrl = APPREICATE_RELATIVE_URL;
 
@@ -187,8 +224,8 @@ public class ResponseFragment extends DialogFragment {
             {
                 this.inspirationListener.onSubmit();
             }
-
         }
+
     }
     class SendResponseRequest extends JsonObjectRequest
     {

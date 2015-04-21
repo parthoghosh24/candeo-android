@@ -1,7 +1,9 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/candeo_white"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
@@ -30,6 +32,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:textColor="@color/candeo_primary_dark"
+                android:textColorHint="@color/candeo_primary"
                 android:hint="Enter Full Name"/>
 
             <EditText
@@ -37,11 +41,37 @@
                 android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/candeo_primary_dark"
+                android:textColorHint="@color/candeo_primary"
                 android:hint="Enter bio (100 chars)"
                 android:singleLine="false"
                 android:maxLines="2"
                 android:lines="2"
                 android:visibility="visible"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="right">
+                <Button
+                    android:id="@+id/candeo_response_update"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/candeo_primary_dark"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:textSize="12sp"
+                    android:text="UPDATE"/>
+
+                <Button
+                    android:id="@+id/candeo_response_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/candeo_primary_dark"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:textSize="12sp"
+                    android:text="CANCEL"/>
+            </LinearLayout>
 
 
         </LinearLayout>

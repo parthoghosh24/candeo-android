@@ -41,10 +41,11 @@ public class UserActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         userFragment = new UserFragment();
         String id = getIntent().getStringExtra("id");
-        GetUserRequest userRequest = new GetUserRequest(id);
-        userRequest.setShouldCache(false);
-        CandeoApplication.getInstance().getAppRequestQueue().add(userRequest);
+        Bundle bundle = new Bundle();
+        bundle.putString("id",id);
+        userFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.candeo_user_container, userFragment).commit();
+        userFragment.requestRefresh(this);
     }
 
 
@@ -72,54 +73,4 @@ public class UserActivity extends ActionBarActivity {
         return true;
     }
 
-    private class GetUserRequest extends JsonObjectRequest {
-        private String id;
-        public GetUserRequest(String id) {
-            super(Method.GET,
-                    String.format(GET_USER_API, id),
-                    new JSONObject(),
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                setTitle(response.getJSONObject("user").getString("name"));
-                            }
-                            catch (JSONException jse)
-                            {
-                                jse.printStackTrace();
-                            }
-                            userFragment.onGetUserComplete(response);
-
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            if(Configuration.DEBUG)Log.e(TAG, "error is " + error.getLocalizedMessage());
-                        }
-                    });
-            this.id=id;
-        }
-
-        @Override
-        public Map<String, String> getHeaders() throws AuthFailureError {
-            Map<String, String> params = new HashMap<>();
-            String secret="";
-            if (Preferences.isUserLoggedIn(getApplicationContext()) && !TextUtils.isEmpty(Preferences.getUserEmail(getApplicationContext()))) {
-                params.put("email", Preferences.getUserEmail(getApplicationContext()));
-                secret=Preferences.getUserApiKey(getApplicationContext());
-
-            } else {
-                params.put("email", "");
-                secret= Configuration.CANDEO_DEFAULT_SECRET;
-            }
-            String message = String.format(GET_USER_RELATIVE_API,id);
-            params.put("message", message);
-            if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
-            String hash = Security.generateHmac(secret, message);
-            if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
-            params.put("Authorization", "Token token=" + hash);
-            return params;
-        }
-    }
 }

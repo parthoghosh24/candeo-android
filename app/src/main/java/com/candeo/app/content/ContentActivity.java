@@ -10,6 +10,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneStateListener;
@@ -155,6 +156,7 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
                     bundle.putInt("responseType", Configuration.INSPIRE);
                     response.setArguments(bundle);
                     response.setInspirationListener(ContentActivity.this);
+                    response.setStyle(DialogFragment.STYLE_NO_TITLE,android.R.style.Theme_Holo_Light_Dialog);
                     response.show(ContentActivity.this.getSupportFragmentManager().beginTransaction(), "Appreciate");
                 }
             }
