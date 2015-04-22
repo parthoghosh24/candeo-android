@@ -963,7 +963,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
             {
                 case 0: //Audio
                     icon.setText(Configuration.FA_AUDIO);
-                    content.setText("Record or upload your created music, song, instrumental, poem, sound or even joke...");
+                    content.setText("Do you make beautiful and inspiring sound? Showcase your created music, song, instrumental, poem or even comedy.");
                     view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -1007,7 +1007,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
 
                 case 1: //Image
                     icon.setText(Configuration.FA_IMAGE);
-                    content.setText("Click or upload your photographic, artistic and painting talent owned or created by you.");
+                    content.setText("Do you click or paint? Showcase your photographic, artistic and painting talent owned or created by you.");
                     view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -1052,7 +1052,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
 
                 case 2://Text
                     icon.setText(Configuration.FA_TEXT);
-                    content.setText("Are you good with words? Showcase your great short story, poem or writing genius here.");
+                    content.setText("Do you love to write? Showcase your great short story, poem or writing genius here.");
                     break;
 
             }
