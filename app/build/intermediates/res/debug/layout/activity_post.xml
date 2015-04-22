@@ -85,7 +85,7 @@
                         android:layout_marginTop="20dp"
                         android:layout_below="@id/candeo_post_top_buttons"
                         android:layout_width="match_parent"
-                        android:layout_height="150dp"
+                        android:layout_height="170dp"
                         android:background="@color/candeo_translucent_black_light"
                         />
                     <TextView

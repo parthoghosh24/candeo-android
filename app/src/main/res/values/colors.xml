@@ -3,7 +3,7 @@
     <color name="candeo_primary">#ff8a8a8a</color>
     <color name="candeo_primary_dark">#ff181818</color>
     <color name="candeo_accent_light">#fffafafa</color>
-    <color name="candeo_translucent_white">#32fafafa</color>
+    <color name="candeo_translucent_white">#55fafafa</color>
     <color name="candeo_white">#fffafafa</color>
     <color name="candeo_light_gray">#ffbdbdbd</color>
     <color name="candeo_translucent_black_light">#32000000</color>

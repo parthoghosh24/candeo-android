@@ -39,7 +39,7 @@
     <color name="candeo_splash_translucent_black">#aa000000</color>
     <color name="candeo_translucent_black">#77000000</color>
     <color name="candeo_translucent_black_light">#32000000</color>
-    <color name="candeo_translucent_white">#32fafafa</color>
+    <color name="candeo_translucent_white">#55fafafa</color>
     <color name="candeo_white">#fffafafa</color>
     <!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/21.0.0/res/values/values.xml -->
     <eat-comment/>
