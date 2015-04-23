@@ -56,7 +56,10 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
     public UserPagerAdapter(int type, Context mContext)
     {
         if(Configuration.DEBUG)Log.e("userpageradapter","in here");
-        in = AnimationUtils.loadAnimation(mContext.getApplicationContext(), android.R.anim.fade_in);
+        if(mContext!=null)
+        {
+            in = AnimationUtils.loadAnimation(mContext.getApplicationContext(), android.R.anim.fade_in);
+        }
         this.type=type;
         this.mContext=mContext;
         this.imageCache=new BitmapLruCache();
@@ -154,7 +157,10 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
                     }
                 }
             });
-            holder.bgImage.startAnimation(in);
+            if(in!=null)
+            {
+                holder.bgImage.startAnimation(in);
+            }
             holder.bgImage.setImageUrl(list.get(position).get("bg_url"),imageLoader);
 
         }
@@ -202,7 +208,10 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
                     }
                 }
             });
-            holder.bgImage.startAnimation(in);
+            if(in!=null)
+            {
+                holder.bgImage.startAnimation(in);
+            }
             holder.bgImage.setImageUrl(list.get(position).get("bg_url"),imageLoader);
         }
     }
@@ -303,8 +312,11 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
         protected void onPostExecute(Bitmap bitmap) {
             if(bitmap!=null)
             {
-                Animation in = AnimationUtils.loadAnimation(mContext, android.R.anim.fade_in);
-                image.startAnimation(in);
+                if(mContext!=null)
+                {
+                    Animation in = AnimationUtils.loadAnimation(mContext, android.R.anim.fade_in);
+                    image.startAnimation(in);
+                }
                 image.setImageBitmap(bitmap);
             }
         }

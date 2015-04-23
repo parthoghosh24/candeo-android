@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:candeo="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="5dp"
     android:weightSum="10">
 
-    <TextView
+    <com.candeo.app.ui.CustomTextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:padding="5dp"
         android:layout_weight="1"
+        candeo:fontName="caviar.ttf"
         android:text="Last Top Performances"/>
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,10 +33,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                app:cardCornerRadius="4dp"
-                app:cardUseCompatPadding="true"
+                candeo:cardCornerRadius="4dp"
+                candeo:cardUseCompatPadding="true"
 
-                app:cardElevation="5dp">
+                candeo:cardElevation="5dp">
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -123,11 +124,12 @@
                                     android:gravity="center">
 
 
-                                    <TextView
+                                    <com.candeo.app.ui.CustomTextView
                                         android:id="@+id/candeo_performance_top_content_1_title"
                                         android:text="Title 1"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        candeo:fontName="caviar.ttf"
                                         android:gravity="center"
                                         android:textSize="13sp"
                                         android:ellipsize="end"
@@ -303,7 +305,7 @@
                                     android:gravity="center">
 
 
-                                    <TextView
+                                    <com.candeo.app.ui.CustomTextView
                                         android:id="@+id/candeo_performance_top_content_2_title"
                                         android:text="Title 2"
                                         android:layout_width="wrap_content"
@@ -311,6 +313,7 @@
                                         android:gravity="center"
                                         android:textSize="13sp"
                                         android:ellipsize="end"
+                                        candeo:fontName="caviar.ttf"
                                         android:maxEms="20"
                                         android:maxLines="1"
                                         />
@@ -480,11 +483,12 @@
                                 >
 
 
-                                <TextView
+                                <com.candeo.app.ui.CustomTextView
                                     android:id="@+id/candeo_performance_top_content_3_title"
                                     android:text="Title 2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    candeo:fontName="caviar.ttf"
                                     android:gravity="center"
                                     android:textSize="12sp"
                                     android:ellipsize="end"
@@ -633,11 +637,12 @@
                                 >
 
 
-                                <TextView
+                                <com.candeo.app.ui.CustomTextView
                                     android:id="@+id/candeo_performance_top_content_4_title"
                                     android:text="Title 4"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    candeo:fontName="caviar.ttf"
                                     android:gravity="center"
                                     android:textSize="12sp"
                                     android:ellipsize="end"
@@ -786,11 +791,12 @@
                                 android:gravity="center"
                                 >
 
-                                <TextView
+                                <com.candeo.app.ui.CustomTextView
                                     android:id="@+id/candeo_performance_top_content_5_title"
                                     android:text="Title 5"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    candeo:fontName="caviar.ttf"
                                     android:gravity="center"
                                     android:textSize="12sp"
                                     android:ellipsize="end"
