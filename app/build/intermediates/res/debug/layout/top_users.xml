@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:candeo="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
 
-    <TextView
+    <com.candeo.app.ui.CustomTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        candeo:fontName="caviar.ttf"
         android:padding="5dp"
         android:text="All Time Top Creators"/>
 
@@ -25,10 +26,10 @@
                android:layout_width="match_parent"
                android:layout_height="match_parent"
                android:clipToPadding="false"
-               app:cardCornerRadius="4dp"
-               app:cardUseCompatPadding="true"
+               candeo:cardCornerRadius="4dp"
+               candeo:cardUseCompatPadding="true"
                android:layout_margin="3dp"
-               app:cardElevation="5dp">
+               candeo:cardElevation="5dp">
                <FrameLayout
                    android:layout_width="match_parent"
                    android:layout_height="match_parent">
@@ -72,11 +73,12 @@
                            android:gravity="center">
 
 
-                           <TextView
+                           <com.candeo.app.ui.CustomTextView
                                android:id="@+id/candeo_top_user_1_name"
                                android:text="Partho Ghosh"
                                android:layout_width="wrap_content"
                                android:layout_height="wrap_content"
+                               candeo:fontName="caviar.ttf"
                                android:gravity="center"
                                android:textSize="13sp"
                                />
@@ -98,10 +100,10 @@
                android:layout_width="match_parent"
                android:layout_height="match_parent"
                android:clipToPadding="false"
-               app:cardCornerRadius="4dp"
-               app:cardUseCompatPadding="true"
+               candeo:cardCornerRadius="4dp"
+               candeo:cardUseCompatPadding="true"
                android:layout_margin="3dp"
-               app:cardElevation="5dp">
+               candeo:cardElevation="5dp">
 
                <FrameLayout
                    android:layout_width="match_parent"
@@ -144,11 +146,12 @@
                            android:orientation="vertical"
                            android:gravity="center">
 
-                           <TextView
+                           <com.candeo.app.ui.CustomTextView
                                android:id="@+id/candeo_top_user_2_name"
                                android:text="Prodipto Ghosh"
                                android:layout_width="wrap_content"
                                android:layout_height="wrap_content"
+                               candeo:fontName="caviar.ttf"
                                android:gravity="center"
                                android:textSize="13sp"
                                />
@@ -167,10 +170,10 @@
                android:layout_width="match_parent"
                android:layout_height="match_parent"
                android:clipToPadding="false"
-               app:cardCornerRadius="4dp"
-               app:cardUseCompatPadding="true"
+               candeo:cardCornerRadius="4dp"
+               candeo:cardUseCompatPadding="true"
                android:layout_margin="3dp"
-               app:cardElevation="5dp">
+               candeo:cardElevation="5dp">
 
                <FrameLayout
                    android:layout_width="match_parent"
@@ -213,11 +216,12 @@
                            android:orientation="vertical"
                            android:gravity="center">
 
-                           <TextView
+                           <com.candeo.app.ui.CustomTextView
                                android:id="@+id/candeo_top_user_3_name"
                                android:text="Partho Ghosh"
                                android:layout_width="wrap_content"
                                android:layout_height="wrap_content"
+                               candeo:fontName="caviar.ttf"
                                android:gravity="center"
                                android:textSize="13sp"
                                />
@@ -231,10 +235,11 @@
            </android.support.v7.widget.CardView>
 
         </LinearLayout>
-    <TextView
+    <com.candeo.app.ui.CustomTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
+        candeo:fontName="caviar.ttf"
         android:text="More Performances"/>
 
 

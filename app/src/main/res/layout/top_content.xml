@@ -103,8 +103,8 @@
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
                                     android:focusableInTouchMode="true"
-                                    app:border_width="2dp"
-                                    app:border_color="#ffffffff"
+                                    candeo:border_width="2dp"
+                                    candeo:border_color="#ffffffff"
                                     />
 
 
@@ -213,10 +213,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                app:cardCornerRadius="4dp"
-                app:cardUseCompatPadding="true"
+                candeo:cardCornerRadius="4dp"
+                candeo:cardUseCompatPadding="true"
 
-                app:cardElevation="5dp">
+                candeo:cardElevation="5dp">
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -284,8 +284,8 @@
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
                                     android:focusableInTouchMode="true"
-                                    app:border_width="2dp"
-                                    app:border_color="#ffffffff"
+                                    candeo:border_width="2dp"
+                                    candeo:border_color="#ffffffff"
                                     />
 
 
@@ -417,10 +417,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                app:cardCornerRadius="4dp"
-                app:cardUseCompatPadding="true"
+                candeo:cardCornerRadius="4dp"
+                candeo:cardUseCompatPadding="true"
 
-                app:cardElevation="5dp">
+                candeo:cardElevation="5dp">
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -572,10 +572,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                app:cardCornerRadius="4dp"
-                app:cardUseCompatPadding="true"
+                candeo:cardCornerRadius="4dp"
+                candeo:cardUseCompatPadding="true"
 
-                app:cardElevation="5dp">
+                candeo:cardElevation="5dp">
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -726,10 +726,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                app:cardCornerRadius="4dp"
-                app:cardUseCompatPadding="true"
+                candeo:cardCornerRadius="4dp"
+                candeo:cardUseCompatPadding="true"
 
-                app:cardElevation="5dp">
+                candeo:cardElevation="5dp">
 
                 <FrameLayout
                     android:layout_width="match_parent"
