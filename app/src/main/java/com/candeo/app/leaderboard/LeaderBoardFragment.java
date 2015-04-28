@@ -75,7 +75,7 @@ public class LeaderBoardFragment extends Fragment {
         ((TextView)noContent.findViewById(R.id.candeo_no_content_text)).setText("Sorry! No Performances yet...");
 
         loadingContent = root.findViewById(R.id.candeo_data_loading);
-        ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/fa.ttf"));
+        ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
         ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setText(Configuration.FA_STATS);
         ((TextView)loadingContent.findViewById(R.id.candeo_progress_text)).setText("Loading Performances...");
 
@@ -94,21 +94,21 @@ public class LeaderBoardFragment extends Fragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 
                 visibleItemCount = performanceListLayoutManager.getChildCount();
-                if(Configuration.DEBUG)Log.e(TAG,"visible item count "+visibleItemCount);
+                if (Configuration.DEBUG) Log.e(TAG, "visible item count " + visibleItemCount);
                 totalItemCount = performanceListLayoutManager.getItemCount();
-                if(Configuration.DEBUG)Log.e(TAG,"total item count "+totalItemCount);
+                if (Configuration.DEBUG) Log.e(TAG, "total item count " + totalItemCount);
                 pastVisibleItems = performanceListLayoutManager.findFirstVisibleItemPosition();
-                if(Configuration.DEBUG)Log.e(TAG,"past visible item count "+ pastVisibleItems);
+                if (Configuration.DEBUG) Log.e(TAG, "past visible item count " + pastVisibleItems);
                 if (loading) {
-                    if(Configuration.DEBUG)Log.e(TAG,"in loading");
-                    if ( (visibleItemCount+ pastVisibleItems) >= totalItemCount) {
+                    if (Configuration.DEBUG) Log.e(TAG, "in loading");
+                    if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
                         loading = false;
                         loadMore();
                     }
                 }
             }
         });
-        requestRefresh(getActivity());
+//        requestRefresh(getActivity());
 
     }
 
@@ -150,6 +150,7 @@ public class LeaderBoardFragment extends Fragment {
             }
             else
             {
+                if(Configuration.DEBUG)Log.e(TAG,"IN HERE LOADING LEADERBOARD");
                 CandeoUtil.toggleView(loadingContent,false);
                 CandeoUtil.toggleView(noContent, true);
             }
@@ -237,7 +238,7 @@ public class LeaderBoardFragment extends Fragment {
                                 if(Configuration.DEBUG)Log.e(TAG,"Server error response while fetching performances "+new String(response.data));
                             }
                             CandeoUtil.toggleView(loadingContent,false);
-                            if(morePerformances.size()==0)
+                            if(mLeaderboardAdapter.getItemCount() ==0 && morePerformances.size()==0)
                             {
                                 CandeoUtil.toggleView(noContent,true);
                             }
@@ -289,6 +290,13 @@ public class LeaderBoardFragment extends Fragment {
                             if (response != null) {
                                 if(Configuration.DEBUG)Log.e(TAG, "Actual error while fetching leaderboard is " + new String(response.data));
                             }
+                            CandeoUtil.toggleView(loadingContent,false);
+                            Log.e(TAG, "mLeaderboardAdapter count "+mLeaderboardAdapter.getItemCount());
+                            if(mLeaderboardAdapter.getItemCount()==0)
+                            {
+                                CandeoUtil.toggleView(noContent,false);
+                            }
+
                         }
                     });
         }

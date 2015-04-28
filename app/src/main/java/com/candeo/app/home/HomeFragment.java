@@ -67,7 +67,7 @@ public class HomeFragment extends Fragment {
             loadingContent = homeView.findViewById(R.id.candeo_data_loading);
             noContent = homeView.findViewById(R.id.candeo_no_content);
             if(Configuration.DEBUG)Log.e(TAG,"NO CONTENT "+noContent);
-            ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/applause.ttf"));
+            ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/applause.ttf"));
             ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setText(Configuration.FA_APPRECIATE);
             ((TextView)loadingContent.findViewById(R.id.candeo_progress_text)).setText("Fetching Showcases...");
             ((TextView)noContent.findViewById(R.id.candeo_no_content_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/applause.ttf"));
@@ -87,7 +87,7 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     if (Preferences.isUserLoggedIn(getActivity())) {
-                        CandeoUtil.showProgress(getActivity(),"Please Wait...",Configuration.FA_MAGIC);
+                        CandeoUtil.showProgress(getActivity(), "Please Wait...", Configuration.FA_MAGIC);
                         CandeoApplication.getInstance().getAppRequestQueue().add(new CheckUserPostedRequest(Preferences.getUserRowId(getActivity())));
                     } else {
                         Intent postIntent = new Intent(getActivity(), LoginActivity.class);
@@ -110,18 +110,15 @@ public class HomeFragment extends Fragment {
             user.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(Preferences.isUserLoggedIn(getActivity()))
-                    {
+                    if (Preferences.isUserLoggedIn(getActivity())) {
                         parentHomePager.setCurrentItem(2);
-                    }
-                    else
-                    {
+                    } else {
                         startActivity(new Intent(getActivity(), LoginActivity.class));
                     }
 
                 }
             });
-        requestRefresh(getActivity());
+//        requestRefresh(getActivity());
         return homeView;
     }
 
@@ -306,7 +303,7 @@ public class HomeFragment extends Fragment {
         public Map<String, String> getHeaders() throws AuthFailureError {
             Map<String, String> params = new HashMap<>();
             String secret="";
-            if (Preferences.isUserLoggedIn(getActivity()) && !TextUtils.isEmpty(Preferences.getUserEmail(getActivity()))) {
+            if (getActivity()!=null && (Preferences.isUserLoggedIn(getActivity()) && !TextUtils.isEmpty(Preferences.getUserEmail(getActivity())))) {
                 params.put("email", Preferences.getUserEmail(getActivity()));
                 secret=Preferences.getUserApiKey(getActivity());
 

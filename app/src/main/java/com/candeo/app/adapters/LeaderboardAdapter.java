@@ -126,18 +126,18 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
             try {
                 JSONObject candeoContent1 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopContent1");
-                if(Configuration.DEBUG)Log.e(TAG,"top1 "+Configuration.BASE_URL+candeoContent1.getString("bg_url"));
+                if(Configuration.DEBUG)Log.e(TAG,"top1 "+candeoContent1.getString("bg_url"));
                 holder.candeoTopContentImage1.startAnimation(in);
                 if(TextUtils.isEmpty(candeoContent1.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent1.getString("bg_url")))
                 {
-                    holder.candeoTopContentImage1.setImageUrl(Configuration.BASE_URL+candeoContent1.getString("media_url"),imageLoader);
+                    holder.candeoTopContentImage1.setImageUrl(candeoContent1.getString("media_url"),imageLoader);
                 }
                 else
                 {
-                    holder.candeoTopContentImage1.setImageUrl(Configuration.BASE_URL+candeoContent1.getString("bg_url"),imageLoader);
+                    holder.candeoTopContentImage1.setImageUrl(candeoContent1.getString("bg_url"),imageLoader);
                 }
 
-                new LoadImageTask(Configuration.BASE_URL+candeoContent1.getString("user_avatar_url"),holder.candeoTopContent1UserAvatar).execute();
+                new LoadImageTask(candeoContent1.getString("user_avatar_url"),holder.candeoTopContent1UserAvatar).execute();
 
                 holder.candeoTopContent1AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/applause.ttf"));
                 holder.candeoTopContent1AppreciateIcon.setText(Configuration.FA_APPRECIATE);
@@ -181,17 +181,17 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
 
                 JSONObject candeoContent2 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopContent2");
-                if(Configuration.DEBUG)Log.e(TAG,"top2 "+Configuration.BASE_URL+candeoContent2.getString("bg_url"));
+                if(Configuration.DEBUG)Log.e(TAG,"top2 "+candeoContent2.getString("bg_url"));
                 holder.candeoTopContentImage2.startAnimation(in);
                 if(TextUtils.isEmpty(candeoContent2.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent2.getString("bg_url")))
                 {
-                    holder.candeoTopContentImage2.setImageUrl(Configuration.BASE_URL+candeoContent2.getString("media_url"),imageLoader);
+                    holder.candeoTopContentImage2.setImageUrl(candeoContent2.getString("media_url"),imageLoader);
                 }
                 else
                 {
-                    holder.candeoTopContentImage2.setImageUrl(Configuration.BASE_URL+candeoContent2.getString("bg_url"),imageLoader);
+                    holder.candeoTopContentImage2.setImageUrl(candeoContent2.getString("bg_url"),imageLoader);
                 }
-                new LoadImageTask(Configuration.BASE_URL+candeoContent2.getString("user_avatar_url"),holder.candeoTopContent2UserAvatar).execute();
+                new LoadImageTask(candeoContent2.getString("user_avatar_url"),holder.candeoTopContent2UserAvatar).execute();
 
                 holder.candeoTopContent2AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/applause.ttf"));
                 holder.candeoTopContent2AppreciateIcon.setText(Configuration.FA_APPRECIATE);
@@ -234,15 +234,15 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                 });
 
                 JSONObject candeoContent3 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopContent3");
-                if(Configuration.DEBUG)Log.e(TAG,"top3 "+Configuration.BASE_URL+candeoContent3.getString("bg_url"));
+                if(Configuration.DEBUG)Log.e(TAG,"top3 "+candeoContent3.getString("bg_url"));
                 holder.candeoTopContentImage3.startAnimation(in);
                 if(TextUtils.isEmpty(candeoContent3.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent3.getString("bg_url")))
                 {
-                    holder.candeoTopContentImage3.setImageUrl(Configuration.BASE_URL+candeoContent3.getString("media_url"),imageLoader);
+                    holder.candeoTopContentImage3.setImageUrl(candeoContent3.getString("media_url"),imageLoader);
                 }
                 else
                 {
-                    holder.candeoTopContentImage3.setImageUrl(Configuration.BASE_URL+candeoContent3.getString("bg_url"),imageLoader);
+                    holder.candeoTopContentImage3.setImageUrl(candeoContent3.getString("bg_url"),imageLoader);
                 }
 
                 holder.candeoTopContent3AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/applause.ttf"));
@@ -286,15 +286,15 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
 
                 JSONObject candeoContent4 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopContent4");
-                if(Configuration.DEBUG)Log.e(TAG,"top4 "+Configuration.BASE_URL+candeoContent4.getString("bg_url"));
+                if(Configuration.DEBUG)Log.e(TAG,"top4 "+candeoContent4.getString("bg_url"));
                 holder.candeoTopContentImage4.startAnimation(in);
                 if(TextUtils.isEmpty(candeoContent4.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent4.getString("bg_url")))
                 {
-                    holder.candeoTopContentImage4.setImageUrl(Configuration.BASE_URL+candeoContent4.getString("media_url"),imageLoader);
+                    holder.candeoTopContentImage4.setImageUrl(candeoContent4.getString("media_url"),imageLoader);
                 }
                 else
                 {
-                    holder.candeoTopContentImage4.setImageUrl(Configuration.BASE_URL+candeoContent4.getString("bg_url"),imageLoader);
+                    holder.candeoTopContentImage4.setImageUrl(candeoContent4.getString("bg_url"),imageLoader);
                 }
 
                 holder.candeoTopContent4AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(), "fonts/applause.ttf"));
@@ -337,21 +337,21 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                 });
 
                 JSONObject candeoContent5 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopContent5");
-                if(Configuration.DEBUG)Log.e(TAG,"top5 "+Configuration.BASE_URL+candeoContent5.getString("bg_url"));
+                if(Configuration.DEBUG)Log.e(TAG,"top5 "+candeoContent5.getString("bg_url"));
                 holder.candeoTopContentImage5.startAnimation(in);
                 if(TextUtils.isEmpty(candeoContent5.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent5.getString("bg_url")))
                 {
-                    holder.candeoTopContentImage5.setImageUrl(Configuration.BASE_URL+candeoContent5.getString("media_url"),imageLoader);
+                    holder.candeoTopContentImage5.setImageUrl(candeoContent5.getString("media_url"),imageLoader);
                 }
                 else
                 {
-                    holder.candeoTopContentImage5.setImageUrl(Configuration.BASE_URL+candeoContent5.getString("bg_url"),imageLoader);
+                    holder.candeoTopContentImage5.setImageUrl(candeoContent5.getString("bg_url"),imageLoader);
                 }
 
                 holder.candeoTopContent5AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(), "fonts/applause.ttf"));
                 holder.candeoTopContent5AppreciateIcon.setText(Configuration.FA_APPRECIATE);
                 holder.candeoTopContent5MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(), "fonts/fa.ttf"));
-                if(Configuration.TEXT == Integer.parseInt(candeoContent4.getString("showcase_media_type")))
+                if(Configuration.TEXT == Integer.parseInt(candeoContent5.getString("showcase_media_type")))
                 {
                     holder.candeoTopContent5MediaIcon.setText(Configuration.FA_TEXT);
                 }
@@ -401,7 +401,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
             {
                 JSONObject candeoTopUser1 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopCreator1");
                 holder.candeoTopCreatorImg1.startAnimation(in);
-                holder.candeoTopCreatorImg1.setImageUrl(Configuration.BASE_URL + candeoTopUser1.getString("user_avatar_url"), imageLoader);
+                holder.candeoTopCreatorImg1.setImageUrl(candeoTopUser1.getString("user_avatar_url"), imageLoader);
                 if(Configuration.DEBUG)Log.e(TAG, "candeoTopUser1 " + candeoTopUser1.getString("name"));
                 holder.candeoTopCreator1Name.setText(candeoTopUser1.getString("name"));
                 holder.candeoTopCreator1.setTag(candeoTopUser1.getString("id"));
@@ -420,7 +420,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
                 JSONObject candeoTopUser2 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopCreator2");
                 holder.candeoTopCreatorImg2.startAnimation(in);
-                holder.candeoTopCreatorImg2.setImageUrl(Configuration.BASE_URL + candeoTopUser2.getString("user_avatar_url"), imageLoader);
+                holder.candeoTopCreatorImg2.setImageUrl(candeoTopUser2.getString("user_avatar_url"), imageLoader);
                 holder.candeoTopCreator2Name.setText(candeoTopUser2.getString("name"));
                 holder.candeoTopCreator2.setTag(candeoTopUser2.getString("id"));
                 holder.candeoTopCreator2.setOnClickListener(new View.OnClickListener() {
@@ -438,7 +438,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
                 JSONObject candeoTopUser3 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopCreator3");
                 holder.candeoTopCreatorImg3.startAnimation(in);
-                holder.candeoTopCreatorImg3.setImageUrl(Configuration.BASE_URL + candeoTopUser3.getString("user_avatar_url"), imageLoader);
+                holder.candeoTopCreatorImg3.setImageUrl(candeoTopUser3.getString("user_avatar_url"), imageLoader);
                 holder.candeoTopCreator3Name.setText(candeoTopUser3.getString("name"));
                 holder.candeoTopCreator3.setTag(candeoTopUser3.getString("id"));
                 holder.candeoTopCreator3.setOnClickListener(new View.OnClickListener() {
@@ -466,9 +466,9 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
             //More
             HashMap<String, String> morePerformance = morePerformances.get(position-2);
             holder.bgImage.startAnimation(in);
-            holder.bgImage.setImageUrl(Configuration.BASE_URL + morePerformance.get("showcase_bg_url"), imageLoader);
+            holder.bgImage.setImageUrl(morePerformance.get("showcase_bg_url"), imageLoader);
             holder.title.setText(morePerformance.get("showcase_title"));
-            new LoadImageTask(Configuration.BASE_URL + morePerformance.get("showcase_user_avatar_url"),holder.userAvatar).execute();
+            new LoadImageTask(morePerformance.get("showcase_user_avatar_url"),holder.userAvatar).execute();
             holder.appreciateIcon.setText(Configuration.FA_APPRECIATE);
             holder.appreciationValue.setText(morePerformance.get("showcase_total_appreciations"));
             holder.rankValue.setText(morePerformance.get("showcase_rank"));

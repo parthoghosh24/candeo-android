@@ -300,7 +300,7 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
         {
             notLoggedIn.setVisibility(View.VISIBLE);
         }
-        requestRefresh(getActivity());
+//        requestRefresh(getActivity());
 
     }
 
