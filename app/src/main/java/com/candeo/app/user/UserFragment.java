@@ -140,13 +140,9 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
 
     public void requestRefresh(Activity activity)
     {
-        if(Preferences.isUserLoggedIn(activity))
-        {
             GetUserRequest userRequest = new GetUserRequest(userId);
             userRequest.setShouldCache(false);
             CandeoApplication.getInstance().getAppRequestQueue().add(userRequest);
-
-        }
     }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -300,7 +296,7 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
         {
             notLoggedIn.setVisibility(View.VISIBLE);
         }
-//        requestRefresh(getActivity());
+        requestRefresh(getActivity());
 
     }
 

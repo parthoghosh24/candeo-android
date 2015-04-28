@@ -403,6 +403,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                 holder.candeoTopCreatorImg1.startAnimation(in);
                 holder.candeoTopCreatorImg1.setImageUrl(candeoTopUser1.getString("user_avatar_url"), imageLoader);
                 if(Configuration.DEBUG)Log.e(TAG, "candeoTopUser1 " + candeoTopUser1.getString("name"));
+                if(Configuration.DEBUG)Log.e(TAG, "candeoTopUser1 id " + candeoTopUser1.getString("id"));
                 holder.candeoTopCreator1Name.setText(candeoTopUser1.getString("name"));
                 holder.candeoTopCreator1.setTag(candeoTopUser1.getString("id"));
                 holder.candeoTopCreator1.setOnClickListener(new View.OnClickListener() {
