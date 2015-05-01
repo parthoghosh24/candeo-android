@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:candeo="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:weightSum="10">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/candeo_response_user_avatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            candeo:border_width="2dp"
+            candeo:border_color="@color/candeo_translucent_black"/>
+
+     </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="7">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/candeo_response_user_name"
+                android:textColor="@color/candeo_primary_dark"
+                android:text="Partho Ghosh"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/candeo_response_middle_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="finds it"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/candeo_response_title"
+                android:textColor="@color/candeo_primary_dark"
+                android:text="Mesmerizing"
+                android:layout_marginLeft="5dp"
+                android:textStyle="bold"/>
+         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.candeo.app.ui.CustomTextView
+                android:id="@+id/candeo_response_text_left_quote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/candeo_primary"
+                candeo:fontName="fa.ttf"/>
+
+            <com.candeo.app.ui.CustomTextView
+                android:id="@+id/candeo_response_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/candeo_primary"
+                android:text="I really like it.. thank you"
+                candeo:fontName="caviar_bold.ttf"/>
+
+            <com.candeo.app.ui.CustomTextView
+                android:id="@+id/candeo_response_text_right_quote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/candeo_primary"
+                android:layout_marginLeft="5dp"
+                candeo:fontName="fa.ttf"/>
+
+         </LinearLayout>
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2">
+
+        <TextView
+            android:id="@+id/candeo_response_created_at"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/candeo_primary"
+            android:text="44 miniutes ago"/>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

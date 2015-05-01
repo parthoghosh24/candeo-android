@@ -126,272 +126,327 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
             try {
                 JSONObject candeoContent1 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopContent1");
-                if(Configuration.DEBUG)Log.e(TAG,"top1 "+candeoContent1.getString("bg_url"));
-                holder.candeoTopContentImage1.startAnimation(in);
-                if(TextUtils.isEmpty(candeoContent1.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent1.getString("bg_url")))
+                if(candeoContent1.length()>0)
                 {
-                    holder.candeoTopContentImage1.setImageUrl(candeoContent1.getString("media_url"),imageLoader);
+                    if(Configuration.DEBUG)Log.e(TAG,"top1 "+candeoContent1.getString("bg_url"));
+                    holder.candeoTopContentImage1.startAnimation(in);
+                    if(TextUtils.isEmpty(candeoContent1.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent1.getString("bg_url")))
+                    {
+                        holder.candeoTopContentImage1.setImageUrl(candeoContent1.getString("media_url"),imageLoader);
+                    }
+                    else
+                    {
+                        holder.candeoTopContentImage1.setImageUrl(candeoContent1.getString("bg_url"),imageLoader);
+                    }
+
+                    new LoadImageTask(candeoContent1.getString("user_avatar_url"),holder.candeoTopContent1UserAvatar).execute();
+
+                    holder.candeoTopContent1AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/applause.ttf"));
+                    holder.candeoTopContent1AppreciateIcon.setText(Configuration.FA_APPRECIATE);
+                    holder.candeoTopContent1MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(), "fonts/fa.ttf"));
+                    if(Configuration.TEXT == Integer.parseInt(candeoContent1.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent1MediaIcon.setText(Configuration.FA_TEXT);
+                    }
+                    if(Configuration.AUDIO == Integer.parseInt(candeoContent1.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent1MediaIcon.setText(Configuration.FA_AUDIO);
+                    }
+                    else if(Configuration.IMAGE == Integer.parseInt(candeoContent1.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent1MediaIcon.setText(Configuration.FA_IMAGE);
+                    }
+                    else if(Configuration.VIDEO == Integer.parseInt(candeoContent1.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent1MediaIcon.setText(Configuration.FA_VIDEO);
+                    }
+                    else if(Configuration.BOOK == Integer.parseInt(candeoContent1.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent1MediaIcon.setText(Configuration.FA_BOOK);
+                    }
+                    holder.candeoTopContent1Title.setText(candeoContent1.getString("showcase_title"));
+                    holder.candeoTopContent1AppreciateCount.setText(candeoContent1.getString("showcase_total_appreciations"));
+                    holder.candeoTopContent1.setTag(candeoContent1.getString("showcase_id"));
+                    holder.candeoTopContent1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(holder.candeoTopContent1.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopContent1.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent1.getTag().toString()) )
+                            {
+                                Intent contentIntent= new Intent(mContext, ContentActivity.class);
+                                contentIntent.putExtra("id",holder.candeoTopContent1.getTag().toString());
+                                contentIntent.putExtra("type",Configuration.SHOWCASE);
+                                mContext.startActivity(contentIntent);
+                            }
+
+                        }
+                    });
+
                 }
                 else
                 {
-                    holder.candeoTopContentImage1.setImageUrl(candeoContent1.getString("bg_url"),imageLoader);
+                    CandeoUtil.toggleView(holder.candeoTopContent1,false);
                 }
 
-                new LoadImageTask(candeoContent1.getString("user_avatar_url"),holder.candeoTopContent1UserAvatar).execute();
-
-                holder.candeoTopContent1AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/applause.ttf"));
-                holder.candeoTopContent1AppreciateIcon.setText(Configuration.FA_APPRECIATE);
-                holder.candeoTopContent1MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(), "fonts/fa.ttf"));
-                if(Configuration.TEXT == Integer.parseInt(candeoContent1.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent1MediaIcon.setText(Configuration.FA_TEXT);
-                }
-                if(Configuration.AUDIO == Integer.parseInt(candeoContent1.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent1MediaIcon.setText(Configuration.FA_AUDIO);
-                }
-                else if(Configuration.IMAGE == Integer.parseInt(candeoContent1.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent1MediaIcon.setText(Configuration.FA_AUDIO);
-                }
-                else if(Configuration.VIDEO == Integer.parseInt(candeoContent1.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent1MediaIcon.setText(Configuration.FA_VIDEO);
-                }
-                else if(Configuration.BOOK == Integer.parseInt(candeoContent1.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent1MediaIcon.setText(Configuration.FA_BOOK);
-                }
-                holder.candeoTopContent1Title.setText(candeoContent1.getString("showcase_title"));
-                holder.candeoTopContent1AppreciateCount.setText(candeoContent1.getString("showcase_total_appreciations"));
-                holder.candeoTopContent1.setTag(candeoContent1.getString("showcase_id"));
-                holder.candeoTopContent1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(holder.candeoTopContent1.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopContent1.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent1.getTag().toString()) )
-                        {
-                            Intent contentIntent= new Intent(mContext, ContentActivity.class);
-                            contentIntent.putExtra("id",holder.candeoTopContent1.getTag().toString());
-                            contentIntent.putExtra("type",Configuration.SHOWCASE);
-                            mContext.startActivity(contentIntent);
-                        }
-
-                    }
-                });
 
 
                 JSONObject candeoContent2 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopContent2");
-                if(Configuration.DEBUG)Log.e(TAG,"top2 "+candeoContent2.getString("bg_url"));
-                holder.candeoTopContentImage2.startAnimation(in);
-                if(TextUtils.isEmpty(candeoContent2.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent2.getString("bg_url")))
+                if(candeoContent2.length()>0)
                 {
-                    holder.candeoTopContentImage2.setImageUrl(candeoContent2.getString("media_url"),imageLoader);
+                    if(Configuration.DEBUG)Log.e(TAG,"top2 "+candeoContent2.getString("bg_url"));
+                    holder.candeoTopContentImage2.startAnimation(in);
+                    if(TextUtils.isEmpty(candeoContent2.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent2.getString("bg_url")))
+                    {
+                        holder.candeoTopContentImage2.setImageUrl(candeoContent2.getString("media_url"),imageLoader);
+                    }
+                    else
+                    {
+                        holder.candeoTopContentImage2.setImageUrl(candeoContent2.getString("bg_url"),imageLoader);
+                    }
+                    new LoadImageTask(candeoContent2.getString("user_avatar_url"),holder.candeoTopContent2UserAvatar).execute();
+
+                    holder.candeoTopContent2AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/applause.ttf"));
+                    holder.candeoTopContent2AppreciateIcon.setText(Configuration.FA_APPRECIATE);
+                    holder.candeoTopContent2MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/fa.ttf"));
+                    if(Configuration.TEXT == Integer.parseInt(candeoContent2.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent2MediaIcon.setText(Configuration.FA_TEXT);
+                    }
+                    if(Configuration.AUDIO == Integer.parseInt(candeoContent2.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent2MediaIcon.setText(Configuration.FA_AUDIO);
+                    }
+                    else if(Configuration.IMAGE == Integer.parseInt(candeoContent2.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent2MediaIcon.setText(Configuration.FA_IMAGE);
+                    }
+                    else if(Configuration.VIDEO == Integer.parseInt(candeoContent2.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent2MediaIcon.setText(Configuration.FA_VIDEO);
+                    }
+                    else if(Configuration.BOOK == Integer.parseInt(candeoContent2.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent2MediaIcon.setText(Configuration.FA_BOOK);
+                    }
+                    holder.candeoTopContent2Title.setText(candeoContent2.getString("showcase_title"));
+                    holder.candeoTopContent2AppreciateCount.setText(candeoContent2.getString("showcase_total_appreciations"));
+                    holder.candeoTopContent2.setTag(candeoContent2.getString("showcase_id"));
+                    holder.candeoTopContent2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(holder.candeoTopContent2.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopContent2.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent2.getTag().toString()) )
+                            {
+                                Intent contentIntent= new Intent(mContext, ContentActivity.class);
+                                contentIntent.putExtra("id",holder.candeoTopContent2.getTag().toString());
+                                contentIntent.putExtra("type",Configuration.SHOWCASE);
+                                mContext.startActivity(contentIntent);
+                            }
+
+                        }
+                    });
+
                 }
                 else
                 {
-                    holder.candeoTopContentImage2.setImageUrl(candeoContent2.getString("bg_url"),imageLoader);
+                    CandeoUtil.toggleView(holder.candeoTopContent2,false);
                 }
-                new LoadImageTask(candeoContent2.getString("user_avatar_url"),holder.candeoTopContent2UserAvatar).execute();
 
-                holder.candeoTopContent2AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/applause.ttf"));
-                holder.candeoTopContent2AppreciateIcon.setText(Configuration.FA_APPRECIATE);
-                holder.candeoTopContent2MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/fa.ttf"));
-                if(Configuration.TEXT == Integer.parseInt(candeoContent2.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent2MediaIcon.setText(Configuration.FA_TEXT);
-                }
-                if(Configuration.AUDIO == Integer.parseInt(candeoContent2.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent2MediaIcon.setText(Configuration.FA_AUDIO);
-                }
-                else if(Configuration.IMAGE == Integer.parseInt(candeoContent2.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent2MediaIcon.setText(Configuration.FA_AUDIO);
-                }
-                else if(Configuration.VIDEO == Integer.parseInt(candeoContent2.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent2MediaIcon.setText(Configuration.FA_VIDEO);
-                }
-                else if(Configuration.BOOK == Integer.parseInt(candeoContent2.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent2MediaIcon.setText(Configuration.FA_BOOK);
-                }
-                holder.candeoTopContent2Title.setText(candeoContent2.getString("showcase_title"));
-                holder.candeoTopContent2AppreciateCount.setText(candeoContent2.getString("showcase_total_appreciations"));
-                holder.candeoTopContent2.setTag(candeoContent2.getString("showcase_id"));
-                holder.candeoTopContent2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(holder.candeoTopContent2.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopContent2.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent2.getTag().toString()) )
-                        {
-                            Intent contentIntent= new Intent(mContext, ContentActivity.class);
-                            contentIntent.putExtra("id",holder.candeoTopContent2.getTag().toString());
-                            contentIntent.putExtra("type",Configuration.SHOWCASE);
-                            mContext.startActivity(contentIntent);
-                        }
-
-                    }
-                });
 
                 JSONObject candeoContent3 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopContent3");
-                if(Configuration.DEBUG)Log.e(TAG,"top3 "+candeoContent3.getString("bg_url"));
-                holder.candeoTopContentImage3.startAnimation(in);
-                if(TextUtils.isEmpty(candeoContent3.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent3.getString("bg_url")))
+                if(candeoContent3.length()>0)
                 {
-                    holder.candeoTopContentImage3.setImageUrl(candeoContent3.getString("media_url"),imageLoader);
+                    if(Configuration.DEBUG)Log.e(TAG,"top3 "+candeoContent3.getString("bg_url"));
+                    holder.candeoTopContentImage3.startAnimation(in);
+                    if(TextUtils.isEmpty(candeoContent3.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent3.getString("bg_url")))
+                    {
+                        holder.candeoTopContentImage3.setImageUrl(candeoContent3.getString("media_url"),imageLoader);
+                    }
+                    else
+                    {
+                        holder.candeoTopContentImage3.setImageUrl(candeoContent3.getString("bg_url"),imageLoader);
+                    }
+
+                    holder.candeoTopContent3AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/applause.ttf"));
+                    holder.candeoTopContent3AppreciateIcon.setText(Configuration.FA_APPRECIATE);
+                    holder.candeoTopContent3MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/fa.ttf"));
+                    if(Configuration.TEXT == Integer.parseInt(candeoContent3.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent3MediaIcon.setText(Configuration.FA_TEXT);
+                    }
+                    if(Configuration.AUDIO == Integer.parseInt(candeoContent3.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent3MediaIcon.setText(Configuration.FA_AUDIO);
+                    }
+                    else if(Configuration.IMAGE == Integer.parseInt(candeoContent3.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent3MediaIcon.setText(Configuration.FA_IMAGE);
+                    }
+                    else if(Configuration.VIDEO == Integer.parseInt(candeoContent3.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent3MediaIcon.setText(Configuration.FA_VIDEO);
+                    }
+                    else if(Configuration.BOOK == Integer.parseInt(candeoContent3.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent3MediaIcon.setText(Configuration.FA_BOOK);
+                    }
+                    holder.candeoTopContent3AppreciateCount.setText(candeoContent3.getString("showcase_total_appreciations"));
+                    holder.candeoTopContent3Title.setText(candeoContent3.getString("showcase_title"));
+                    holder.candeoTopContent3.setTag(candeoContent3.getString("showcase_id"));
+                    holder.candeoTopContent3.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (holder.candeoTopContent3.getTag() != null && !TextUtils.isEmpty(holder.candeoTopContent3.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent3.getTag().toString())) {
+                                Intent contentIntent = new Intent(mContext, ContentActivity.class);
+                                contentIntent.putExtra("id", holder.candeoTopContent3.getTag().toString());
+                                contentIntent.putExtra("type", Configuration.SHOWCASE);
+                                mContext.startActivity(contentIntent);
+                            }
+
+                        }
+                    });
+
                 }
                 else
                 {
-                    holder.candeoTopContentImage3.setImageUrl(candeoContent3.getString("bg_url"),imageLoader);
+                    CandeoUtil.toggleView(holder.candeoTopContent3,false);
                 }
-
-                holder.candeoTopContent3AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/applause.ttf"));
-                holder.candeoTopContent3AppreciateIcon.setText(Configuration.FA_APPRECIATE);
-                holder.candeoTopContent3MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/fa.ttf"));
-                if(Configuration.TEXT == Integer.parseInt(candeoContent3.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent3MediaIcon.setText(Configuration.FA_TEXT);
-                }
-                if(Configuration.AUDIO == Integer.parseInt(candeoContent3.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent3MediaIcon.setText(Configuration.FA_AUDIO);
-                }
-                else if(Configuration.IMAGE == Integer.parseInt(candeoContent3.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent3MediaIcon.setText(Configuration.FA_AUDIO);
-                }
-                else if(Configuration.VIDEO == Integer.parseInt(candeoContent3.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent3MediaIcon.setText(Configuration.FA_VIDEO);
-                }
-                else if(Configuration.BOOK == Integer.parseInt(candeoContent3.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent3MediaIcon.setText(Configuration.FA_BOOK);
-                }
-                holder.candeoTopContent3AppreciateCount.setText(candeoContent3.getString("showcase_total_appreciations"));
-                holder.candeoTopContent3Title.setText(candeoContent3.getString("showcase_title"));
-                holder.candeoTopContent3.setTag(candeoContent3.getString("showcase_id"));
-                holder.candeoTopContent3.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (holder.candeoTopContent3.getTag() != null && !TextUtils.isEmpty(holder.candeoTopContent3.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent3.getTag().toString())) {
-                            Intent contentIntent = new Intent(mContext, ContentActivity.class);
-                            contentIntent.putExtra("id", holder.candeoTopContent3.getTag().toString());
-                            contentIntent.putExtra("type", Configuration.SHOWCASE);
-                            mContext.startActivity(contentIntent);
-                        }
-
-                    }
-                });
 
 
                 JSONObject candeoContent4 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopContent4");
-                if(Configuration.DEBUG)Log.e(TAG,"top4 "+candeoContent4.getString("bg_url"));
-                holder.candeoTopContentImage4.startAnimation(in);
-                if(TextUtils.isEmpty(candeoContent4.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent4.getString("bg_url")))
+                if(candeoContent4.length()>0)
                 {
-                    holder.candeoTopContentImage4.setImageUrl(candeoContent4.getString("media_url"),imageLoader);
+                    if(Configuration.DEBUG)Log.e(TAG,"top4 "+candeoContent4.getString("bg_url"));
+                    holder.candeoTopContentImage4.startAnimation(in);
+                    if(TextUtils.isEmpty(candeoContent4.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent4.getString("bg_url")))
+                    {
+                        holder.candeoTopContentImage4.setImageUrl(candeoContent4.getString("media_url"),imageLoader);
+                    }
+                    else
+                    {
+                        holder.candeoTopContentImage4.setImageUrl(candeoContent4.getString("bg_url"),imageLoader);
+                    }
+
+                    holder.candeoTopContent4AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(), "fonts/applause.ttf"));
+                    holder.candeoTopContent4AppreciateIcon.setText(Configuration.FA_APPRECIATE);
+                    holder.candeoTopContent4MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(), "fonts/fa.ttf"));
+                    if(Configuration.TEXT == Integer.parseInt(candeoContent4.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent4MediaIcon.setText(Configuration.FA_TEXT);
+                    }
+                    if(Configuration.AUDIO == Integer.parseInt(candeoContent4.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent4MediaIcon.setText(Configuration.FA_AUDIO);
+                    }
+                    else if(Configuration.IMAGE == Integer.parseInt(candeoContent4.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent4MediaIcon.setText(Configuration.FA_IMAGE);
+                    }
+                    else if(Configuration.VIDEO == Integer.parseInt(candeoContent4.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent4MediaIcon.setText(Configuration.FA_VIDEO);
+                    }
+                    else if(Configuration.BOOK == Integer.parseInt(candeoContent4.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent4MediaIcon.setText(Configuration.FA_BOOK);
+                    }
+                    holder.candeoTopContent4AppreciateCount.setText(candeoContent4.getString("showcase_total_appreciations"));
+                    holder.candeoTopContent4Title.setText(candeoContent4.getString("showcase_title"));
+                    holder.candeoTopContent4.setTag(candeoContent4.getString("showcase_id"));
+                    holder.candeoTopContent4.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (holder.candeoTopContent4.getTag() != null && !TextUtils.isEmpty(holder.candeoTopContent4.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent4.getTag().toString())) {
+                                Intent contentIntent = new Intent(mContext, ContentActivity.class);
+                                contentIntent.putExtra("id", holder.candeoTopContent4.getTag().toString());
+                                contentIntent.putExtra("type", Configuration.SHOWCASE);
+                                mContext.startActivity(contentIntent);
+                            }
+
+                        }
+                    });
+
                 }
                 else
                 {
-                    holder.candeoTopContentImage4.setImageUrl(candeoContent4.getString("bg_url"),imageLoader);
+                    CandeoUtil.toggleView(holder.candeoTopContent4,false);
                 }
 
-                holder.candeoTopContent4AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(), "fonts/applause.ttf"));
-                holder.candeoTopContent4AppreciateIcon.setText(Configuration.FA_APPRECIATE);
-                holder.candeoTopContent4MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(), "fonts/fa.ttf"));
-                if(Configuration.TEXT == Integer.parseInt(candeoContent4.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent4MediaIcon.setText(Configuration.FA_TEXT);
-                }
-                if(Configuration.AUDIO == Integer.parseInt(candeoContent4.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent4MediaIcon.setText(Configuration.FA_AUDIO);
-                }
-                else if(Configuration.IMAGE == Integer.parseInt(candeoContent4.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent4MediaIcon.setText(Configuration.FA_AUDIO);
-                }
-                else if(Configuration.VIDEO == Integer.parseInt(candeoContent4.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent4MediaIcon.setText(Configuration.FA_VIDEO);
-                }
-                else if(Configuration.BOOK == Integer.parseInt(candeoContent4.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent4MediaIcon.setText(Configuration.FA_BOOK);
-                }
-                holder.candeoTopContent4AppreciateCount.setText(candeoContent4.getString("showcase_total_appreciations"));
-                holder.candeoTopContent4Title.setText(candeoContent4.getString("showcase_title"));
-                holder.candeoTopContent4.setTag(candeoContent4.getString("showcase_id"));
-                holder.candeoTopContent4.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (holder.candeoTopContent4.getTag() != null && !TextUtils.isEmpty(holder.candeoTopContent4.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent4.getTag().toString())) {
-                            Intent contentIntent = new Intent(mContext, ContentActivity.class);
-                            contentIntent.putExtra("id", holder.candeoTopContent4.getTag().toString());
-                            contentIntent.putExtra("type", Configuration.SHOWCASE);
-                            mContext.startActivity(contentIntent);
-                        }
-
-                    }
-                });
 
                 JSONObject candeoContent5 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopContent5");
-                if(Configuration.DEBUG)Log.e(TAG,"top5 "+candeoContent5.getString("bg_url"));
-                holder.candeoTopContentImage5.startAnimation(in);
-                if(TextUtils.isEmpty(candeoContent5.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent5.getString("bg_url")))
+                if(candeoContent5.length()>0)
                 {
-                    holder.candeoTopContentImage5.setImageUrl(candeoContent5.getString("media_url"),imageLoader);
+                    if(Configuration.DEBUG)Log.e(TAG,"top5 "+candeoContent5.getString("bg_url"));
+                    holder.candeoTopContentImage5.startAnimation(in);
+                    if(TextUtils.isEmpty(candeoContent5.getString("bg_url")) || "null".equalsIgnoreCase(candeoContent5.getString("bg_url")))
+                    {
+                        holder.candeoTopContentImage5.setImageUrl(candeoContent5.getString("media_url"),imageLoader);
+                    }
+                    else
+                    {
+                        holder.candeoTopContentImage5.setImageUrl(candeoContent5.getString("bg_url"),imageLoader);
+                    }
+
+                    holder.candeoTopContent5AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(), "fonts/applause.ttf"));
+                    holder.candeoTopContent5AppreciateIcon.setText(Configuration.FA_APPRECIATE);
+                    holder.candeoTopContent5MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(), "fonts/fa.ttf"));
+                    if(Configuration.TEXT == Integer.parseInt(candeoContent5.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent5MediaIcon.setText(Configuration.FA_TEXT);
+                    }
+                    if(Configuration.AUDIO == Integer.parseInt(candeoContent5.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent5MediaIcon.setText(Configuration.FA_AUDIO);
+                    }
+                    else if(Configuration.IMAGE == Integer.parseInt(candeoContent5.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent5MediaIcon.setText(Configuration.FA_IMAGE);
+                    }
+                    else if(Configuration.VIDEO == Integer.parseInt(candeoContent5.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent5MediaIcon.setText(Configuration.FA_VIDEO);
+                    }
+                    else if(Configuration.BOOK == Integer.parseInt(candeoContent5.getString("showcase_media_type")))
+                    {
+                        holder.candeoTopContent5MediaIcon.setText(Configuration.FA_BOOK);
+                    }
+                    holder.candeoTopContent5AppreciateCount.setText(candeoContent5.getString("showcase_total_appreciations"));
+                    holder.candeoTopContent5Title.setText(candeoContent5.getString("showcase_title"));
+                    holder.candeoTopContent5.setTag(candeoContent5.getString("showcase_id"));
+                    holder.candeoTopContent5.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(holder.candeoTopContent5.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopContent5.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent5.getTag().toString()) )
+                            {
+                                Intent contentIntent= new Intent(mContext, ContentActivity.class);
+                                contentIntent.putExtra("id",holder.candeoTopContent5.getTag().toString());
+                                contentIntent.putExtra("type",Configuration.SHOWCASE);
+                                mContext.startActivity(contentIntent);
+                            }
+
+                        }
+                    });
+
                 }
                 else
                 {
-                    holder.candeoTopContentImage5.setImageUrl(candeoContent5.getString("bg_url"),imageLoader);
+                    CandeoUtil.toggleView(holder.candeoTopContent5,false);
                 }
 
-                holder.candeoTopContent5AppreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(), "fonts/applause.ttf"));
-                holder.candeoTopContent5AppreciateIcon.setText(Configuration.FA_APPRECIATE);
-                holder.candeoTopContent5MediaIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(), "fonts/fa.ttf"));
-                if(Configuration.TEXT == Integer.parseInt(candeoContent5.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent5MediaIcon.setText(Configuration.FA_TEXT);
-                }
-                if(Configuration.AUDIO == Integer.parseInt(candeoContent5.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent5MediaIcon.setText(Configuration.FA_AUDIO);
-                }
-                else if(Configuration.IMAGE == Integer.parseInt(candeoContent5.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent5MediaIcon.setText(Configuration.FA_AUDIO);
-                }
-                else if(Configuration.VIDEO == Integer.parseInt(candeoContent5.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent5MediaIcon.setText(Configuration.FA_VIDEO);
-                }
-                else if(Configuration.BOOK == Integer.parseInt(candeoContent5.getString("showcase_media_type")))
-                {
-                    holder.candeoTopContent5MediaIcon.setText(Configuration.FA_BOOK);
-                }
-                holder.candeoTopContent5AppreciateCount.setText(candeoContent5.getString("showcase_total_appreciations"));
-                holder.candeoTopContent5Title.setText(candeoContent5.getString("showcase_title"));
-                holder.candeoTopContent5.setTag(candeoContent5.getString("showcase_id"));
-                holder.candeoTopContent5.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(holder.candeoTopContent5.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopContent5.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent5.getTag().toString()) )
-                        {
-                            Intent contentIntent= new Intent(mContext, ContentActivity.class);
-                            contentIntent.putExtra("id",holder.candeoTopContent5.getTag().toString());
-                            contentIntent.putExtra("type",Configuration.SHOWCASE);
-                            mContext.startActivity(contentIntent);
-                        }
 
-                    }
-                });
+                if(Configuration.DEBUG)Log.e(TAG,"No top content: "+(candeoContent1.length() == 0 && candeoContent2.length() == 0 && candeoContent3.length() == 0 && candeoContent4.length() == 0 && candeoContent5.length() == 0));
+                if(candeoContent1.length() == 0 && candeoContent2.length() == 0 && candeoContent3.length() == 0 && candeoContent4.length() == 0 && candeoContent5.length() == 0)
+                {
+                    CandeoUtil.toggleView(holder.noTopContent,true);
+                    CandeoUtil.toggleView(holder.topContentHolder,false);
+                    ((TextView)holder.noTopContent.findViewById(R.id.candeo_no_content_icon)).setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/fa.ttf"));
+                    ((TextView)holder.noTopContent.findViewById(R.id.candeo_no_content_icon)).setText(Configuration.FA_MAGIC);
+                    ((TextView)holder.noTopContent.findViewById(R.id.candeo_no_content_text)).setText("No Performances last week!");
+                }
 
             }
             catch (JSONException jse)
             {
                 jse.printStackTrace();
+                if(Configuration.DEBUG)Log.e(TAG,"Top content error is "+jse.getLocalizedMessage());
             }
 
         }
@@ -467,7 +522,17 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
             //More
             HashMap<String, String> morePerformance = morePerformances.get(position-2);
             holder.bgImage.startAnimation(in);
-            holder.bgImage.setImageUrl(morePerformance.get("showcase_bg_url"), imageLoader);
+            if(Configuration.DEBUG)Log.e(TAG,"bg url is "+(TextUtils.isEmpty(morePerformance.get("showcase_bg_url")) || "null".equalsIgnoreCase(morePerformance.get("showcase_bg_url"))));
+            if(TextUtils.isEmpty(morePerformance.get("showcase_bg_url")) || "null".equalsIgnoreCase(morePerformance.get("showcase_bg_url")))
+            {
+                holder.bgImage.setImageUrl(morePerformance.get("showcase_media_url"), imageLoader);
+
+            }
+            else
+            {
+                holder.bgImage.setImageUrl(morePerformance.get("showcase_bg_url"), imageLoader);
+            }
+
             holder.title.setText(morePerformance.get("showcase_title"));
             new LoadImageTask(morePerformance.get("showcase_user_avatar_url"),holder.userAvatar).execute();
             holder.appreciateIcon.setText(Configuration.FA_APPRECIATE);
@@ -484,7 +549,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
             }
             else if(Configuration.IMAGE == Integer.parseInt(morePerformance.get("showcase_media_type")))
             {
-                holder.mediaIcon.setText(Configuration.FA_AUDIO);
+                holder.mediaIcon.setText(Configuration.FA_IMAGE);
             }
             else if(Configuration.VIDEO == Integer.parseInt(morePerformance.get("showcase_media_type")))
             {
@@ -524,6 +589,8 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     {
 
         //Top 5 last week contents
+        public View noTopContent = null;
+        public LinearLayout topContentHolder = null;
         public NetworkImageView candeoTopContentImage1 = null;
         public TextView candeoTopContent1AppreciateIcon=null;
         public TextView candeoTopContent1AppreciateCount = null;
@@ -597,6 +664,9 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
             if(TOP_PERFORMANCES == type)
             {
+                noTopContent = itemLayoutView.findViewById(R.id.candeo_no_content);
+                CandeoUtil.toggleView(noTopContent,false);
+                topContentHolder = (LinearLayout)itemLayoutView.findViewById(R.id.candeo_performance_top_content_holder);
                 candeoTopContentImage1 = (NetworkImageView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_1_bg);
                 candeoTopContent1AppreciateIcon=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_1_appreciate_icon);
                 candeoTopContent1AppreciateCount=(TextView)itemLayoutView.findViewById(R.id.candeo_performance_top_content_1_appreciate_count);

@@ -62,6 +62,8 @@ public class Configuration {
     public static final String FA_CIRCLE_O="\uf10c";
     public static final String FA_PENCIL="\uf14b";
     public static final String FA_TEXT="\uf040";
+    public static final String FA_LEFT_QUOTE="\uf10d";
+    public static final String FA_RIGHT_QUOTE="\uf10e";
 
 
     //Media types

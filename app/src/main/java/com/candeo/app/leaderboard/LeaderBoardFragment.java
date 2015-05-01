@@ -52,7 +52,6 @@ public class LeaderBoardFragment extends Fragment {
     private final static String GET_MORE_PERFORMANCES_API=Configuration.BASE_URL+"/api/v1"+GET_MORE_PERFORMANCES_RELATIVE_API;
     private final static String GET_PERFORMANCES_RELATIVE_API = "/contents/performances/show";
     private final static String GET_PERFORMANCES_API = Configuration.BASE_URL + "/api/v1" + GET_PERFORMANCES_RELATIVE_API;
-    private final static String FIRST_MORE_PERFORMANCE_RANK="5";
     private String lastRank="";
     private boolean loading = true;
     private int pastVisibleItems, visibleItemCount, totalItemCount;
@@ -146,7 +145,16 @@ public class LeaderBoardFragment extends Fragment {
                 }
 
                 performancesList.setAdapter(mLeaderboardAdapter);
-                CandeoApplication.getInstance().getAppRequestQueue().add(new GetMorePerformancesRequest(FIRST_MORE_PERFORMANCE_RANK,false));
+
+                int lastRank = 0;
+                try {
+                    lastRank = response.getInt("last_rank");
+                }
+                catch (JSONException jse)
+                {
+                    jse.printStackTrace();
+                }
+                CandeoApplication.getInstance().getAppRequestQueue().add(new GetMorePerformancesRequest(lastRank+"",false));
             }
             else
             {
@@ -190,6 +198,7 @@ public class LeaderBoardFragment extends Fragment {
                                         {
                                             JSONObject performance = list.getJSONObject(index);
                                             HashMap<String,String> performanceMap = new HashMap<>();
+                                            if(Configuration.DEBUG)Log.e(TAG,"Json is "+performance.toString());
                                             performanceMap.put("showcase_id",performance.getString("showcase_id"));
                                             performanceMap.put("showcase_title",performance.getString("showcase_title"));
                                             performanceMap.put("showcase_media_type",performance.getString("showcase_media_type"));
@@ -291,8 +300,7 @@ public class LeaderBoardFragment extends Fragment {
                                 if(Configuration.DEBUG)Log.e(TAG, "Actual error while fetching leaderboard is " + new String(response.data));
                             }
                             CandeoUtil.toggleView(loadingContent,false);
-                            Log.e(TAG, "mLeaderboardAdapter count "+mLeaderboardAdapter.getItemCount());
-                            if(mLeaderboardAdapter.getItemCount()==0)
+                            if(mLeaderboardAdapter==null || mLeaderboardAdapter!=null && mLeaderboardAdapter.getItemCount()==0)
                             {
                                 CandeoUtil.toggleView(noContent,false);
                             }

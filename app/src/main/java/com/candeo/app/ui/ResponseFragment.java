@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +55,6 @@ public class ResponseFragment extends DialogFragment {
     private InspirationListener inspirationListener=null;
     private NumberPicker picker;
     private final static String TAG="Candeo - response";
-    private ContextThemeWrapper contextThemeWrapper=null;
     private static final String APPREICATE_RELATIVE_URL="/contents/responses/appreciate";
     private static final String APPRECIATE_URL = Configuration.BASE_URL +"/api/v1"+APPREICATE_RELATIVE_URL;
     private static final String SKIP_RELATIVE_URL="/contents/responses/skip";

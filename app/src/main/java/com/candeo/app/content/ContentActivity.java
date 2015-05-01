@@ -3,7 +3,6 @@ package com.candeo.app.content;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
@@ -35,10 +34,9 @@ import android.widget.VideoView;
 import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
-import com.candeo.app.home.HomeActivity;
 import com.candeo.app.ui.CustomTextView;
 import com.candeo.app.ui.ResponseFragment;
-import com.candeo.app.ui.ScreenReciever;
+import com.candeo.app.ui.ResponseListFragment;
 import com.candeo.app.user.LoginActivity;
 import com.candeo.app.user.UserActivity;
 import com.candeo.app.util.CandeoUtil;
@@ -364,8 +362,67 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
                 title.setText(jsonObject.optString("title"));
                 setTitle(jsonObject.optString("title"));
                 appreciateCount.setText(jsonObject.optString("appreciate_count"));
+                if(Integer.parseInt(jsonObject.optString("appreciate_count")) > 0)
+                {
+                    appreciateIcon.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ResponseListFragment response = new ResponseListFragment();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("title", "Appreciations");
+                            bundle.putString("contentId",id);
+                            response.setArguments(bundle);
+                            response.setStyle(DialogFragment.STYLE_NO_TITLE,android.R.style.Theme_Holo_Light_Dialog);
+                            response.show(getSupportFragmentManager(), "Appreciations");
+                        }
+                    });
+
+                    appreciateCount.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            ResponseListFragment response = new ResponseListFragment();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("title", "Appreciations");
+                            bundle.putString("contentId",id);
+                            response.setArguments(bundle);
+                            response.setStyle(DialogFragment.STYLE_NO_TITLE,android.R.style.Theme_Holo_Light_Dialog);
+                            response.show(getSupportFragmentManager(), "Appreciations");
+
+                        }
+                    });
+                }
                 skipCount.setText(jsonObject.optString("skip_count"));
                 inspiredCount.setText(jsonObject.optString("inspired_count"));
+                if(Integer.parseInt(jsonObject.optString("inspired_count"))>0)
+                {
+                    inspiredCount.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ResponseListFragment response = new ResponseListFragment();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("title", "Inspirations");
+                            bundle.putString("contentId",id);
+                            response.setArguments(bundle);
+                            response.setStyle(DialogFragment.STYLE_NO_TITLE,android.R.style.Theme_Holo_Light_Dialog);
+                            response.show(getSupportFragmentManager(), "Inspirations");
+                        }
+                    });
+
+                    inspiredIcon.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ResponseListFragment response = new ResponseListFragment();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("title", "Inspirations");
+                            bundle.putString("contentId",id);
+                            response.setArguments(bundle);
+                            response.setStyle(DialogFragment.STYLE_NO_TITLE,android.R.style.Theme_Holo_Light_Dialog);
+                            response.show(getSupportFragmentManager(), "Inspirations");
+                        }
+                    });
+
+                }
                 createdAt.setText(jsonObject.optString("created_at"));
                 boolean hasBeenInspired=jsonObject.optBoolean("has_been_inspired");
                 if(hasBeenInspired)
