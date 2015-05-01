@@ -167,6 +167,7 @@ public class ResponseListFragment extends DialogFragment {
                 params.put("email", "");
                 secret=Configuration.CANDEO_DEFAULT_SECRET;
             }
+            if(Configuration.DEBUG)Log.e(TAG,"email is "+params.get("email"));
             String message = String.format(GET_RESPONSE_LIST_RELATIVE_API,type,contentId);
             params.put("message", message);
             if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
