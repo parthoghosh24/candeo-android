@@ -119,9 +119,10 @@ public class ResponseListFragment extends DialogFragment {
                                 try {
 
                                     JSONArray responses = response.getJSONArray("responses");
+                                    if(Configuration.DEBUG)Log.e(TAG,"responses size "+responses.length());
                                     if(responseListAdapter == null)
                                     {
-                                        responseListAdapter = new ResponseAdapter(mContext,responses);
+                                        responseListAdapter = new ResponseAdapter(mContext,responses,type);
                                     }
                                     else
                                     {

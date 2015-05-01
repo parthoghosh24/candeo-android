@@ -37,6 +37,7 @@
     <color name="candeo_primary">#ff8a8a8a</color>
     <color name="candeo_primary_dark">#ff181818</color>
     <color name="candeo_splash_translucent_black">#aa000000</color>
+    <color name="candeo_time_blue">#ff060852</color>
     <color name="candeo_translucent_black">#77000000</color>
     <color name="candeo_translucent_black_light">#32000000</color>
     <color name="candeo_translucent_white">#55fafafa</color>

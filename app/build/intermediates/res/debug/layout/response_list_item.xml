@@ -4,19 +4,20 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
+    android:padding="5dp"
     android:weightSum="10">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="0dp"
+        android:gravity="left"
         android:layout_height="wrap_content"
-        android:layout_weight="1">
+        android:layout_weight="1.5">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/candeo_response_user_avatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             candeo:border_width="2dp"
             candeo:border_color="@color/candeo_translucent_black"/>
 
@@ -25,88 +26,86 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="0dp"
+        android:layout_marginLeft="5dp"
         android:layout_height="wrap_content"
-        android:layout_weight="7">
+        android:layout_weight="8.5">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
+            <com.candeo.app.ui.CustomTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/candeo_response_user_name"
                 android:textColor="@color/candeo_primary_dark"
+                android:textSize="12sp"
+                candeo:fontName="caviar_bold.ttf"
                 android:text="Partho Ghosh"
                 android:textStyle="bold"/>
 
-            <TextView
+            <com.candeo.app.ui.CustomTextView
                 android:id="@+id/candeo_response_middle_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="12sp"
+                candeo:fontName="caviar.ttf"
                 android:layout_marginLeft="5dp"
                 android:text="finds it"
                 />
 
-            <TextView
+            <com.candeo.app.ui.CustomTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/candeo_response_title"
+                android:textSize="12sp"
+                candeo:fontName="caviar_bold.ttf"
                 android:textColor="@color/candeo_primary_dark"
                 android:text="Mesmerizing"
                 android:layout_marginLeft="5dp"
                 android:textStyle="bold"/>
          </LinearLayout>
         <LinearLayout
+            android:id="@+id/candeo_response_list_content_body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-            <com.candeo.app.ui.CustomTextView
-                android:id="@+id/candeo_response_text_left_quote"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/candeo_primary"
-                candeo:fontName="fa.ttf"/>
 
             <com.candeo.app.ui.CustomTextView
                 android:id="@+id/candeo_response_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/candeo_primary"
+                android:textColor="@color/candeo_light_gray"
                 android:text="I really like it.. thank you"
                 candeo:fontName="caviar_bold.ttf"/>
 
-            <com.candeo.app.ui.CustomTextView
-                android:id="@+id/candeo_response_text_right_quote"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/candeo_primary"
-                android:layout_marginLeft="5dp"
-                candeo:fontName="fa.ttf"/>
 
          </LinearLayout>
 
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="2">
-
-        <TextView
-            android:id="@+id/candeo_response_created_at"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/candeo_primary"
-            android:text="44 miniutes ago"/>
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/candeo_response_created_at"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/candeo_time_blue"
+                android:text="44 miniutes ago"/>
+
+        </LinearLayout>
+
 
 
     </LinearLayout>
+
 
 
 </LinearLayout><!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/src/main/res/layout/response_list_item.xml -->

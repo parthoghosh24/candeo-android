@@ -362,7 +362,7 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
                 title.setText(jsonObject.optString("title"));
                 setTitle(jsonObject.optString("title"));
                 appreciateCount.setText(jsonObject.optString("appreciate_count"));
-                if(Integer.parseInt(jsonObject.optString("appreciate_count")) > 0)
+                if(Integer.parseInt(appreciateCount.getText().toString()) > 0)
                 {
                     appreciateIcon.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -394,7 +394,7 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
                 }
                 skipCount.setText(jsonObject.optString("skip_count"));
                 inspiredCount.setText(jsonObject.optString("inspired_count"));
-                if(Integer.parseInt(jsonObject.optString("inspired_count"))>0)
+                if(Integer.parseInt(inspiredCount.getText().toString())>0)
                 {
                     inspiredCount.setOnClickListener(new View.OnClickListener() {
                         @Override
