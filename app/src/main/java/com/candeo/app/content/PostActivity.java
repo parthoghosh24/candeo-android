@@ -428,8 +428,8 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
                 {
                     case 0 : // Audio
                     case 1 : // Image
-                        description.setHint("Provide a description (200 chars - Optional)");
-                        setDescriptionMaxLength(200);
+                        description.setHint("Provide a description (500 chars - Optional)");
+                        setDescriptionMaxLength(500);
                         break;
                     case 2 : // Text
                         hasMedia=false;
