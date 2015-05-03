@@ -3,6 +3,8 @@ package com.candeo.app;
 import android.app.Application;
 import android.os.Environment;
 import android.util.DisplayMetrics;
+
+import com.amplitude.api.Amplitude;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.candeo.app.network.Hurlstack;
@@ -44,6 +46,18 @@ public class CandeoApplication extends Application {
             sInstance = this;
         }
 
+        if(!Configuration.DEBUG)
+        {
+            if(Configuration.BASE_URL.contains("stage"))
+            {
+                Amplitude.getInstance().initialize(this,"3e65f9966c5feeef7f1d77af0ec0f741");
+            }
+            else
+            {
+                Amplitude.getInstance().initialize(this,"a2e3be092e1ae98ede5594945451d93e");
+            }
+
+        }
 
     }
 

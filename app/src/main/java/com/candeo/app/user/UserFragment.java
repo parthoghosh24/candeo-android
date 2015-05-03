@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amplitude.api.Amplitude;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -267,6 +268,7 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
         updateUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Amplitude.getInstance().logEvent("User update profile button clicked");
                 ProfileUpdateFragment profileUpdateFragment = new ProfileUpdateFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("name",name);

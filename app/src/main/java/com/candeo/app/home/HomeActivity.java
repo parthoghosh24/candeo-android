@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.amplitude.api.Amplitude;
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
@@ -60,6 +61,7 @@ public class HomeActivity extends ActionBarActivity {
         } else {
 
             setContentView(R.layout.activity_home);
+            Amplitude.getInstance().logEvent("Home Activity loaded");
             toolbar = (Toolbar) findViewById(R.id.candeo_toolbar);
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -96,16 +98,21 @@ public class HomeActivity extends ActionBarActivity {
 
                     switch (position) {
                         case 0:
+                            Amplitude.getInstance().logEvent("LeaderBoard swiped");
                             getSupportActionBar().show();
                             getSupportActionBar().setTitle("Performances");
                             leaderBoardFragment.requestRefresh(HomeActivity.this);
                             break;
+
                         case 1:
+                            Amplitude.getInstance().logEvent("Limelight swiped");
                             getSupportActionBar().hide();
                             if (Configuration.DEBUG) Log.e(TAG, "Limelight request fetched");
                             homeFragment.requestRefresh(HomeActivity.this);
                             break;
+
                         case 2:
+                            Amplitude.getInstance().logEvent("Profile swiped");
                             getSupportActionBar().show();
                             getSupportActionBar().setTitle("My Profile");
                             userFragment.requestRefresh(HomeActivity.this);
@@ -141,6 +148,16 @@ public class HomeActivity extends ActionBarActivity {
                 break;
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        Amplitude.getInstance().startSession();
+    }
+
+    @Override
+    protected void onPause() {
+        Amplitude.getInstance().endSession();
     }
 
     @Override

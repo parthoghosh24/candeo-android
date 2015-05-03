@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import com.amplitude.api.Amplitude;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
@@ -114,6 +115,7 @@ public class ResponseFragment extends DialogFragment {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Amplitude.getInstance().logEvent("Response Cancel Button clicked");
                 dismiss();
             }
         });
@@ -190,6 +192,7 @@ public class ResponseFragment extends DialogFragment {
         @Override
         public void onClick(View v) {
             //Success pressed
+            Amplitude.getInstance().logEvent("Response Success Button clicked");
             dismiss();
             String url = APPRECIATE_URL;
             String relativeUrl = APPREICATE_RELATIVE_URL;

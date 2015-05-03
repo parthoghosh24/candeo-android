@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.amplitude.api.Amplitude;
 import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
@@ -93,6 +94,7 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
+        Amplitude.getInstance().logEvent("Content Activity loaded");
         id = getIntent().getStringExtra("id");
 //        epubCore = new EpubCore();
         toolbar = (Toolbar)findViewById(R.id.candeo_content_toolbar);
@@ -134,6 +136,7 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
         getInspiredButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Amplitude.getInstance().logEvent("Get Inspired clicked");
 //                Toast.makeText(getApplicationContext(),"I got inspired",Toast.LENGTH_LONG).show();
                 if(!Preferences.isUserLoggedIn(ContentActivity.this))
                 {
@@ -170,6 +173,7 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
             public void onClick(View v) {
                 if(userAvatar.getTag()!=null)
                 {
+                    Amplitude.getInstance().logEvent("Creator avatar clicked");
                     finish();
                     Intent userIntent= new Intent(getApplicationContext(), UserActivity.class);
                     userIntent.putExtra("id",userAvatar.getTag().toString());
@@ -236,16 +240,18 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
         super.onBackPressed();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
 
-    }
 
     @Override
     protected void onResume() {
-        super.onResume();
+        Amplitude.getInstance().startSession();
     }
+
+    @Override
+    protected void onPause() {
+        Amplitude.getInstance().endSession();
+    }
+
 
     @Override
     protected void onStop() {
@@ -367,6 +373,7 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
                     appreciateIcon.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            Amplitude.getInstance().logEvent("Appreciate icon clicked for list");
                             ResponseListFragment response = new ResponseListFragment();
                             Bundle bundle = new Bundle();
                             bundle.putString("title", "Appreciations");
@@ -381,6 +388,7 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
                         @Override
                         public void onClick(View v) {
 
+                            Amplitude.getInstance().logEvent("Appreciate count clicked for list");
                             ResponseListFragment response = new ResponseListFragment();
                             Bundle bundle = new Bundle();
                             bundle.putString("title", "Appreciations");
@@ -399,6 +407,7 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
                     inspiredCount.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            Amplitude.getInstance().logEvent("Inspired count clicked for list");
                             ResponseListFragment response = new ResponseListFragment();
                             Bundle bundle = new Bundle();
                             bundle.putString("title", "Inspirations");
@@ -412,6 +421,7 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
                     inspiredIcon.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            Amplitude.getInstance().logEvent("Inspired icon clicked for list");
                             ResponseListFragment response = new ResponseListFragment();
                             Bundle bundle = new Bundle();
                             bundle.putString("title", "Inspirations");
@@ -455,6 +465,7 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Amplitude.getInstance().logEvent("Play button clicked");
                 if(!mediaPlayer.isPlaying())
                 {
                     videoView.start();

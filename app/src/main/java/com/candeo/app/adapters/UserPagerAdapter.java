@@ -17,6 +17,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amplitude.api.Amplitude;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.candeo.app.CandeoApplication;
@@ -109,6 +110,7 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
                 public void onClick(View v) {
                     if(holder.view.getTag()!=null)
                     {
+                        Amplitude.getInstance().logEvent("Fan or Promoted user clicked");
                         Intent userIntent= new Intent(mContext, UserActivity.class);
                         userIntent.putExtra("id",holder.view.getTag().toString());
                         mContext.startActivity(userIntent);
@@ -150,6 +152,7 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
                 public void onClick(View v) {
                     if( holder.view.getTag()!=null && !TextUtils.isEmpty( holder.view.getTag().toString()) && !"-1".equalsIgnoreCase( holder.view.getTag().toString()) )
                     {
+                        Amplitude.getInstance().logEvent("Created Content clicked");
                         Intent contentIntent= new Intent(mContext, ContentActivity.class);
                         contentIntent.putExtra("id", holder.view.getTag().toString());
                         contentIntent.putExtra("type",Configuration.SHOWCASE);
@@ -201,6 +204,7 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
                 public void onClick(View v) {
                     if( holder.view.getTag()!=null && !TextUtils.isEmpty( holder.view.getTag().toString()) && !"-1".equalsIgnoreCase( holder.view.getTag().toString()) )
                     {
+                        Amplitude.getInstance().logEvent("Discovered Appreciation or Inspiration clicked");
                         Intent contentIntent= new Intent(mContext, ContentActivity.class);
                         contentIntent.putExtra("id", holder.view.getTag().toString());
                         contentIntent.putExtra("type",Configuration.SHOWCASE);

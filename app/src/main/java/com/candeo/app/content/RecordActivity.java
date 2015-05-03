@@ -16,7 +16,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amplitude.api.Amplitude;
+import com.candeo.app.Configuration;
 import com.candeo.app.R;
+import com.candeo.app.util.CandeoUtil;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -41,6 +44,7 @@ public class RecordActivity extends Activity {
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
+        Amplitude.getInstance().logEvent("Record Activity loaded");
         setFinishOnTouchOutside(false);
         controls=(LinearLayout)findViewById(R.id.candeo_record_controls);
         recordTimer=(TextView)findViewById(R.id.candeo_record_timer);
@@ -58,11 +62,12 @@ public class RecordActivity extends Activity {
         cancel=(Button)findViewById(R.id.candeo_record_cancel);
         stop =(Button)findViewById(R.id.candeo_stop_record);
         record =(Button)findViewById(R.id.candeo_record);
-        record.setTypeface(loadFont("fonts/fa.ttf"));
+        record.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
         record.setText("\uf111");
         record.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Amplitude.getInstance().logEvent("Record Button clicked");
                 try {
                     recorder.prepare();
                     recorder.start();
@@ -90,13 +95,14 @@ public class RecordActivity extends Activity {
             }
         });
         play=(Button)findViewById(R.id.candeo_play_record);
-        play.setTypeface(loadFont("fonts/fa.ttf"));
+        play.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
         play.setTextSize(TypedValue.COMPLEX_UNIT_SP, 80);
         play.setText("\uf04b");
 
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Amplitude.getInstance().logEvent("Play Button clicked");
                 if(!isPlaying)
                 {
                     isPlaying=true;
@@ -105,7 +111,7 @@ public class RecordActivity extends Activity {
                         player.setDataSource(outputFile);
                         player.prepare();
                         player.start();
-                        play.setText("\uf04c");
+                        play.setText(Configuration.FA_PAUSE);
                     }catch (IOException ioe)
                     {
                         ioe.printStackTrace();
@@ -117,7 +123,7 @@ public class RecordActivity extends Activity {
                     isPlaying=false;
                     player.release();
                     player=null;
-                    play.setText("\uf04b");
+                    play.setText(Configuration.FA_PLAY);
 
                 }
                 if(player!=null)
@@ -128,7 +134,7 @@ public class RecordActivity extends Activity {
                             isPlaying=false;
                             player.release();
                             player=null;
-                            play.setText("\uf04b");
+                            play.setText(Configuration.FA_PLAY);
                         }
                     });
                 }
@@ -140,6 +146,7 @@ public class RecordActivity extends Activity {
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Amplitude.getInstance().logEvent("Stop Button clicked");
                 recorder.stop();
                 recorder.release();
                 recorder = null;
@@ -157,6 +164,7 @@ public class RecordActivity extends Activity {
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Amplitude.getInstance().logEvent("Ok Button clicked");
                 Intent intent = new Intent();
                 intent.putExtra("path",outputFile);
                 setResult(RESULT_OK,intent);
@@ -166,15 +174,22 @@ public class RecordActivity extends Activity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Amplitude.getInstance().logEvent("Cancel Button clicked");
                 setResult(RESULT_CANCELED);
                 finish();
             }
         });
     }
 
-    private Typeface loadFont(String fontFile)
-    {
-        return  Typeface.createFromAsset(getAssets(),fontFile);
+    @Override
+    protected void onResume() {
+        Amplitude.getInstance().startSession();
     }
+
+    @Override
+    protected void onPause() {
+        Amplitude.getInstance().endSession();
+    }
+
 
 }

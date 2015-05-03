@@ -26,6 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amplitude.api.Amplitude;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
@@ -81,6 +82,7 @@ public class LoginActivity extends Activity implements UploadMediaListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Amplitude.getInstance().logEvent("Login activity loaded");
         setContentView(R.layout.activity_login);
         emailSelector = (Spinner)findViewById(R.id.candeo_login_email_selector);
         isSignup=true;
@@ -89,6 +91,7 @@ public class LoginActivity extends Activity implements UploadMediaListener {
         debugEmail= (EditText)findViewById(R.id.candeo_login_email_debug);
         if(Configuration.DEBUG)debugEmail.setVisibility(View.VISIBLE);
         emails= CandeoUtil.emailAddresses(this);
+        terms=(Button)findViewById(R.id.candeo_user_terms);
         ArrayAdapter<String> emailSelectorAdapter = new ArrayAdapter<>(this, R.layout.candeo_email_spinner_item,emails.toArray(new String[emails.size()]));
         emailSelectorAdapter.setDropDownViewResource(R.layout.candeo_spinner_dropdown_item);
         emailSelector.setAdapter(emailSelectorAdapter);
@@ -102,11 +105,14 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                 signup.setEnabled(false);
                if(isSignup)
                {
+                   Amplitude.getInstance().logEvent("Registration flow initiated");
 
                    registerUser(name.getText().toString(), email);
                }
                else
                {
+                   Amplitude.getInstance().logEvent("Login flow initiated");
+
                    loginUser(email);
                }
 
@@ -117,6 +123,7 @@ public class LoginActivity extends Activity implements UploadMediaListener {
         signin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Amplitude.getInstance().logEvent("Login/Signup button toggled");
                 signup.setEnabled(true);
                 if(isSignup)
                 {
@@ -136,11 +143,19 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                 }
             }
         });
+
+        terms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Amplitude.getInstance().logEvent("Terms button clicked");
+            }
+        });
         userProfile=(ImageView)findViewById(R.id.candeo_user_profile_image);
         userProfile.setImageURI(Uri.parse(Preferences.getUserAvatarPath(getApplicationContext())));
         userProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Amplitude.getInstance().logEvent("Image selector and uploader clicked");
                 //Upload Image
                 initImageSelection();
             }
@@ -209,6 +224,16 @@ public class LoginActivity extends Activity implements UploadMediaListener {
 
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        Amplitude.getInstance().startSession();
+    }
+
+    @Override
+    protected void onPause() {
+        Amplitude.getInstance().endSession();
     }
 
     @Override
@@ -433,6 +458,8 @@ public class LoginActivity extends Activity implements UploadMediaListener {
             }
 
         }
+
+
 
         @Override
         protected Bitmap doInBackground(Bitmap... params) {

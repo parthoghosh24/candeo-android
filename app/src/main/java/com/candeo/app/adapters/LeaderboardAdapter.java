@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.amplitude.api.Amplitude;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.candeo.app.CandeoApplication;
@@ -172,6 +173,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                         public void onClick(View v) {
                             if(holder.candeoTopContent1.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopContent1.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent1.getTag().toString()) )
                             {
+                                Amplitude.getInstance().logEvent("Top content 1 clicked");
                                 Intent contentIntent= new Intent(mContext, ContentActivity.class);
                                 contentIntent.putExtra("id",holder.candeoTopContent1.getTag().toString());
                                 contentIntent.putExtra("type",Configuration.SHOWCASE);
@@ -235,6 +237,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                         public void onClick(View v) {
                             if(holder.candeoTopContent2.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopContent2.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent2.getTag().toString()) )
                             {
+                                Amplitude.getInstance().logEvent("Top content 2 clicked");
                                 Intent contentIntent= new Intent(mContext, ContentActivity.class);
                                 contentIntent.putExtra("id",holder.candeoTopContent2.getTag().toString());
                                 contentIntent.putExtra("type",Configuration.SHOWCASE);
@@ -295,6 +298,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                         @Override
                         public void onClick(View v) {
                             if (holder.candeoTopContent3.getTag() != null && !TextUtils.isEmpty(holder.candeoTopContent3.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent3.getTag().toString())) {
+                                Amplitude.getInstance().logEvent("Top content 3 clicked");
                                 Intent contentIntent = new Intent(mContext, ContentActivity.class);
                                 contentIntent.putExtra("id", holder.candeoTopContent3.getTag().toString());
                                 contentIntent.putExtra("type", Configuration.SHOWCASE);
@@ -355,6 +359,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                         @Override
                         public void onClick(View v) {
                             if (holder.candeoTopContent4.getTag() != null && !TextUtils.isEmpty(holder.candeoTopContent4.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent4.getTag().toString())) {
+                                Amplitude.getInstance().logEvent("Top content 4 clicked");
                                 Intent contentIntent = new Intent(mContext, ContentActivity.class);
                                 contentIntent.putExtra("id", holder.candeoTopContent4.getTag().toString());
                                 contentIntent.putExtra("type", Configuration.SHOWCASE);
@@ -416,6 +421,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                         public void onClick(View v) {
                             if(holder.candeoTopContent5.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopContent5.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopContent5.getTag().toString()) )
                             {
+                                Amplitude.getInstance().logEvent("Top content 5 clicked");
                                 Intent contentIntent= new Intent(mContext, ContentActivity.class);
                                 contentIntent.putExtra("id",holder.candeoTopContent5.getTag().toString());
                                 contentIntent.putExtra("type",Configuration.SHOWCASE);
@@ -466,6 +472,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                     public void onClick(View v) {
                         if(holder.candeoTopCreator1.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopCreator1.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopCreator1.getTag().toString()) )
                         {
+                            Amplitude.getInstance().logEvent("Top creator 1 clicked");
                             Intent contentIntent= new Intent(mContext, UserActivity.class);
                             contentIntent.putExtra("id",holder.candeoTopCreator1.getTag().toString());
                             mContext.startActivity(contentIntent);
@@ -484,6 +491,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                     public void onClick(View v) {
                         if(holder.candeoTopCreator2.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopCreator2.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopCreator2.getTag().toString()) )
                         {
+                            Amplitude.getInstance().logEvent("Top creator 2 clicked");
                             Intent contentIntent= new Intent(mContext, UserActivity.class);
                             contentIntent.putExtra("id",holder.candeoTopCreator2.getTag().toString());
                             mContext.startActivity(contentIntent);
@@ -502,6 +510,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                     public void onClick(View v) {
                         if(holder.candeoTopCreator3.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopCreator3.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopCreator3.getTag().toString()) )
                         {
+                            Amplitude.getInstance().logEvent("Top creator 3 clicked");
                             Intent contentIntent= new Intent(mContext, UserActivity.class);
                             contentIntent.putExtra("id",holder.candeoTopCreator3.getTag().toString());
                             mContext.startActivity(contentIntent);
@@ -565,6 +574,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                 public void onClick(View v) {
                     if(holder.contentHolder.getTag()!=null && !TextUtils.isEmpty(holder.contentHolder.getTag().toString()) && !"-1".equalsIgnoreCase(holder.contentHolder.getTag().toString()) )
                     {
+                        Amplitude.getInstance().logEvent("More content clicked");
                         Intent contentIntent= new Intent(mContext, ContentActivity.class);
                         contentIntent.putExtra("id",holder.contentHolder.getTag().toString());
                         contentIntent.putExtra("type",Configuration.SHOWCASE);

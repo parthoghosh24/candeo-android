@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amplitude.api.Amplitude;
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
@@ -86,6 +87,7 @@ public class HomeFragment extends Fragment {
             create.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Amplitude.getInstance().logEvent("Showcase create clicked");
                     if (Preferences.isUserLoggedIn(getActivity())) {
                         CandeoUtil.showProgress(getActivity(), "Please Wait...", Configuration.FA_MAGIC);
                         CandeoApplication.getInstance().getAppRequestQueue().add(new CheckUserPostedRequest(Preferences.getUserRowId(getActivity())));
@@ -102,6 +104,7 @@ public class HomeFragment extends Fragment {
             feed.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Amplitude.getInstance().logEvent("Leaderboard clicked");
                     parentHomePager.setCurrentItem(0);
                 }
             });
@@ -110,6 +113,7 @@ public class HomeFragment extends Fragment {
             user.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Amplitude.getInstance().logEvent("User profile clicked");
                     if (Preferences.isUserLoggedIn(getActivity())) {
                         parentHomePager.setCurrentItem(2);
                     } else {

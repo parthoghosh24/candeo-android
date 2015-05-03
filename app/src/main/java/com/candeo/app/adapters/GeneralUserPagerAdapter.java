@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.amplitude.api.Amplitude;
 import com.candeo.app.Configuration;
 import com.candeo.app.user.CreatedFragment;
 import com.candeo.app.user.SocialFragment;
@@ -27,8 +28,10 @@ public class GeneralUserPagerAdapter extends FragmentStatePagerAdapter{
         switch (position)
         {
             case 0:
+                Amplitude.getInstance().logEvent("Other user created clicked");
                 return createdFragment;
             case 1:
+                Amplitude.getInstance().logEvent("Other user social clicked");
                 return socialFragment;
         }
         return new Fragment();

@@ -164,9 +164,9 @@
                         android:singleLine="false"
                         android:lines="10"
                         android:gravity="top|left"
-                        android:maxLength="200"
+                        android:maxLength="500"
                         android:background="@android:color/transparent"
-                        android:hint="Provide a description (200 chars - Optional)"/>
+                        android:hint="Provide a description (500 chars - Optional)"/>
 
                     <TextView
                         android:id="@+id/candeo_copyright_text"

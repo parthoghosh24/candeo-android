@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.amplitude.api.Amplitude;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
@@ -34,6 +35,7 @@ public class UserVerifyActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Amplitude.getInstance().logEvent("Verify activity loaded");
         setContentView(R.layout.activity_user_verify);
         String url = getIntent().getDataString();
 //        Toast.makeText(getApplicationContext(),"Url is "+url,Toast.LENGTH_LONG).show();
@@ -44,6 +46,16 @@ public class UserVerifyActivity extends ActionBarActivity {
         UserVerifyRequest verifyRequest = new UserVerifyRequest(payload);
         verifyRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         CandeoApplication.getInstance().getAppRequestQueue().add(verifyRequest);
+    }
+
+    @Override
+    protected void onResume() {
+        Amplitude.getInstance().startSession();
+    }
+
+    @Override
+    protected void onPause() {
+        Amplitude.getInstance().endSession();
     }
 
     class UserVerifyRequest extends JsonObjectRequest

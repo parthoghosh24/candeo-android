@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.amplitude.api.Amplitude;
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
 import com.candeo.app.user.UserActivity;
@@ -72,6 +73,7 @@ public class ResponseAdapter extends RecyclerView.Adapter<ResponseAdapter.Respon
                 public void onClick(View v) {
 
                     try {
+                        Amplitude.getInstance().logEvent("User name clicked from response");
                         Intent userIntent= new Intent(mContext, UserActivity.class);
                         userIntent.putExtra("id",user.getString("id"));
                         mContext.startActivity(userIntent);
@@ -87,6 +89,7 @@ public class ResponseAdapter extends RecyclerView.Adapter<ResponseAdapter.Respon
                 @Override
                 public void onClick(View v) {
                     try {
+                        Amplitude.getInstance().logEvent("User avatar clicked from response");
                         Intent userIntent= new Intent(mContext, UserActivity.class);
                         userIntent.putExtra("id",user.getString("id"));
                         mContext.startActivity(userIntent);

@@ -16,6 +16,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.VideoView;
+
+import com.amplitude.api.Amplitude;
 import com.candeo.app.adapters.TutorialPagerAdapter;
 import com.candeo.app.home.HomeActivity;
 import com.candeo.app.util.CandeoUtil;
@@ -69,6 +71,7 @@ public class SplashActivity extends Activity {
             public void onPageSelected(int position) {
                 if(position == 0)
                 {
+                    Amplitude.getInstance().logEvent("First tutorial page selected");
                     indicator1.setText(Configuration.FA_CIRCLE);
                     indicator2.setText(Configuration.FA_CIRCLE_O);
                     indicator3.setText(Configuration.FA_CIRCLE_O);
@@ -76,6 +79,7 @@ public class SplashActivity extends Activity {
                 }
                 if(position == 1)
                 {
+                    Amplitude.getInstance().logEvent("Second tutorial page selected");
                     indicator1.setText(Configuration.FA_CIRCLE_O);
                     indicator2.setText(Configuration.FA_CIRCLE);
                     indicator3.setText(Configuration.FA_CIRCLE_O);
@@ -83,6 +87,7 @@ public class SplashActivity extends Activity {
                 }
                 if(position == 2)
                 {
+                    Amplitude.getInstance().logEvent("Third tutorial page selected");
                     indicator1.setText(Configuration.FA_CIRCLE_O);
                     indicator2.setText(Configuration.FA_CIRCLE_O);
                     indicator3.setText(Configuration.FA_CIRCLE);
@@ -90,6 +95,7 @@ public class SplashActivity extends Activity {
                 }
                 if(position == 3)
                 {
+                    Amplitude.getInstance().logEvent("Fourth tutorial page selected");
                     indicator1.setText(Configuration.FA_CIRCLE_O);
                     indicator2.setText(Configuration.FA_CIRCLE_O);
                     indicator3.setText(Configuration.FA_CIRCLE_O);
@@ -115,6 +121,7 @@ public class SplashActivity extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Amplitude.getInstance().logEvent("Start button clicked");
                 Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
                 Preferences.setFirstRun(getApplicationContext(),false);
                 startActivity(intent);
@@ -132,6 +139,15 @@ public class SplashActivity extends Activity {
         splashView.start();
     }
 
+    @Override
+    protected void onResume() {
+        Amplitude.getInstance().startSession();
+    }
+
+    @Override
+    protected void onPause() {
+        Amplitude.getInstance().endSession();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

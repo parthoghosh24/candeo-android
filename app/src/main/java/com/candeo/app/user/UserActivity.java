@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.amplitude.api.Amplitude;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -48,6 +49,16 @@ public class UserActivity extends ActionBarActivity {
         userFragment.requestRefresh(this);
     }
 
+
+    @Override
+    protected void onResume() {
+        Amplitude.getInstance().startSession();
+    }
+
+    @Override
+    protected void onPause() {
+        Amplitude.getInstance().endSession();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

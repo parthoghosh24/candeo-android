@@ -29,6 +29,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.amplitude.api.Amplitude;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
@@ -114,6 +115,7 @@ public class ProfileUpdateFragment extends DialogFragment implements UploadMedia
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Amplitude.getInstance().logEvent("Update request initiated after click");
                 HashMap<String, String> payloadMap = new HashMap<>();
                 payloadMap.put("id",Preferences.getUserRowId(getActivity()));
                 payloadMap.put("name",userName.getText().toString());

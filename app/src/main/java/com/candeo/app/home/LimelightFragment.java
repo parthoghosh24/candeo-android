@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amplitude.api.Amplitude;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -138,6 +139,7 @@ public class LimelightFragment extends Fragment{
         showcaseHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Amplitude.getInstance().logEvent("Showcase clicked");
                 if(showcaseHolder.getTag()!=null && !TextUtils.isEmpty(showcaseHolder.getTag().toString()) && !"-1".equalsIgnoreCase(showcaseHolder.getTag().toString()) )
                 {
                     Intent contentIntent= new Intent(getActivity(), ContentActivity.class);
@@ -152,6 +154,7 @@ public class LimelightFragment extends Fragment{
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Amplitude.getInstance().logEvent("User Avatar clicked for creator profile");
                 if(avatar.getTag()!=null)
                 {
                     Intent userIntent= new Intent(getActivity(), UserActivity.class);
@@ -183,6 +186,7 @@ public class LimelightFragment extends Fragment{
         }
         @Override
         public void onClick(View v) {
+            Amplitude.getInstance().logEvent("Appreciation clicked");
                             if(!Preferences.isUserLoggedIn(getActivity()))
                 {
 
@@ -218,6 +222,7 @@ public class LimelightFragment extends Fragment{
         }
         @Override
         public void onClick(View v) {
+            Amplitude.getInstance().logEvent("Skip clicked");
             if(!Preferences.isUserLoggedIn(getActivity()))
             {
 

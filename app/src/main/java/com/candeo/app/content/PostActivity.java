@@ -41,6 +41,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.amplitude.api.Amplitude;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
@@ -149,6 +150,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+        Amplitude.getInstance().logEvent("Post Activity loaded");
         toolbar = (Toolbar)findViewById(R.id.candeo_post_toolbar);
         type = getIntent().getStringExtra("type");
         setSupportActionBar(toolbar);
@@ -172,6 +174,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
         audio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
+                Amplitude.getInstance().logEvent("Audio play clicked in Post activity");
                 if(player!=null)
                 {
                     player.stop();
@@ -318,6 +321,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
         postIt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Amplitude.getInstance().logEvent("Post It clicked");
                 if(Configuration.SHOWCASE == contentType)
                 {
                   if(TextUtils.isEmpty(showcaseTitle.getText()))
@@ -909,6 +913,15 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
     }
 
 
+    @Override
+    protected void onResume() {
+        Amplitude.getInstance().startSession();
+    }
+
+    @Override
+    protected void onPause() {
+        Amplitude.getInstance().endSession();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -963,10 +976,13 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
             {
                 case 0: //Audio
                     icon.setText(Configuration.FA_AUDIO);
+                    Amplitude.getInstance().logEvent("Audio Menu swiped in Post Activity");
                     content.setText("Do you make beautiful and inspiring sound? Showcase your created music, song, instrumental, poem or even comedy.");
                     view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+
+                            Amplitude.getInstance().logEvent("Audio Menu clicked in Post Activity");
 
                             if(player!=null)
                             {
@@ -1007,10 +1023,12 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
 
                 case 1: //Image
                     icon.setText(Configuration.FA_IMAGE);
+                    Amplitude.getInstance().logEvent("Image Menu swiped in Post Activity");
                     content.setText("Do you click or paint? Showcase your photographic, artistic and painting talent owned or created by you.");
                     view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            Amplitude.getInstance().logEvent("Image Menu clicked in Post Activity");
                             System.out.println("Clicking image......");
                             final CharSequence[] choices ={"Click Something", "Fetch From Gallery", "Cancel"};
                             AlertDialog.Builder builder = new AlertDialog.Builder(PostActivity.this);
@@ -1052,6 +1070,7 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
 
                 case 2://Text
                     icon.setText(Configuration.FA_TEXT);
+                    Amplitude.getInstance().logEvent("Text Menu swiped in Post Activity");
                     content.setText("Do you love to write? Showcase your great short story, poem or writing genius here.");
                     break;
 
