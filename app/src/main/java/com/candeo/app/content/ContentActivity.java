@@ -241,14 +241,15 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
     }
 
 
-
     @Override
     protected void onResume() {
+        super.onResume();
         Amplitude.getInstance().startSession();
     }
 
     @Override
     protected void onPause() {
+        super.onPause();
         Amplitude.getInstance().endSession();
     }
 

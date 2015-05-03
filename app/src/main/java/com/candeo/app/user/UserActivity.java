@@ -52,11 +52,13 @@ public class UserActivity extends ActionBarActivity {
 
     @Override
     protected void onResume() {
+        super.onResume();
         Amplitude.getInstance().startSession();
     }
 
     @Override
     protected void onPause() {
+        super.onPause();
         Amplitude.getInstance().endSession();
     }
 

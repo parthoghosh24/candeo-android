@@ -915,11 +915,13 @@ public class PostActivity extends ActionBarActivity implements UploadMediaListen
 
     @Override
     protected void onResume() {
+        super.onResume();
         Amplitude.getInstance().startSession();
     }
 
     @Override
     protected void onPause() {
+        super.onPause();
         Amplitude.getInstance().endSession();
     }
 

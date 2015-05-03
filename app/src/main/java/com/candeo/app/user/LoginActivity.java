@@ -228,11 +228,13 @@ public class LoginActivity extends Activity implements UploadMediaListener {
 
     @Override
     protected void onResume() {
+        super.onResume();
         Amplitude.getInstance().startSession();
     }
 
     @Override
     protected void onPause() {
+        super.onPause();
         Amplitude.getInstance().endSession();
     }
 
