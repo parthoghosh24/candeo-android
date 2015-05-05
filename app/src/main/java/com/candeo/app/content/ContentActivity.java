@@ -79,6 +79,8 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
     private TextView inspiredIcon;
     private TextView inspiredCount;
     private Button getInspiredButton;
+//    private Button shareButton;
+    private TextView shareButton;
     private TextView createdAt;
     private View loadingContent;
     private RelativeLayout candeoMediaControl;
@@ -95,7 +97,15 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
         Amplitude.getInstance().logEvent("Content Activity loaded");
-        id = getIntent().getStringExtra("id");
+        String url = getIntent().getDataString();
+        if(!TextUtils.isEmpty(url))
+        {
+            id = CandeoUtil.getCodeFromUrl(url);
+        }
+        else
+        {
+            id = getIntent().getStringExtra("id");
+        }
 //        epubCore = new EpubCore();
         toolbar = (Toolbar)findViewById(R.id.candeo_content_toolbar);
         loadingContent = findViewById(R.id.candeo_loading_content);
@@ -162,8 +172,20 @@ public class ContentActivity extends ActionBarActivity implements InspirationLis
                 }
             }
         });
-
-
+        shareButton = (TextView)findViewById(R.id.candeo_content_share_button);
+        shareButton.setTypeface(CandeoUtil.loadFont(getAssets(),"fonts/fa.ttf"));
+        shareButton.setText(Configuration.FA_SHARE_ALT);
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Amplitude.getInstance().logEvent("Share button clicked");
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "http://www.candeoapp.com/content/"+id);
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
+            }
+        });
         createdAt=(TextView)findViewById(R.id.candeo_content_created_at);
         appreciateCount=(TextView)findViewById(R.id.candeo_content_appreciate_count);
         skipCount=(TextView)findViewById(R.id.candeo_content_skip_count);

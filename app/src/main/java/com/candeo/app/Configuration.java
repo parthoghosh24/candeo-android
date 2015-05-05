@@ -64,6 +64,7 @@ public class Configuration {
     public static final String FA_TEXT="\uf040";
     public static final String FA_LEFT_QUOTE="\uf10d";
     public static final String FA_RIGHT_QUOTE="\uf10e";
+    public static final String FA_SHARE_ALT="\uf1e0";
 
 
     //Media types

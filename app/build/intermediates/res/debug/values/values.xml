@@ -200,7 +200,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_appreciate">AppreciateActivity</string>
     <string name="title_activity_book_render">BookRenderActivity</string>
-    <string name="title_activity_content">ContentActivity</string>
+    <string name="title_activity_content">Candeo</string>
     <string name="title_activity_get_inspired">GetInspiredActivity</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_activity_login">LoginActivity</string>
@@ -208,7 +208,7 @@
     <string name="title_activity_record">RecordActivity</string>
     <string name="title_activity_respond">RespondActivity</string>
     <string name="title_activity_user">UserActivity</string>
-    <string name="title_activity_user_verify">Open in Candeo</string>
+    <string name="title_activity_user_verify">Candeo</string>
     <!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/src/main/res/values/styles.xml -->
     <eat-comment/>
     <style name="AppTheme" parent="Theme.AppCompat">

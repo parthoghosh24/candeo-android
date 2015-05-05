@@ -5,7 +5,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_home">HomeActivity</string>
-    <string name="title_activity_content">ContentActivity</string>
+    <string name="title_activity_content">Candeo</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_post">PostActivity</string>
     <string name="title_activity_respond">RespondActivity</string>
@@ -14,7 +14,7 @@
     <string name="title_activity_get_inspired">GetInspiredActivity</string>
     <string name="title_activity_appreciate">AppreciateActivity</string>
     <string name="title_activity_book_render">BookRenderActivity</string>
-    <string name="title_activity_user_verify">Open in Candeo</string>
+    <string name="title_activity_user_verify">Candeo</string>
     <string name="title_activity_user">UserActivity</string>
 
 </resources>
