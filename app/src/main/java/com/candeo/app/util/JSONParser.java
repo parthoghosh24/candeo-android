@@ -13,6 +13,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,6 +42,7 @@ public class JSONParser {
         System.out.println("URL is: "+url);
         try {
             DefaultHttpClient httpClient = new DefaultHttpClient();
+            httpClient.setHttpRequestRetryHandler(new  DefaultHttpRequestRetryHandler(3,true));
             HttpGet get = new HttpGet(url);
             String secret="";
             if(TextUtils.isEmpty(Preferences.getUserEmail(mContext)))
