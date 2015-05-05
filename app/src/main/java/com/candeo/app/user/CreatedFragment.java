@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -111,7 +112,9 @@ public class CreatedFragment extends Fragment {
     {
         if(Configuration.DEBUG)Log.e(TAG,"last timestamp "+lastTimestamp);
         CandeoUtil.toggleView(noUserCreatedContent, false);
-        CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserCreations(userId,lastTimestamp));
+        GetUserCreations request =  new GetUserCreations(userId,lastTimestamp);
+        request.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        CandeoApplication.getInstance().getAppRequestQueue().add(request);
     }
 
     private class GetUserCreations extends JsonObjectRequest

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -164,14 +165,18 @@ public class SocialFragment extends Fragment {
     {
         if(Configuration.DEBUG)Log.e(TAG,"last fans timestamp "+lastFansTimestamp);
         CandeoUtil.toggleView(noFans, false);
-        CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserFans(userId,lastFansTimestamp));
+        GetUserFans request = new GetUserFans(userId,lastFansTimestamp);
+        request.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        CandeoApplication.getInstance().getAppRequestQueue().add(request);
     }
 
     private void loadPromotedMore()
     {
         if(Configuration.DEBUG)Log.e(TAG,"last promoted timestamp "+lastPromotedTimestamp);
         CandeoUtil.toggleView(noPromoted, false);
-        CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserPromoted(userId,lastPromotedTimestamp));
+        GetUserPromoted request = new GetUserPromoted(userId,lastPromotedTimestamp);
+        request.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        CandeoApplication.getInstance().getAppRequestQueue().add(request);
     }
 
     private class GetUserFans extends JsonObjectRequest

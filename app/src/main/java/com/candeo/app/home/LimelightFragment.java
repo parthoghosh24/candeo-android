@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.amplitude.api.Amplitude;
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -134,7 +135,9 @@ public class LimelightFragment extends Fragment{
         if(Configuration.DEBUG)Log.e(TAG,"id is "+id);
         if(!TextUtils.isEmpty(id))
         {
-            CandeoApplication.getInstance().getAppRequestQueue().add(new FetchLimelight(id));
+            FetchLimelight request= new FetchLimelight(id);
+            request.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            CandeoApplication.getInstance().getAppRequestQueue().add(request);
         }
         showcaseHolder.setOnClickListener(new View.OnClickListener() {
             @Override

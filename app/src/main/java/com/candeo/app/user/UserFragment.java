@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.amplitude.api.Amplitude;
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -143,6 +144,7 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
     {
             GetUserRequest userRequest = new GetUserRequest(userId);
             userRequest.setShouldCache(false);
+            userRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             CandeoApplication.getInstance().getAppRequestQueue().add(userRequest);
     }
     @Override

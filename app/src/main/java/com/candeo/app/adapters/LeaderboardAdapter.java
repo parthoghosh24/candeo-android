@@ -546,7 +546,9 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
             new LoadImageTask(morePerformance.get("showcase_user_avatar_url"),holder.userAvatar).execute();
             holder.appreciateIcon.setText(Configuration.FA_APPRECIATE);
             holder.appreciationValue.setText(morePerformance.get("showcase_total_appreciations"));
-            holder.rankValue.setText(morePerformance.get("showcase_rank"));
+            holder.rankIcon.setVisibility(View.GONE);
+            holder.rankValue.setVisibility(View.GONE);
+//            holder.rankValue.setText(morePerformance.get("showcase_rank"));
             holder.date.setText(morePerformance.get("showcase_user_name"));
             if(Configuration.TEXT == Integer.parseInt(morePerformance.get("showcase_media_type")))
             {
@@ -655,6 +657,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
         public NetworkImageView bgImage;
         public TextView userName;
         public TextView appreciateIcon;
+        public TextView rankIcon;
         public TextView rankValue;
         public TextView appreciationValue;
         public TextView date;
@@ -741,6 +744,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                 bgImage.setImageURI(Uri.parse(Preferences.getUserAvatarPath(mContext)));
                 date= (TextView)itemLayoutView.findViewById(R.id.candeo_showcase_date);
                 appreciationValue = (TextView)itemLayoutView.findViewById(R.id.candeo_content_appreciate_count);
+                rankIcon = (TextView)itemLayoutView.findViewById(R.id.candeo_content_rank_icon);
                 rankValue = (TextView)itemLayoutView.findViewById(R.id.candeo_content_rank_value);
                 appreciateIcon = (TextView)itemLayoutView.findViewById(R.id.candeo_content_appreciate_icon);
                 appreciateIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(),"fonts/applause.ttf"));

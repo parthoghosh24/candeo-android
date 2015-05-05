@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -153,14 +154,18 @@ public class DiscoveryFragment extends Fragment {
     {
         if(Configuration.DEBUG)Log.e(TAG,"last appreciations timestamp "+lastAppreciationTimestamp);
         CandeoUtil.toggleView(noAppreciations, false);
-        CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserAppreciations(userId,lastAppreciationTimestamp));
+        GetUserAppreciations request= new GetUserAppreciations(userId,lastAppreciationTimestamp);
+        request.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        CandeoApplication.getInstance().getAppRequestQueue().add(request);
     }
 
     private void loadInspirationsMore()
     {
         if(Configuration.DEBUG)Log.e(TAG,"last inspirations timestamp "+lastInspirationTimestamp);
         CandeoUtil.toggleView(noInspirations, false);
-        CandeoApplication.getInstance().getAppRequestQueue().add(new GetUserInspirations(userId,lastInspirationTimestamp));
+        GetUserInspirations request = new GetUserInspirations(userId,lastInspirationTimestamp);
+        request.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        CandeoApplication.getInstance().getAppRequestQueue().add(request);
     }
 
 

@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.amplitude.api.Amplitude;
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -90,7 +91,9 @@ public class HomeFragment extends Fragment {
                     Amplitude.getInstance().logEvent("Showcase create clicked");
                     if (Preferences.isUserLoggedIn(getActivity())) {
                         CandeoUtil.showProgress(getActivity(), "Please Wait...", Configuration.FA_MAGIC);
-                        CandeoApplication.getInstance().getAppRequestQueue().add(new CheckUserPostedRequest(Preferences.getUserRowId(getActivity())));
+                        CheckUserPostedRequest request = new CheckUserPostedRequest(Preferences.getUserRowId(getActivity()));
+                        request.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                        CandeoApplication.getInstance().getAppRequestQueue().add(request);
                     } else {
                         Intent postIntent = new Intent(getActivity(), LoginActivity.class);
                         startActivity(postIntent);
@@ -138,6 +141,7 @@ public class HomeFragment extends Fragment {
         String id = TextUtils.isEmpty(Preferences.getUserRowId(activity)) ? "0" : Preferences.getUserRowId(activity);
         FetchLimelightList fetchLimelightListRequest = new FetchLimelightList(id);
         fetchLimelightListRequest.setShouldCache(false);
+        fetchLimelightListRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         CandeoApplication.getInstance().getAppRequestQueue().add(fetchLimelightListRequest);
     }
 
@@ -200,8 +204,9 @@ public class HomeFragment extends Fragment {
         private String id;
         public CheckUserPostedRequest(String id)
         {
-            super(String.format(HAS_USER_POSTED_URL,id),
-                    null,
+            super(Method.GET,
+                    String.format(HAS_USER_POSTED_URL,id),
+                    new JSONObject(),
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
