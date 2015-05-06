@@ -306,7 +306,7 @@ public class LeaderBoardFragment extends Fragment {
                             CandeoUtil.toggleView(loadingContent,false);
                             if(mLeaderboardAdapter==null || mLeaderboardAdapter!=null && mLeaderboardAdapter.getItemCount()==0)
                             {
-                                CandeoUtil.toggleView(noContent,false);
+                                CandeoUtil.toggleView(noContent,true);
                             }
 
                         }
