@@ -2,6 +2,7 @@
     android:id="@+id/candeo_spinner_dropdown_item_list"
     style="?android:attr/spinnerDropDownItemStyle"
     android:textColor="@android:color/background_light"
+    android:background="@color/candeo_splash_translucent_black"
     android:singleLine="true"
     android:layout_width="match_parent"
     android:layout_height="50dp"
