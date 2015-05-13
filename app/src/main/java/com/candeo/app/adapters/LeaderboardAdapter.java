@@ -461,63 +461,87 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
             try
             {
                 JSONObject candeoTopUser1 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopCreator1");
-                holder.candeoTopCreatorImg1.startAnimation(in);
-                holder.candeoTopCreatorImg1.setImageUrl(candeoTopUser1.getString("user_avatar_url"), imageLoader);
-                if(Configuration.DEBUG)Log.e(TAG, "candeoTopUser1 " + candeoTopUser1.getString("name"));
-                if(Configuration.DEBUG)Log.e(TAG, "candeoTopUser1 id " + candeoTopUser1.getString("id"));
-                holder.candeoTopCreator1Name.setText(candeoTopUser1.getString("name"));
-                holder.candeoTopCreator1.setTag(candeoTopUser1.getString("id"));
-                holder.candeoTopCreator1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(holder.candeoTopCreator1.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopCreator1.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopCreator1.getTag().toString()) )
-                        {
-                            Amplitude.getInstance().logEvent("Top creator 1 clicked");
-                            Intent contentIntent= new Intent(mContext, UserActivity.class);
-                            contentIntent.putExtra("id",holder.candeoTopCreator1.getTag().toString());
-                            mContext.startActivity(contentIntent);
-                        }
+                if(candeoTopUser1!=null && candeoTopUser1.length()>0)
+                {
+                    holder.candeoTopCreatorImg1.startAnimation(in);
+                    holder.candeoTopCreatorImg1.setImageUrl(candeoTopUser1.getString("user_avatar_url"), imageLoader);
+                    if(Configuration.DEBUG)Log.e(TAG, "candeoTopUser1 " + candeoTopUser1.getString("name"));
+                    if(Configuration.DEBUG)Log.e(TAG, "candeoTopUser1 id " + candeoTopUser1.getString("id"));
+                    holder.candeoTopCreator1Name.setText(candeoTopUser1.getString("name"));
+                    holder.candeoTopCreator1.setTag(candeoTopUser1.getString("id"));
+                    holder.candeoTopCreator1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(holder.candeoTopCreator1.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopCreator1.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopCreator1.getTag().toString()) )
+                            {
+                                Amplitude.getInstance().logEvent("Top creator 1 clicked");
+                                Intent contentIntent= new Intent(mContext, UserActivity.class);
+                                contentIntent.putExtra("id",holder.candeoTopCreator1.getTag().toString());
+                                mContext.startActivity(contentIntent);
+                            }
 
-                    }
-                });
+                        }
+                    });
+                }
+                else
+                {
+                    CandeoUtil.toggleView(holder.candeoTopCreator1,false);
+                }
+
 
                 JSONObject candeoTopUser2 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopCreator2");
-                holder.candeoTopCreatorImg2.startAnimation(in);
-                holder.candeoTopCreatorImg2.setImageUrl(candeoTopUser2.getString("user_avatar_url"), imageLoader);
-                holder.candeoTopCreator2Name.setText(candeoTopUser2.getString("name"));
-                holder.candeoTopCreator2.setTag(candeoTopUser2.getString("id"));
-                holder.candeoTopCreator2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(holder.candeoTopCreator2.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopCreator2.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopCreator2.getTag().toString()) )
-                        {
-                            Amplitude.getInstance().logEvent("Top creator 2 clicked");
-                            Intent contentIntent= new Intent(mContext, UserActivity.class);
-                            contentIntent.putExtra("id",holder.candeoTopCreator2.getTag().toString());
-                            mContext.startActivity(contentIntent);
-                        }
+                if(candeoTopUser2!=null && candeoTopUser2.length()>0)
+                {
+                    holder.candeoTopCreatorImg2.startAnimation(in);
+                    holder.candeoTopCreatorImg2.setImageUrl(candeoTopUser2.getString("user_avatar_url"), imageLoader);
+                    holder.candeoTopCreator2Name.setText(candeoTopUser2.getString("name"));
+                    holder.candeoTopCreator2.setTag(candeoTopUser2.getString("id"));
+                    holder.candeoTopCreator2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(holder.candeoTopCreator2.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopCreator2.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopCreator2.getTag().toString()) )
+                            {
+                                Amplitude.getInstance().logEvent("Top creator 2 clicked");
+                                Intent contentIntent= new Intent(mContext, UserActivity.class);
+                                contentIntent.putExtra("id",holder.candeoTopCreator2.getTag().toString());
+                                mContext.startActivity(contentIntent);
+                            }
 
-                    }
-                });
+                        }
+                    });
+                }
+                else
+                {
+                    CandeoUtil.toggleView(holder.candeoTopCreator2,false);
+                }
+
 
                 JSONObject candeoTopUser3 = topContentAndUser.getJSONObject("performance").getJSONObject("candeoTopCreator3");
-                holder.candeoTopCreatorImg3.startAnimation(in);
-                holder.candeoTopCreatorImg3.setImageUrl(candeoTopUser3.getString("user_avatar_url"), imageLoader);
-                holder.candeoTopCreator3Name.setText(candeoTopUser3.getString("name"));
-                holder.candeoTopCreator3.setTag(candeoTopUser3.getString("id"));
-                holder.candeoTopCreator3.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(holder.candeoTopCreator3.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopCreator3.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopCreator3.getTag().toString()) )
-                        {
-                            Amplitude.getInstance().logEvent("Top creator 3 clicked");
-                            Intent contentIntent= new Intent(mContext, UserActivity.class);
-                            contentIntent.putExtra("id",holder.candeoTopCreator3.getTag().toString());
-                            mContext.startActivity(contentIntent);
-                        }
+                if(candeoTopUser3!=null && candeoTopUser3.length()>0)
+                {
+                    holder.candeoTopCreatorImg3.startAnimation(in);
+                    holder.candeoTopCreatorImg3.setImageUrl(candeoTopUser3.getString("user_avatar_url"), imageLoader);
+                    holder.candeoTopCreator3Name.setText(candeoTopUser3.getString("name"));
+                    holder.candeoTopCreator3.setTag(candeoTopUser3.getString("id"));
+                    holder.candeoTopCreator3.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(holder.candeoTopCreator3.getTag()!=null && !TextUtils.isEmpty(holder.candeoTopCreator3.getTag().toString()) && !"-1".equalsIgnoreCase(holder.candeoTopCreator3.getTag().toString()) )
+                            {
+                                Amplitude.getInstance().logEvent("Top creator 3 clicked");
+                                Intent contentIntent= new Intent(mContext, UserActivity.class);
+                                contentIntent.putExtra("id",holder.candeoTopCreator3.getTag().toString());
+                                mContext.startActivity(contentIntent);
+                            }
 
-                    }
-                });
+                        }
+                    });
+                }
+                else
+                {
+                    CandeoUtil.toggleView(holder.candeoTopCreator3,false);
+                }
+
             }
             catch (JSONException jse)
             {
