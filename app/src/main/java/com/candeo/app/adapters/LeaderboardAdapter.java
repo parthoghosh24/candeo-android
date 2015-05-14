@@ -486,6 +486,8 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                 else
                 {
                     CandeoUtil.toggleView(holder.candeoTopCreator1,false);
+                    holder.candeoTopCreator2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.5f));
+                    holder.candeoTopCreator3.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,1.5f));
                 }
 
 
@@ -513,6 +515,8 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                 else
                 {
                     CandeoUtil.toggleView(holder.candeoTopCreator2,false);
+                    holder.candeoTopCreator1.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.5f));
+                    holder.candeoTopCreator3.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.5f));
                 }
 
 
@@ -540,6 +544,8 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                 else
                 {
                     CandeoUtil.toggleView(holder.candeoTopCreator3,false);
+                    holder.candeoTopCreator1.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.5f));
+                    holder.candeoTopCreator2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.5f));
                 }
 
             }
