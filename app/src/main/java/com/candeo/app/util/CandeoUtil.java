@@ -4,9 +4,12 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -15,6 +18,7 @@ import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -40,6 +44,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
@@ -209,5 +214,37 @@ public class CandeoUtil {
 
 
         return parsedDate;
+    }
+
+    public static void showNotification(Context context, HashMap<String, String> fields, Class target) {
+        String title = fields.get("title");
+        String body = fields.get("body");
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(context)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle(title)
+                        .setTicker(body)
+                        .setContentText(body);
+        if (target != null) {
+            Intent resultIntent = new Intent(context, target);
+            Log.e("candeoutil", "target is " + target.getName());
+            PendingIntent resultPendingIntent =
+                    PendingIntent.getActivity(
+                            context,
+                            0,
+                            resultIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT
+                    );
+            mBuilder.setContentIntent(resultPendingIntent);
+            mBuilder.setAutoCancel(true);
+        }
+
+        NotificationManager mNotifyMgr =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.BigTextStyle big = new NotificationCompat.BigTextStyle(mBuilder);
+        big.bigText(body);
+        mNotifyMgr.notify(1, big.build());
+
+
     }
 }

@@ -4,9 +4,10 @@
 /home/partho/projects/tools/gmate/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-aab74f90a5b7af9d0619e002801912a44b881307.jar
 /home/partho/projects/tools/gmate/projects/candeo-android/app/build/intermediates/pre-dexed/debug/android-sdk-1.6.2-dc0e3557e38eddd7e5698ac692cf2b850c615a38.jar
 /home/partho/projects/tools/gmate/projects/candeo-android/app/build/intermediates/pre-dexed/debug/okio-1.2.0-025270cdf2429b85f46f4a5c9354e91ac32ecaec.jar
-/home/partho/projects/tools/gmate/projects/candeo-android/app/build/intermediates/pre-dexed/debug/library-1.0.15-8d3f79a4e078d114f42a6cc76b220e13a619daf1.jar
+/home/partho/projects/tools/gmate/projects/candeo-android/app/build/intermediates/pre-dexed/debug/library-1.0.16-15736a44d784ce113a207c31a0dcec4c1aa9a1be.jar
 /home/partho/projects/tools/gmate/projects/candeo-android/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.2-b79c8b7cafa6a986b0bc8ebd13fb58ca78e91c9f.jar
 /home/partho/projects/tools/gmate/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-605f314b08737baa306920d9725f0218190d9c8f.jar
 /home/partho/projects/tools/gmate/projects/candeo-android/app/build/intermediates/pre-dexed/debug/okhttp-2.2.0-00bcfefccbd915fd07cce0703c08a39fa616ff6e.jar
 /home/partho/projects/tools/gmate/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-a0084d2c380874ab2f8a2680e86e67c62f00960a.jar
 /home/partho/projects/tools/gmate/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-59cf4c1b1405b292dff19e127caa924e3a84269a.jar
+/home/partho/projects/tools/gmate/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-e958d6b1facb14ed5e478ff9818b6ba7174e3097.jar

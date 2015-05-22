@@ -20,6 +20,7 @@ public class Preferences {
     private static final String CANDEO_PREF_USER_ABOUT="CANDEO_PREF_USER_ABOUT";
     private static final String CANDEO_PREF_USER_ROW_ID="CANDEO_PREF_USER_ROW_ID";
     private static final String CANDEO_PREF_USER_API_KEY="CANDEO_PREF_USER_API_KEY";
+    private static final String CANDEO_PREF_USER_GCM_ID="CANDEO_PREF_USER_GCM_ID";
 
 
     private static SharedPreferences getSharedPref(Context ctx)
@@ -28,7 +29,7 @@ public class Preferences {
     }
     public static boolean isFirstRun(Context context)
     {
-        return getSharedPref(context).getBoolean(CANDEO_PREF_FIRST_RUN,true);
+        return getSharedPref(context).getBoolean(CANDEO_PREF_FIRST_RUN, true);
     }
 
     public static void setFirstRun(Context context, boolean state)
@@ -133,6 +134,18 @@ public class Preferences {
         Editor editor = getSharedPref(context).edit();
         editor.putString(CANDEO_PREF_USER_API_KEY,apiKey);
         editor.commit();
+    }
+
+    public static void setUserGcmId(Context context, String gcmId)
+    {
+        Editor editor = getSharedPref(context).edit();
+        editor.putString(CANDEO_PREF_USER_GCM_ID,gcmId);
+        editor.commit();
+    }
+
+    public static String getUserGcmId(Context context)
+    {
+        return getSharedPref(context).getString(CANDEO_PREF_USER_GCM_ID,"");
     }
 
 

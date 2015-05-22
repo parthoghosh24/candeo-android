@@ -3,6 +3,7 @@ package com.candeo.app.home;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.amplitude.api.Amplitude;
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -31,11 +33,15 @@ import com.candeo.app.leaderboard.LeaderBoardFragment;
 import com.candeo.app.user.LoginActivity;
 import com.candeo.app.user.UserFragment;
 import com.candeo.app.util.Preferences;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,6 +56,8 @@ public class HomeActivity extends ActionBarActivity {
     private LeaderBoardFragment leaderBoardFragment;
     private UserFragment userFragment;
     private static final String TAG = "Candeo - Home";
+    private static final String API_USER_UPDATE_GCM_RELATIVE_URL="/users/gcm";
+    private static final String API_USER_UPDATE_GCM_URL= Configuration.BASE_URL +"/api/v1"+API_USER_UPDATE_GCM_RELATIVE_URL;
 
 
     @Override
@@ -65,7 +73,19 @@ public class HomeActivity extends ActionBarActivity {
             toolbar = (Toolbar) findViewById(R.id.candeo_toolbar);
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+            if(TextUtils.isEmpty(Preferences.getUserRowId(this)) && checkPlayServices())
+            {
+                GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
+                String gcmId = Preferences.getUserGcmId(getApplicationContext());
+                if(TextUtils.isEmpty(gcmId))
+                {
+                    registerInBackground(gcm);
+                }
+                else
+                {
+                    if(Configuration.DEBUG)Log.e(TAG,"GCM ID IS "+gcmId);
+                }
+            }
 
             homePager = (ViewPager) findViewById(R.id.home_pager);
             homeFragment = new HomeFragment();
@@ -196,6 +216,96 @@ public class HomeActivity extends ActionBarActivity {
     }
 
 
+    private void registerInBackground(final GoogleCloudMessaging gcm)
+    {
+        new AsyncTask<Void, String, String>()
+        {
+            @Override
+            protected String doInBackground(Void... params) {
+                String message ="";
+                try {
+                    String regId = gcm.register(Configuration.GCM_SENDER_ID);
+                    message  = "Device registered, registration ID=" + regId;
+                    Preferences.setUserGcmId(getApplicationContext(),regId);
+                    HashMap<String, String> payload = new HashMap<>();
+                    payload.put("id", Preferences.getUserRowId(getApplicationContext()));
+                    payload.put("gcm_id", regId);
+                    UpdateGCMIDRequest updateGCMIDRequest = new UpdateGCMIDRequest(payload);
+                    updateGCMIDRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                    CandeoApplication.getInstance().getAppRequestQueue().add(updateGCMIDRequest);
+                }
+                catch (IOException ioe)
+                {
+                    ioe.printStackTrace();
+                    message="Error: "+ioe.getMessage();
+                }
+                return message;
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                if(Configuration.DEBUG)Log.e(TAG,"GCM response");
+            }
+        }.execute(null, null, null);
+    }
+
+    class UpdateGCMIDRequest extends JsonObjectRequest
+    {
+        public UpdateGCMIDRequest(Map<String,String> payload)
+        {
+            super(Method.POST,
+                    API_USER_UPDATE_GCM_URL,
+                    new JSONObject(payload),
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            //GCM successfully registered
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            //Something wrong happened during registration
+                        }
+                    });
+        }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            String secret="";
+            if ((Preferences.isUserLoggedIn(getApplicationContext()) && !TextUtils.isEmpty(Preferences.getUserEmail(getApplicationContext())))) {
+                params.put("email", Preferences.getUserEmail(getApplicationContext()));
+                secret=Preferences.getUserApiKey(getApplicationContext());
+
+            } else {
+                params.put("email", "");
+                secret=Configuration.CANDEO_DEFAULT_SECRET;
+            }
+            String message = API_USER_UPDATE_GCM_RELATIVE_URL;
+            params.put("message", message);
+            if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
+            String hash = Security.generateHmac(secret, message);
+            if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
+            params.put("Authorization", "Token token=" + hash);
+            return params;
+        }
+    }
+
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+                        Configuration.PLAY_SERVICES_RESOLUTION_REQUEST ).show();
+            } else {
+                Log.i(TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
 
 
 
