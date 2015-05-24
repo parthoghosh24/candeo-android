@@ -39,8 +39,8 @@ public class CandeoApplication extends Application {
         File candeoBookDirectory = new File(Environment.getExternalStorageDirectory()+"/candeo/books");
         candeoBookDirectory.mkdirs();
 
+        appRequestQueue = Configuration.DEBUG?Volley.newRequestQueue(getApplicationContext()):Volley.newRequestQueue(getApplicationContext(), new Hurlstack());
 
-        appRequestQueue = Volley.newRequestQueue(getApplicationContext(), new Hurlstack());
         if (sInstance == null)
         {
             sInstance = this;

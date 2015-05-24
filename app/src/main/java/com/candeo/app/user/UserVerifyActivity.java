@@ -156,10 +156,11 @@ public class UserVerifyActivity extends ActionBarActivity {
                 try {
                     String regId = gcm.register(Configuration.GCM_SENDER_ID);
                     message  = "Device registered, registration ID=" + regId;
-                    Preferences.setUserGcmId(getApplicationContext(),regId);
+                    Preferences.setUserGcmId(getApplicationContext(), regId);
                     HashMap<String, String> payload = new HashMap<>();
                     payload.put("id", Preferences.getUserRowId(getApplicationContext()));
                     payload.put("gcm_id", regId);
+                    Log.e(TAG,"Updating GCM");
                     UpdateGCMIDRequest updateGCMIDRequest = new UpdateGCMIDRequest(payload);
                     updateGCMIDRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
                     CandeoApplication.getInstance().getAppRequestQueue().add(updateGCMIDRequest);
@@ -190,12 +191,18 @@ public class UserVerifyActivity extends ActionBarActivity {
                         @Override
                         public void onResponse(JSONObject response) {
                             //GCM successfully registered
+                            Log.e(TAG,"GCM succesffully registered");
                         }
                     },
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             //Something wrong happened during registration
+                            Log.e(TAG, "GCM error is "+error.getMessage());
+                            if(error.networkResponse!=null)
+                            {
+                                Log.e(TAG,"GCM  Server error "+new String(error.networkResponse.data));
+                            }
                         }
                     });
         }

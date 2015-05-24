@@ -87,13 +87,13 @@ ADDED from AndroidManifest.xml:25:9
 		ADDED from AndroidManifest.xml:28:13
 	android:name
 		ADDED from AndroidManifest.xml:26:13
-intent-filter#com.candeo.app.gcm+com.google.android.c2dm.intent.RECEIVE
+intent-filter#com.candeo.app+com.google.android.c2dm.intent.RECEIVE
 ADDED from AndroidManifest.xml:29:13
 action#com.google.android.c2dm.intent.RECEIVE
 ADDED from AndroidManifest.xml:30:17
 	android:name
 		ADDED from AndroidManifest.xml:30:25
-category#com.candeo.app.gcm
+category#com.candeo.app
 ADDED from AndroidManifest.xml:32:17
 	android:name
 		ADDED from AndroidManifest.xml:32:27

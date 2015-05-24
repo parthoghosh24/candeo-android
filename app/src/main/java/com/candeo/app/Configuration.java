@@ -11,18 +11,18 @@ import java.util.Map;
  */
 public class Configuration {
 
-//    public static final boolean DEBUG=false;
-    public static final boolean DEBUG=true;
+    public static final boolean DEBUG=false;
+//    public static final boolean DEBUG=true;
     //Base url
 //    public static final String BASE_URL ="http://192.168.0.104:3000";
 //      public static final String BASE_URL ="http://192.168.0.103:3000";
 //      public static final String BASE_URL ="http://192.168.0.102:3000";
 //    public static final String BASE_URL ="http://192.168.0.101:3000";
 //        public static final String BASE_URL ="http://192.168.0.104:3000";
-    public static final String BASE_URL="http://192.168.43.239:3000";
+//    public static final String BASE_URL="http://192.168.43.239:3000";
     //    public static final String BASE_URL="http://10.0.3.116:3000";
 //    public static final String BASE_URL ="http://stage.candeoapp.com";
-//    public static final String BASE_URL ="http://www.candeoapp.com";
+    public static final String BASE_URL ="http://www.candeoapp.com";
 
     public final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     public final static String GCM_SENDER_ID="1026062841670";

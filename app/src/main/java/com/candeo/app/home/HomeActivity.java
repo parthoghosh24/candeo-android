@@ -73,8 +73,9 @@ public class HomeActivity extends ActionBarActivity {
             toolbar = (Toolbar) findViewById(R.id.candeo_toolbar);
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            if(TextUtils.isEmpty(Preferences.getUserRowId(this)) && checkPlayServices())
+            if(!TextUtils.isEmpty(Preferences.getUserRowId(this)) && checkPlayServices())
             {
+                if(Configuration.DEBUG)Log.e(TAG,"GCM Registration");
                 GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
                 String gcmId = Preferences.getUserGcmId(getApplicationContext());
                 if(TextUtils.isEmpty(gcmId))
@@ -98,7 +99,14 @@ public class HomeActivity extends ActionBarActivity {
             homePager.setAdapter(tabPagerAdapter);
             homePager.setOffscreenPageLimit(2);
             String fromVerify = getIntent().getStringExtra("fromVerify");
-            if (!TextUtils.isEmpty(fromVerify) && "verified".equalsIgnoreCase(fromVerify)) {
+            String performance = getIntent().getStringExtra("performance");
+            if(!TextUtils.isEmpty(performance) && "performance".equalsIgnoreCase(performance))
+            {
+                getSupportActionBar().show();
+                getSupportActionBar().setTitle("Performances");
+                homePager.setCurrentItem(0);
+            }
+            else if (!TextUtils.isEmpty(fromVerify) && "verified".equalsIgnoreCase(fromVerify)) {
                 getSupportActionBar().show();
                 getSupportActionBar().setTitle("My Profile");
                 homePager.setCurrentItem(2);

@@ -16,7 +16,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
@@ -27,6 +29,9 @@ import android.widget.TextView;
 
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
+import com.candeo.app.content.ContentActivity;
+import com.candeo.app.home.HomeActivity;
+import com.candeo.app.user.UserActivity;
 
 import org.apache.http.util.ByteArrayBuffer;
 
@@ -216,35 +221,95 @@ public class CandeoUtil {
         return parsedDate;
     }
 
-    public static void showNotification(Context context, HashMap<String, String> fields, Class target) {
+    public static void showNotification(Context context, HashMap<String, String> fields) {
         String title = fields.get("title");
         String body = fields.get("body");
+        String url = fields.get("imageUrl");
+        String bigUrl = fields.get("bigImageUrl");
+        String type = fields.get("type");
+        String id = fields.get("id");
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setSmallIcon(R.drawable.logo)
                         .setContentTitle(title)
                         .setTicker(body)
                         .setContentText(body);
-        if (target != null) {
-            Intent resultIntent = new Intent(context, target);
-            Log.e("candeoutil", "target is " + target.getName());
-            PendingIntent resultPendingIntent =
-                    PendingIntent.getActivity(
-                            context,
-                            0,
-                            resultIntent,
-                            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT
-                    );
+        mBuilder.setSmallIcon(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ? R.drawable.logo_inverted : R.drawable.logo);
+        Bitmap bitmap =null;
+        mBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(body));
+        if(!TextUtils.isEmpty(url))
+        {
+            if(Configuration.DEBUG)Log.e("candeoutil","check image url");
+            bitmap =getBitmapFromUrl(url);
+            mBuilder.setLargeIcon(bitmap);
+        }
+        if(!TextUtils.isEmpty(bigUrl))
+        {
+            bitmap =getBitmapFromUrl(bigUrl);
+            mBuilder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap).setSummaryText(body));
+
+        }
+        PendingIntent resultPendingIntent = getPendingIntent(type,id,context);
+        if (resultPendingIntent != null) {
             mBuilder.setContentIntent(resultPendingIntent);
             mBuilder.setAutoCancel(true);
         }
 
         NotificationManager mNotifyMgr =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationCompat.BigTextStyle big = new NotificationCompat.BigTextStyle(mBuilder);
-        big.bigText(body);
-        mNotifyMgr.notify(1, big.build());
+        mNotifyMgr.notify(1, mBuilder.build());
 
 
+    }
+
+    private static PendingIntent getPendingIntent(String type, String id, Context context)
+    {
+        Class mClazz= null;
+        PendingIntent result = null;
+        if(!TextUtils.isEmpty(type))
+        {
+            if("home".equalsIgnoreCase(type))
+            {
+                mClazz= HomeActivity.class;
+            }
+            if("content".equalsIgnoreCase(type))
+            {
+                mClazz= ContentActivity.class;
+            }
+            if("performance".equalsIgnoreCase(type))
+            {
+                mClazz= HomeActivity.class;
+
+            }
+            if("user".equalsIgnoreCase(type))
+            {
+                mClazz= UserActivity.class;
+            }
+
+            Intent resultIntent = new Intent(context,mClazz);
+            if("content".equalsIgnoreCase(type))
+            {
+                resultIntent.putExtra("id",id);
+                resultIntent.putExtra("type",Configuration.SHOWCASE);
+            }
+            if("performance".equalsIgnoreCase(type))
+            {
+                resultIntent.putExtra("performance","performance");
+            }
+            if("user".equalsIgnoreCase(type))
+            {
+                resultIntent.putExtra("id",id);
+            }
+            result =
+                    PendingIntent.getActivity(
+                            context,
+                            0,
+                            resultIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT
+                    );
+
+        }
+
+        return result;
     }
 }
