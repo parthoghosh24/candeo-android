@@ -96,6 +96,7 @@ public class HomeActivity extends ActionBarActivity {
             bundle.putString("id",Preferences.getUserRowId(this));
             userFragment.setArguments(bundle);
             tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), homeFragment, leaderBoardFragment, userFragment);
+            leaderBoardFragment.requestRefresh(this);
             homePager.setAdapter(tabPagerAdapter);
             homePager.setOffscreenPageLimit(2);
             String fromVerify = getIntent().getStringExtra("fromVerify");
@@ -166,7 +167,7 @@ public class HomeActivity extends ActionBarActivity {
         switch (homePager.getCurrentItem())
         {
             case 0: //Performances
-                leaderBoardFragment.requestRefresh(this);
+                //
                 break;
             case 1: //Limelight
                 homeFragment.requestRefresh(this);

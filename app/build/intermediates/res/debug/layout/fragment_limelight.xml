@@ -7,7 +7,8 @@
     android:orientation="vertical">
 
     <include layout="@layout/loading_content"
-        android:id="@+id/candeo_data_loading"/>
+        android:id="@+id/candeo_data_loading"
+        android:visibility="gone"/>
 
     <include layout="@layout/no_content"
         android:id="@+id/candeo_no_content"
