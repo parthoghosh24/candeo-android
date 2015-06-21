@@ -303,10 +303,18 @@ public class LeaderBoardFragment extends Fragment {
                             if (response != null) {
                                 if(Configuration.DEBUG)Log.e(TAG, "Actual error while fetching leaderboard is " + new String(response.data));
                             }
-                            CandeoUtil.toggleView(loadingContent,false);
+                            if(loadingContent!=null)
+                            {
+                                CandeoUtil.toggleView(loadingContent,false);
+                            }
+
                             if(mLeaderboardAdapter==null || mLeaderboardAdapter!=null && mLeaderboardAdapter.getItemCount()==0)
                             {
-                                CandeoUtil.toggleView(noContent,true);
+                                if(noContent!=null)
+                                {
+                                    CandeoUtil.toggleView(noContent,true);
+                                }
+
                             }
 
                         }

@@ -142,6 +142,10 @@
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
+            android:name="com.candeo.app.shout.ShoutActivity"
+            android:label="@string/title_activity_shout" >
+        </activity>
+        <activity
             android:name="android.support.v7.widget.TestActivity"
             android:label="RecyclerViewTestActivity" />
 

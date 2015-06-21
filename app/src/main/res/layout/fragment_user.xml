@@ -262,6 +262,7 @@
       </LinearLayout>
     <com.candeo.app.ui.SlidingTabLayout
         android:id="@+id/candeo_user_sliding_tabs"
+        android:background="@color/background_floating_material_light"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

@@ -182,10 +182,10 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
                     avatarUrl=user.getString("avatar_path");
                     userName.setText(name);
                     userBio.setText(TextUtils.isEmpty(bio) ? Configuration.CANDEO_DEFAULT_BIO : bio);
-                    appreciateCount.setText(""+user.getInt("total_appreciations"));
-                    inspireCount.setText(""+user.getInt("total_inspires"));
-                    currentRank.setText(""+user.get("current_rank"));
-                    highestRank.setText(""+user.get("highest_rank"));
+                    appreciateCount.setText("" + user.getInt("total_appreciations"));
+                    inspireCount.setText("" + user.getInt("total_inspires"));
+                    currentRank.setText("" + user.get("current_rank"));
+                    highestRank.setText("" + user.get("highest_rank"));
                     new LoadImageTask().execute(avatarUrl);
                     Bundle bundle = new Bundle();
                     bundle.putString("userId",userId);
@@ -197,9 +197,20 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
                     discoveryFragment = new DiscoveryFragment();
                     discoveryFragment.setArguments(bundle);
                     boolean isSameUser = getActivity()!=null && Preferences.getUserRowId(getActivity()).equalsIgnoreCase(userId);
-                    contentAdapter = isSameUser? new UserContentAdapter(getActivity().getSupportFragmentManager(), createdFragment,socialFragment,discoveryFragment) : new GeneralUserPagerAdapter(getActivity().getSupportFragmentManager(), createdFragment,socialFragment);
+                    contentAdapter = isSameUser? new UserContentAdapter(getChildFragmentManager(), createdFragment,socialFragment,discoveryFragment) : new GeneralUserPagerAdapter(getActivity().getSupportFragmentManager(), createdFragment,socialFragment);
                     userContentPager.setAdapter(contentAdapter);
                     slidingTabs.setViewPager(userContentPager);
+                    slidingTabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+                        @Override
+                        public int getIndicatorColor(int position) {
+                            return getResources().getColor(R.color.candeo_light_btn_blue);
+                        }
+
+                        @Override
+                        public int getDividerColor(int position) {
+                            return 0;
+                        }
+                    });
                     userContentPager.setCurrentItem(0);
                     if(Configuration.DEBUG)Log.e(TAG,"page current item is "+userContentPager.getCurrentItem());
                     if(Preferences.isUserLoggedIn(getActivity()) || !TextUtils.isEmpty(userId))

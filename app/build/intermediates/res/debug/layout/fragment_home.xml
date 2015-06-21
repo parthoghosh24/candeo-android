@@ -1,77 +1,58 @@
 
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.candeo.app.home.HomeActivity"
-    android:orientation="vertical"
-    android:layout_weight="1"
-    >
-
-
-    <LinearLayout
+     <FrameLayout
+         android:id="@+id/home_screen"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+         tools:context="com.candeo.app.home.HomeActivity"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-        <include layout="@layout/loading_content"
-            android:id="@+id/candeo_data_loading"/>
+        android:layout_height="match_parent">
 
-        <include layout="@layout/no_content"
-            android:id="@+id/candeo_no_content"
-            android:visibility="gone"/>
-        <com.candeo.app.ui.NonSwipeablePager
-            android:id="@+id/candeo_showcase_pager"
+        <LinearLayout
+
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            />
-    </LinearLayout>
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+                <include layout="@layout/loading_content"
+                    android:id="@+id/candeo_data_loading"/>
+
+                <include layout="@layout/no_content"
+                    android:id="@+id/candeo_no_content"
+                    android:visibility="gone"/>
+                <com.candeo.app.ui.NonSwipeablePager
+                    android:id="@+id/candeo_showcase_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    />
+
+            </LinearLayout>
 
 
-    <LinearLayout
-        android:id="@+id/candeo_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:weightSum="9"
-        android:orientation="horizontal">
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/candeo_feed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:background="?android:attr/selectableItemBackground"
-            />
-        <Button
-            android:id="@+id/candeo_init_post"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginLeft="40dp"
-            android:layout_weight="3"
-            android:background="?android:attr/selectableItemBackground"
-            />
-        <Button
-            android:id="@+id/candeo_user"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginLeft="40dp"
-            android:layout_weight="3"
-            android:background="?android:attr/selectableItemBackground"
-            />
+         <android.support.design.widget.FloatingActionButton
+             android:id="@+id/candeo_init_post"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginBottom="16dp"
+             android:layout_marginRight="16dp"
+             android:layout_gravity="bottom|end"
+             app:backgroundTint="@color/candeo_light_btn_blue"
+             android:text="test"
+             app:fabSize="normal"
+             app:rippleColor="#F06292"
+             />
 
-    </LinearLayout>
-
-
-
+    </FrameLayout>
 
 
 
 
-
-</LinearLayout>
-
-<!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/src/main/res/layout/fragment_home.xml -->
+<!-- From: file:/home/dholu/projects/candeo-android/app/src/main/res/layout/fragment_home.xml -->

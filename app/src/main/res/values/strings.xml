@@ -16,5 +16,8 @@
     <string name="title_activity_book_render">BookRenderActivity</string>
     <string name="title_activity_user_verify">Candeo</string>
     <string name="title_activity_user">UserActivity</string>
+    <string name="fa_magic">&#xf0d0;</string>
+    <string name="fa_bullhorn">&#xf0a1;</string>
+    <string name="title_activity_shout">ShoutActivity</string>
 
 </resources>

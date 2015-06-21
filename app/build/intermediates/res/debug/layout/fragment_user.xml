@@ -262,6 +262,7 @@
       </LinearLayout>
     <com.candeo.app.ui.SlidingTabLayout
         android:id="@+id/candeo_user_sliding_tabs"
+        android:background="@color/background_floating_material_light"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
@@ -284,4 +285,4 @@
 
 
 </LinearLayout>
-<!-- From: file:/home/partho/projects/tools/gmate/projects/candeo-android/app/src/main/res/layout/fragment_user.xml -->
+<!-- From: file:/home/dholu/projects/candeo-android/app/src/main/res/layout/fragment_user.xml -->

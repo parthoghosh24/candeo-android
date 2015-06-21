@@ -41,6 +41,7 @@ public class Configuration {
 
 
 
+    //Font icons
     public static final String FA_VIDEO="\uf008";
     public static final String FA_AUDIO="\uf001";
     public static final String FA_IMAGE="\uf030";
@@ -67,6 +68,9 @@ public class Configuration {
     public static final String FA_LEFT_QUOTE="\uf10d";
     public static final String FA_RIGHT_QUOTE="\uf10e";
     public static final String FA_SHARE_ALT="\uf1e0";
+    public static final String FA_BULLHORN="\uf0a1";
+    public static final String FA_HOME ="\uf015";
+    public static final String FA_SHOPPING_CART ="\uf07a";
 
 
     //Media types

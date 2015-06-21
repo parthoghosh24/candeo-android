@@ -54,14 +54,14 @@ public class SplashActivity extends Activity {
 
         indicator1.setTypeface(CandeoUtil.loadFont(getAssets(),"fonts/fa.ttf"));
         indicator1.setText(Configuration.FA_CIRCLE);
-        indicator2.setTypeface(CandeoUtil.loadFont(getAssets(),"fonts/fa.ttf"));
+        indicator2.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
         indicator2.setText(Configuration.FA_CIRCLE_O);
-        indicator3.setTypeface(CandeoUtil.loadFont(getAssets(),"fonts/fa.ttf"));
+        indicator3.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
         indicator3.setText(Configuration.FA_CIRCLE_O);
-        indicator4.setTypeface(CandeoUtil.loadFont(getAssets(),"fonts/fa.ttf"));
+        indicator4.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
         indicator4.setText(Configuration.FA_CIRCLE_O);
 
-        tutorialPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        tutorialPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 

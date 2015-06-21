@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -30,6 +31,7 @@ import com.candeo.app.R;
 import com.candeo.app.algorithms.Security;
 import com.candeo.app.content.PostActivity;
 import com.candeo.app.transformers.ShowcaseTransformer;
+import com.candeo.app.ui.FontAwesomeDrawable;
 import com.candeo.app.ui.NonSwipeablePager;
 import com.candeo.app.user.LoginActivity;
 import com.candeo.app.util.CandeoUtil;
@@ -45,21 +47,18 @@ import java.util.Map;
 
 public class HomeFragment extends Fragment {
 
-    private ViewPager parentHomePager;
     private NonSwipeablePager showcasePager;
-    private Button create;
-    private Button feed;
-    private Button user;
     private ArrayList<HashMap<String, String>> showcases = new ArrayList<>();
     private LimelightAdapter pagerAdapter;
     private View homeView=null;
     private View loadingContent = null;
     private View noContent =null;
+    private FloatingActionButton create;
     private static final String TAG="Candeo - HomeFrag";
-    private static final String HAS_USER_POSTED_RELATIVE_URL="/users/posted/%s";
-    private static final String HAS_USER_POSTED_URL=Configuration.BASE_URL+"/api/v1"+HAS_USER_POSTED_RELATIVE_URL;
     private final static String GET_LIMELIGHT_LIST_RELATIVE_API = "/contents/limelights/list/%s";
     private final static String GET_LIMELIGHT_LIST_API = Configuration.BASE_URL + "/api/v1" + GET_LIMELIGHT_LIST_RELATIVE_API;
+    private static final String HAS_USER_POSTED_RELATIVE_URL="/users/posted/%s";
+    private static final String HAS_USER_POSTED_URL=Configuration.BASE_URL+"/api/v1"+HAS_USER_POSTED_RELATIVE_URL;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -75,56 +74,30 @@ public class HomeFragment extends Fragment {
             ((TextView)noContent.findViewById(R.id.candeo_no_content_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/applause.ttf"));
             ((TextView)noContent.findViewById(R.id.candeo_no_content_icon)).setText(Configuration.FA_APPRECIATE);
             ((TextView)noContent.findViewById(R.id.candeo_no_content_text)).setText("No More Showcases to fetch right now");
-            CandeoUtil.toggleView(loadingContent,true);
+            CandeoUtil.toggleView(loadingContent, true);
             CandeoUtil.toggleView(noContent,false);
-            parentHomePager=(ViewPager)getActivity().findViewById(R.id.home_pager);
             showcasePager = (NonSwipeablePager)homeView.findViewById(R.id.candeo_showcase_pager);
             showcasePager.setPageTransformer(true, new ShowcaseTransformer());
-            create = (Button)homeView.findViewById(R.id.candeo_init_post);
-            feed=(Button)homeView.findViewById(R.id.candeo_feed);
-            user=(Button)homeView.findViewById(R.id.candeo_user);
-            create.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
-            create.setText(Configuration.FA_MAGIC);
+            create=(FloatingActionButton)homeView.findViewById(R.id.candeo_init_post);
+            FontAwesomeDrawable.FontAwesomeDrawableBuilder builder = new FontAwesomeDrawable.FontAwesomeDrawableBuilder(getActivity(),R.string.fa_magic);
+            builder.setColor(getActivity().getResources().getColor(R.color.candeo_white));
+            builder.setSize(20);
+            create.setImageDrawable(builder.build());
             create.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Amplitude.getInstance().logEvent("Showcase create clicked");
                     if (Preferences.isUserLoggedIn(getActivity())) {
                         CandeoUtil.showProgress(getActivity(), "Please Wait...", Configuration.FA_MAGIC);
                         CheckUserPostedRequest request = new CheckUserPostedRequest(Preferences.getUserRowId(getActivity()));
-                        request.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                        request.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 10, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
                         CandeoApplication.getInstance().getAppRequestQueue().add(request);
                     } else {
                         Intent postIntent = new Intent(getActivity(), LoginActivity.class);
                         startActivity(postIntent);
                     }
-
-
                 }
             });
-            feed.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
-            feed.setText(Configuration.FA_STATS);
-            feed.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Amplitude.getInstance().logEvent("Leaderboard clicked");
-                    parentHomePager.setCurrentItem(0);
-                }
-            });
-            user.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
-            user.setText(Configuration.FA_USER);
-            user.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Amplitude.getInstance().logEvent("User profile clicked");
-                    if (Preferences.isUserLoggedIn(getActivity())) {
-                        parentHomePager.setCurrentItem(2);
-                    } else {
-                        startActivity(new Intent(getActivity(), LoginActivity.class));
-                    }
 
-                }
-            });
 //        requestRefresh(getActivity());
         return homeView;
     }
@@ -179,7 +152,7 @@ public class HomeFragment extends Fragment {
             if(showcases!=null && showcases.size()>0)
             {
                 if(Configuration.DEBUG)Log.e(TAG,"fm "+getActivity());
-               pagerAdapter = new LimelightAdapter(showcasePager,getActivity().getSupportFragmentManager(),showcases);
+               pagerAdapter = new LimelightAdapter(showcasePager,getChildFragmentManager(),showcases);
                 showcasePager.setAdapter(pagerAdapter);
 //               pagerAdapter.notifyDataSetChanged();
                 CandeoUtil.toggleView(loadingContent,false);
@@ -198,6 +171,69 @@ public class HomeFragment extends Fragment {
 
 
     }
+
+
+
+    private class FetchLimelightList extends JsonObjectRequest {
+        private String id;
+        public FetchLimelightList(String id) {
+            super(Method.GET,
+                    String.format(GET_LIMELIGHT_LIST_API, id),
+                    new JSONObject(),
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            onGetLimelightComplete(response);
+
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                            if(Configuration.DEBUG)Log.e(TAG, "Error occured");
+                            if(Configuration.DEBUG)Log.e(TAG, "localized error while fetching is limelight " + error.getLocalizedMessage());
+                            NetworkResponse response = error.networkResponse;
+                            if (response != null) {
+                                if(Configuration.DEBUG)Log.e(TAG, "Actual error while fetching limelight is " + new String(response.data));
+                            }
+                            if(noContent!=null && loadingContent!=null)
+                            {
+                                CandeoUtil.toggleView(noContent,true);
+                                CandeoUtil.toggleView(loadingContent,false);
+                            }
+
+
+                        }
+                    }
+            );
+            this.id=id;
+        }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            String secret="";
+            if (getActivity()!=null && (Preferences.isUserLoggedIn(getActivity()) && !TextUtils.isEmpty(Preferences.getUserEmail(getActivity())))) {
+                params.put("email", Preferences.getUserEmail(getActivity()));
+                secret=Preferences.getUserApiKey(getActivity());
+
+            } else {
+                params.put("email", "");
+                secret=Configuration.CANDEO_DEFAULT_SECRET;
+            }
+            String message = String.format(GET_LIMELIGHT_LIST_RELATIVE_API,id);
+            params.put("message", message);
+            if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
+            String hash = Security.generateHmac(secret, message);
+            if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
+            params.put("Authorization", "Token token=" + hash);
+            return params;
+        }
+    }
+
+
 
     class CheckUserPostedRequest extends JsonObjectRequest
     {
@@ -270,68 +306,6 @@ public class HomeFragment extends Fragment {
             return params;
         }
     }
-
-    private class FetchLimelightList extends JsonObjectRequest {
-        private String id;
-        public FetchLimelightList(String id) {
-            super(Method.GET,
-                    String.format(GET_LIMELIGHT_LIST_API, id),
-                    new JSONObject(),
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-
-                            onGetLimelightComplete(response);
-
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-
-                            if(Configuration.DEBUG)Log.e(TAG, "Error occured");
-                            if(Configuration.DEBUG)Log.e(TAG, "localized error while fetching is limelight " + error.getLocalizedMessage());
-                            NetworkResponse response = error.networkResponse;
-                            if (response != null) {
-                                if(Configuration.DEBUG)Log.e(TAG, "Actual error while fetching limelight is " + new String(response.data));
-                            }
-                            if(noContent!=null && loadingContent!=null)
-                            {
-                                CandeoUtil.toggleView(noContent,true);
-                                CandeoUtil.toggleView(loadingContent,false);
-                            }
-
-
-                        }
-                    }
-            );
-            this.id=id;
-        }
-
-        @Override
-        public Map<String, String> getHeaders() throws AuthFailureError {
-            Map<String, String> params = new HashMap<>();
-            String secret="";
-            if (getActivity()!=null && (Preferences.isUserLoggedIn(getActivity()) && !TextUtils.isEmpty(Preferences.getUserEmail(getActivity())))) {
-                params.put("email", Preferences.getUserEmail(getActivity()));
-                secret=Preferences.getUserApiKey(getActivity());
-
-            } else {
-                params.put("email", "");
-                secret=Configuration.CANDEO_DEFAULT_SECRET;
-            }
-            String message = String.format(GET_LIMELIGHT_LIST_RELATIVE_API,id);
-            params.put("message", message);
-            if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);
-            String hash = Security.generateHmac(secret, message);
-            if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
-            params.put("Authorization", "Token token=" + hash);
-            return params;
-        }
-    }
-
-
-
 
 
 
