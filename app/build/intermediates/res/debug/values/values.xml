@@ -34,6 +34,7 @@
     <!-- From: file:/home/dholu/projects/candeo-android/app/src/main/res/values/colors.xml -->
     <eat-comment/>
     <color name="candeo_accent_light">#fffafafa</color>
+    <color name="candeo_checked_green">#ff78d08c</color>
     <color name="candeo_light_btn_blue">#ff5186ce</color>
     <color name="candeo_light_gray">#ffbdbdbd</color>
     <color name="candeo_primary">#ff8a8a8a</color>

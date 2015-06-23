@@ -71,6 +71,8 @@ public class Configuration {
     public static final String FA_BULLHORN="\uf0a1";
     public static final String FA_HOME ="\uf015";
     public static final String FA_SHOPPING_CART ="\uf07a";
+    public static final String FA_CHECK="\uf00c";
+    public static final String FA_CHECK_CIRCLE="\uf058";
 
 
     //Media types

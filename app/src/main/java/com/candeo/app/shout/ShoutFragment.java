@@ -17,6 +17,8 @@ import com.candeo.app.adapters.ShoutPagerAdapter;
 import com.candeo.app.ui.FontAwesomeDrawable;
 import com.candeo.app.ui.SlidingTabLayout;
 
+import java.util.ArrayList;
+
 public class ShoutFragment extends Fragment {
 
 
@@ -27,6 +29,7 @@ public class ShoutFragment extends Fragment {
     private ShoutListFragment shoutListFragment=null;
     private ShoutNetworkFragment shoutNetworkFragment = null;
     private SlidingTabLayout slidingTabs;
+    public static ArrayList<String> networkIdList = new ArrayList<>();
     private static final String TAG="shoutfrag";
 
     @Override
@@ -43,28 +46,21 @@ public class ShoutFragment extends Fragment {
         shoutListFragment = new ShoutListFragment();
         shoutNetworkFragment = new ShoutNetworkFragment();
         shoutPagerAdapter = new ShoutPagerAdapter(getChildFragmentManager(),shoutListFragment,shoutNetworkFragment);
-
-
-        new Handler().post(new Runnable() {
+        shoutPager.setAdapter(shoutPagerAdapter);
+        slidingTabs.setViewPager(shoutPager);
+        slidingTabs.setDistributeEvenly(true);
+        slidingTabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
-            public void run() {
-                Log.e(TAG,"I am called");
-                shoutPager.setAdapter(shoutPagerAdapter);
-                slidingTabs.setViewPager(shoutPager);
-                slidingTabs.setDistributeEvenly(true);
-                slidingTabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-                    @Override
-                    public int getIndicatorColor(int position) {
-                        return getResources().getColor(R.color.candeo_light_btn_blue);
-                    }
+            public int getIndicatorColor(int position) {
+                return getResources().getColor(R.color.candeo_light_btn_blue);
+            }
 
-                    @Override
-                    public int getDividerColor(int position) {
-                        return 0;
-                    }
-                });
+            @Override
+            public int getDividerColor(int position) {
+                return 0;
             }
         });
+
         return homeView;
     }
 

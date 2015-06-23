@@ -11,4 +11,5 @@
     <color name="candeo_splash_translucent_black">#aa000000</color>
     <color name="candeo_time_blue">#ff060852</color>
     <color name="candeo_light_btn_blue">#ff5186ce</color>
+    <color name="candeo_checked_green">#ff78d08c</color>
 </resources>
