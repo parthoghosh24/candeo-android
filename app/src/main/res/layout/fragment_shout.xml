@@ -1,57 +1,67 @@
-
-<FrameLayout
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.candeo.app.home.HomeActivity"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <include layout="@layout/no_content"
+        android:id="@+id/candeo_user_not_logged_in"
+        android:visibility="gone"/>
 
-    <LinearLayout
+    <FrameLayout
 
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_weight="1">
-
-        <com.candeo.app.ui.SlidingTabLayout
-            android:id="@+id/candeo_shout_sliding_tabs"
-            android:background="@color/candeo_white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        android:layout_height="match_parent">
 
         <LinearLayout
+
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_height="0dp"
             android:layout_weight="1">
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/candeo_shouts_pager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+            <com.candeo.app.ui.SlidingTabLayout
+                android:id="@+id/candeo_shout_sliding_tabs"
                 android:background="@color/candeo_white"
-                />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/candeo_shouts_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/candeo_white"
+                    />
+
+            </LinearLayout>
+
 
         </LinearLayout>
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/candeo_create_shout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_gravity="bottom|end"
+            app:backgroundTint="@color/candeo_light_btn_blue"
+            android:text="test"
+            app:fabSize="normal"
+            app:rippleColor="#F06292"
+            />
 
-    </LinearLayout>
+    </FrameLayout>
+</LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/candeo_create_shout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_gravity="bottom|end"
-        app:backgroundTint="@color/candeo_light_btn_blue"
-        android:text="test"
-        app:fabSize="normal"
-        app:rippleColor="#F06292"
-        />
 
-</FrameLayout>
 
 
 

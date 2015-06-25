@@ -16,13 +16,13 @@ public class Configuration {
     //Base url
 //    public static final String BASE_URL ="http://192.168.0.104:3000";
 //      public static final String BASE_URL ="http://192.168.0.103:3000";
-//      public static final String BASE_URL ="http://192.168.0.102:3000";
+      public static final String BASE_URL ="http://192.168.0.102:3000";
 //    public static final String BASE_URL ="http://192.168.0.101:3000";
 //        public static final String BASE_URL ="http://192.168.0.104:3000";
 //    public static final String BASE_URL="http://192.168.43.239:3000";
     //    public static final String BASE_URL="http://10.0.3.116:3000";
 //    public static final String BASE_URL ="http://stage.candeoapp.com";
-    public static final String BASE_URL ="http://www.candeoapp.com";
+//    public static final String BASE_URL ="http://www.candeoapp.com";
 
     public final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     public final static String GCM_SENDER_ID="1026062841670";
@@ -73,6 +73,8 @@ public class Configuration {
     public static final String FA_SHOPPING_CART ="\uf07a";
     public static final String FA_CHECK="\uf00c";
     public static final String FA_CHECK_CIRCLE="\uf058";
+    public static final String FA_UNLOCK ="\uf13e";
+    public static final String FA_LOCK="\uf023";
 
 
     //Media types

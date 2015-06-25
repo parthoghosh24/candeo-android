@@ -252,7 +252,7 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
     {
         loadingContent = root.findViewById(R.id.candeo_data_loading);
         userId=getArguments().getString("id");
-        ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/fa.ttf"));
+        ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
         ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setText(Configuration.FA_USER);
         ((TextView)loadingContent.findViewById(R.id.candeo_progress_text)).setText("Loading User...");
         toggleLoading(true);
@@ -276,7 +276,7 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
         updateUserButton=(LinearLayout)root.findViewById(R.id.candeo_user_update_button);
         if(Configuration.DEBUG)Log.e(TAG,"is same user? "+(Preferences.isUserLoggedIn(getActivity()) && !TextUtils.isEmpty(userId) && userId.equalsIgnoreCase(Preferences.getUserRowId(getActivity()))));
         updateProfileText=(TextView)root.findViewById(R.id.candeo_user_update_profile_text);
-        updateProfileText.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/fa.ttf"));
+        updateProfileText.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
         updateProfileText.setText(Configuration.FA_PENCIL);
         updateUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -295,7 +295,7 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
         });
 
         notLoggedIn = root.findViewById(R.id.candeo_user_not_logged_in);
-        ((TextView)notLoggedIn.findViewById(R.id.candeo_no_content_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/fa.ttf"));
+        ((TextView)notLoggedIn.findViewById(R.id.candeo_no_content_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
         ((TextView)notLoggedIn.findViewById(R.id.candeo_no_content_icon)).setText(Configuration.FA_USER);
         notLoggedIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -306,12 +306,13 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
         if(Preferences.isUserLoggedIn(getActivity()) || !TextUtils.isEmpty(userId))
         {
             notLoggedIn.setVisibility(View.GONE);
+            requestRefresh(getActivity());
         }
         else
         {
             notLoggedIn.setVisibility(View.VISIBLE);
         }
-        requestRefresh(getActivity());
+
 
     }
 

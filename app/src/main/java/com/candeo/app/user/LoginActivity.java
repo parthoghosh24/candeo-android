@@ -560,6 +560,10 @@ public class LoginActivity extends Activity implements UploadMediaListener {
             ome.printStackTrace();
             return  bitmap;
         }
+        catch (Exception ex)
+        {
+            return bitmap;
+        }
 
     }
 

@@ -1,89 +1,11 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin">
+    android:layout_height="match_parent">
 
-    <include layout="@layout/no_content"
-        android:id="@+id/candeo_no_content"
-        android:visibility="gone"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
-        tools:context="com.candeo.app.user.LoginActivity">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:orientation="vertical"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/candeo_user_profile_image"
-                android:layout_width="80dp"
-                android:layout_height="80dp" />
-
-            <EditText
-                android:id="@+id/candeo_user_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:hint="Enter Full Name"/>
-            <Spinner
-                android:id="@+id/candeo_login_email_selector"
-                android:layout_marginTop="40dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="100dp">
-
-            </Spinner>
-            <EditText
-                android:id="@+id/candeo_login_email_debug"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Debug email"
-                android:visibility="gone"/>
-            <Button
-                android:id="@+id/candeo_user_register"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="SIGN UP"
-                android:background="@android:color/holo_blue_light"/>
-
-
-        </LinearLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_alignParentBottom="true"
-            >
-            <Button
-                android:id="@+id/candeo_user_sign_in"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:text="SIGN IN"
-                android:textSize="12sp"
-                android:layout_alignParentLeft="true"/>
-
-            <Button
-                android:id="@+id/candeo_user_terms"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TERMS"
-                android:textSize="12sp"
-                android:background="?android:attr/selectableItemBackground"
-                android:layout_alignParentRight="true"/>
-        </RelativeLayout>
-
-    </RelativeLayout>
+    <include layout="@layout/login_layout"
+        android:id="@+id/candeo_login_layout"
+        />
 
 </LinearLayout>
 

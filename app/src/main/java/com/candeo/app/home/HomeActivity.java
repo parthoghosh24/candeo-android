@@ -125,11 +125,8 @@ public class HomeActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Amplitude.getInstance().logEvent("User profile clicked");
-                    if (Preferences.isUserLoggedIn(HomeActivity.this)) {
-                        homePager.setCurrentItem(3);
-                    } else {
-                        startActivity(new Intent(HomeActivity.this, LoginActivity.class));
-                    }
+                    homePager.setCurrentItem(3);
+
 
                 }
             });

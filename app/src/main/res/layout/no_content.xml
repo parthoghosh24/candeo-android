@@ -33,7 +33,7 @@
             android:gravity="center"
             android:textColor="@color/candeo_light_gray"
             candeo:fontName="caviar.ttf"
-            android:text="Tap to signup to create and spread talent"
+            android:text="Tap to signin/signup to create and spread talent"
             android:textSize="25sp" />
     </LinearLayout>
 
