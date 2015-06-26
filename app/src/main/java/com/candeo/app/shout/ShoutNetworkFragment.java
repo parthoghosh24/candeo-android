@@ -88,7 +88,6 @@ public class ShoutNetworkFragment extends Fragment {
     private class GetUserShoutNetwork extends JsonObjectRequest
     {
         private String id;
-        private String lastTimeStamp;
         public GetUserShoutNetwork(String id)
         {
             super(Method.GET,

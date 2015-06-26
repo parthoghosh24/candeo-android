@@ -5,6 +5,17 @@
     <attr format="reference" name="drawerArrowStyle"/>
     <attr format="dimension" name="height"/>
     <attr format="boolean" name="isLightTheme"/>
+    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/22.0.0/res/values/values.xml -->
+    <eat-comment/>
+    <attr format="reference" name="mediaRouteButtonStyle"/>
+    <attr format="reference" name="mediaRouteConnectingDrawable"/>
+    <attr format="reference" name="mediaRouteOffDrawable"/>
+    <attr format="reference" name="mediaRouteOnDrawable"/>
+    <attr format="reference" name="mediaRoutePauseDrawable"/>
+    <attr format="reference" name="mediaRoutePlayDrawable"/>
+    <attr format="reference" name="mediaRouteSettingsDrawable"/>
+    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/res/values/values.xml -->
+    <eat-comment/>
     <attr format="string" name="title"/>
     <bool name="abc_action_bar_embed_tabs">true</bool>
     <bool name="abc_action_bar_embed_tabs_pre_jb">false</bool>
@@ -52,7 +63,7 @@
     <color name="cardview_light_background">#FFFAFAFA</color>
     <color name="cardview_shadow_end_color">#03000000</color>
     <color name="cardview_shadow_start_color">#37000000</color>
-    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/res/values/common_colors.xml -->
+    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.5.0/res/values/common_colors.xml -->
     <eat-comment/>
     <color name="common_action_bar_splitter">#d2d2d2</color>
     <color name="common_signin_btn_dark_text_default">@android:color/white</color>
@@ -116,7 +127,7 @@
     <color name="switch_thumb_disabled_material_light">#ffbdbdbd</color>
     <color name="switch_thumb_normal_material_dark">#ffbdbdbd</color>
     <color name="switch_thumb_normal_material_light">#fff1f1f1</color>
-    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/res/values/wallet_colors.xml -->
+    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/7.5.0/res/values/wallet_colors.xml -->
     <eat-comment/>
     <color name="wallet_bright_foreground_disabled_holo_light">#ffb2b2b2</color>
     <color name="wallet_bright_foreground_holo_dark">#fff3f3f3</color>
@@ -148,6 +159,7 @@
     <declare-styleable name="CollapsingToolbarLayout"><attr format="dimension" name="expandedTitleMargin"/><attr format="dimension" name="expandedTitleMarginStart"/><attr format="dimension" name="expandedTitleMarginTop"/><attr format="dimension" name="expandedTitleMarginEnd"/><attr format="dimension" name="expandedTitleMarginBottom"/><attr format="reference" name="expandedTitleTextAppearance"/><attr format="reference" name="collapsedTitleTextAppearance"/><attr format="color" name="contentScrim"/><attr format="color" name="statusBarScrim"/><attr format="reference" name="toolbarId"/></declare-styleable>
     <declare-styleable name="CoordinatorLayout"><attr format="reference" name="keylines"/><attr format="reference" name="statusBarBackground"/></declare-styleable>
     <declare-styleable name="CoordinatorLayout_LayoutParams"><attr name="android:layout_gravity"/><attr format="string" name="layout_behavior"/><attr format="reference" name="layout_anchor"/><attr format="integer" name="layout_keyline"/><attr name="layout_anchorGravity"><flag name="top" value="0x30"/><flag name="bottom" value="0x50"/><flag name="left" value="0x03"/><flag name="right" value="0x05"/><flag name="center_vertical" value="0x10"/><flag name="fill_vertical" value="0x70"/><flag name="center_horizontal" value="0x01"/><flag name="fill_horizontal" value="0x07"/><flag name="center" value="0x11"/><flag name="fill" value="0x77"/><flag name="clip_vertical" value="0x80"/><flag name="clip_horizontal" value="0x08"/><flag name="start" value="0x00800003"/><flag name="end" value="0x00800005"/></attr></declare-styleable>
+    <declare-styleable name="CustomWalletTheme"><attr format="enum" name="windowTransitionStyle"><enum name="slide" value="1"/><enum name="none" value="2"/></attr></declare-styleable>
     <declare-styleable name="DrawerArrowToggle"><attr format="color" name="color"/><attr format="boolean" name="spinBars"/><attr format="dimension" name="drawableSize"/><attr format="dimension" name="gapBetweenBars"/><attr format="dimension" name="topBottomBarArrowSize"/><attr format="dimension" name="middleBarArrowSize"/><attr format="dimension" name="barSize"/><attr format="dimension" name="thickness"/></declare-styleable>
     <declare-styleable name="FloatingActionButton"><attr name="android:background"/><attr name="backgroundTint"/><attr name="backgroundTintMode"/><attr format="color" name="rippleColor"/><attr name="fabSize"><enum name="normal" value="0"/><enum name="mini" value="1"/></attr><attr name="elevation"/><attr format="dimension" name="pressedTranslationZ"/><attr format="dimension" name="borderWidth"/></declare-styleable>
     <declare-styleable name="LinearLayoutCompat"><attr name="android:orientation"/><attr name="android:gravity"/><attr name="android:baselineAligned"/><attr name="android:baselineAlignedChildIndex"/><attr name="android:weightSum"/><attr format="boolean" name="measureWithLargestChild"/><attr name="divider"/><attr name="showDividers"><flag name="none" value="0"/><flag name="beginning" value="1"/><flag name="middle" value="2"/><flag name="end" value="4"/></attr><attr format="dimension" name="dividerPadding"/></declare-styleable>
@@ -155,6 +167,7 @@
     <declare-styleable name="ListPopupWindow"><attr name="android:dropDownVerticalOffset"/><attr name="android:dropDownHorizontalOffset"/></declare-styleable>
     <declare-styleable name="LoadingImageView"><attr format="enum" name="imageAspectRatioAdjust"><enum name="none" value="0"/><enum name="adjust_width" value="1"/><enum name="adjust_height" value="2"/></attr><attr format="float" name="imageAspectRatio"/><attr format="boolean" name="circleCrop"/></declare-styleable>
     <declare-styleable name="MapAttrs"><attr format="enum" name="mapType"><enum name="none" value="0"/><enum name="normal" value="1"/><enum name="satellite" value="2"/><enum name="terrain" value="3"/><enum name="hybrid" value="4"/></attr><attr format="float" name="cameraBearing"/><attr format="float" name="cameraTargetLat"/><attr format="float" name="cameraTargetLng"/><attr format="float" name="cameraTilt"/><attr format="float" name="cameraZoom"/><attr format="boolean" name="liteMode"/><attr format="boolean" name="uiCompass"/><attr format="boolean" name="uiRotateGestures"/><attr format="boolean" name="uiScrollGestures"/><attr format="boolean" name="uiTiltGestures"/><attr format="boolean" name="uiZoomControls"/><attr format="boolean" name="uiZoomGestures"/><attr format="boolean" name="useViewLifecycle"/><attr format="boolean" name="zOrderOnTop"/><attr format="boolean" name="uiMapToolbar"/></declare-styleable>
+    <declare-styleable name="MediaRouteButton"><attr format="reference" name="externalRouteEnabledDrawable"/><attr name="android:minWidth"/><attr name="android:minHeight"/></declare-styleable>
     <declare-styleable name="MenuGroup"><attr name="android:id"/><attr name="android:menuCategory"/><attr name="android:orderInCategory"/><attr name="android:checkableBehavior"/><attr name="android:visible"/><attr name="android:enabled"/></declare-styleable>
     <declare-styleable name="MenuItem"><attr name="android:id"/><attr name="android:menuCategory"/><attr name="android:orderInCategory"/><attr name="android:title"/><attr name="android:titleCondensed"/><attr name="android:icon"/><attr name="android:alphabeticShortcut"/><attr name="android:numericShortcut"/><attr name="android:checkable"/><attr name="android:checked"/><attr name="android:visible"/><attr name="android:enabled"/><attr name="android:onClick"/><attr name="showAsAction"><flag name="never" value="0"/><flag name="ifRoom" value="1"/><flag name="always" value="2"/><flag name="withText" value="4"/><flag name="collapseActionView" value="8"/></attr><attr format="reference" name="actionLayout"/><attr format="string" name="actionViewClass"/><attr format="string" name="actionProviderClass"/></declare-styleable>
     <declare-styleable name="MenuView"><attr name="android:itemTextAppearance"/><attr name="android:horizontalDivider"/><attr name="android:verticalDivider"/><attr name="android:headerBackground"/><attr name="android:itemBackground"/><attr name="android:windowAnimationStyle"/><attr name="android:itemIconDisabledAlpha"/><attr format="boolean" name="preserveIconSpacing"/></declare-styleable>
@@ -175,7 +188,7 @@
     <declare-styleable name="Toolbar"><attr format="reference" name="titleTextAppearance"/><attr format="reference" name="subtitleTextAppearance"/><attr name="title"/><attr name="subtitle"/><attr name="android:gravity"/><attr format="dimension" name="titleMargins"/><attr format="dimension" name="titleMarginStart"/><attr format="dimension" name="titleMarginEnd"/><attr format="dimension" name="titleMarginTop"/><attr format="dimension" name="titleMarginBottom"/><attr name="contentInsetStart"/><attr name="contentInsetEnd"/><attr name="contentInsetLeft"/><attr name="contentInsetRight"/><attr format="dimension" name="maxButtonHeight"/><attr format="reference" name="collapseIcon"/><attr format="string" name="collapseContentDescription"/><attr name="popupTheme"/><attr format="reference" name="navigationIcon"/><attr format="string" name="navigationContentDescription"/><attr name="android:minHeight"/></declare-styleable>
     <declare-styleable name="View"><attr format="dimension" name="paddingStart"/><attr format="dimension" name="paddingEnd"/><attr name="android:focusable"/><attr format="reference" name="theme"/><attr name="android:theme"/><attr format="color" name="backgroundTint"/><attr name="backgroundTintMode"><enum name="src_over" value="3"/><enum name="src_in" value="5"/><enum name="src_atop" value="9"/><enum name="multiply" value="14"/><enum name="screen" value="15"/></attr></declare-styleable>
     <declare-styleable name="ViewStubCompat"><attr name="android:layout"/><attr name="android:inflatedId"/><attr name="android:id"/></declare-styleable>
-    <declare-styleable name="WalletFragmentOptions"><attr format="enum" name="appTheme"><enum name="holo_dark" value="0"/><enum name="holo_light" value="1"/></attr><attr format="enum" name="environment"><enum name="production" value="1"/><enum name="sandbox" value="0"/><enum name="strict_sandbox" value="2"/></attr><attr format="reference" name="fragmentStyle"/><attr format="enum" name="fragmentMode"><enum name="buyButton" value="1"/><enum name="selectionDetails" value="2"/></attr></declare-styleable>
+    <declare-styleable name="WalletFragmentOptions"><attr format="enum" name="appTheme"><enum name="holo_dark" value="0"/><enum name="holo_light" value="1"/></attr><attr format="enum" name="environment"><enum name="production" value="1"/><enum name="test" value="3"/><enum name="sandbox" value="0"/><enum name="strict_sandbox" value="2"/></attr><attr format="reference" name="fragmentStyle"/><attr format="enum" name="fragmentMode"><enum name="buyButton" value="1"/><enum name="selectionDetails" value="2"/></attr></declare-styleable>
     <declare-styleable name="WalletFragmentStyle"><attr format="dimension" name="buyButtonHeight"><enum name="match_parent" value="-1"/><enum name="wrap_content" value="-2"/></attr><attr format="dimension" name="buyButtonWidth"><enum name="match_parent" value="-1"/><enum name="wrap_content" value="-2"/></attr><attr format="enum" name="buyButtonText"><enum name="buy_with_google" value="1"/><enum name="buy_now" value="2"/><enum name="book_now" value="3"/><enum name="donate_with_google" value="4"/></attr><attr format="enum" name="buyButtonAppearance"><enum name="classic" value="1"/><enum name="grayscale" value="2"/><enum name="monochrome" value="3"/></attr><attr format="reference" name="maskedWalletDetailsTextAppearance"/><attr format="reference" name="maskedWalletDetailsHeaderTextAppearance"/><attr format="reference|color" name="maskedWalletDetailsBackground"/><attr format="reference" name="maskedWalletDetailsButtonTextAppearance"/><attr format="reference|color" name="maskedWalletDetailsButtonBackground"/><attr format="color" name="maskedWalletDetailsLogoTextColor"/><attr format="enum" name="maskedWalletDetailsLogoImageType"><enum name="classic" value="1"/><enum name="monochrome" value="2"/></attr></declare-styleable>
     <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/res/values/values.xml -->
     <eat-comment/>
@@ -267,6 +280,9 @@
     <dimen name="fab_size_mini">40dp</dimen>
     <dimen name="fab_size_normal">56dp</dimen>
     <dimen name="fab_translation_z_pressed">6dp</dimen>
+    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/22.0.0/res/values/values.xml -->
+    <eat-comment/>
+    <dimen name="mr_media_route_controller_art_max_height">320dp</dimen>
     <!-- From: file:/home/dholu/projects/candeo-android/app/src/main/res/values/dimens.xml -->
     <eat-comment/>
     <dimen name="navigation_drawer_width">240dp</dimen>
@@ -305,6 +321,11 @@
     <item name="action_bar_spinner" type="id"/>
     <item name="action_menu_divider" type="id"/>
     <item name="action_menu_presenter" type="id"/>
+    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/7.5.0/res/values/cast_ids.xml -->
+    <eat-comment/>
+    <item name="cast_notification_id" type="id"/>
+    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/res/values/values.xml -->
+    <eat-comment/>
     <item name="home" type="id"/>
     <item name="progress_circular" type="id"/>
     <item name="progress_horizontal" type="id"/>
@@ -319,9 +340,9 @@
     <integer name="abc_config_activityShortDur">150</integer>
     <integer name="abc_max_action_buttons">2</integer>
     <integer name="cancel_button_image_alpha">127</integer>
-    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/res/values/version.xml -->
+    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.5.0/res/values/version.xml -->
     <eat-comment/>
-    <integer name="google_play_services_version">6587000</integer>
+    <integer name="google_play_services_version">7571000</integer>
     <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.android.support/design/22.2.0/res/values/values.xml -->
     <eat-comment/>
     <integer name="snackbar_text_max_lines">2</integer>
@@ -345,7 +366,7 @@
     <string name="abc_shareactionprovider_share_with">Share with</string>
     <string name="abc_shareactionprovider_share_with_application">Share with %s</string>
     <string name="abc_toolbar_collapse_description">Collapse</string>
-    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/res/values/admob_strings.xml -->
+    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.5.0/res/values/admob_strings.xml -->
     <eat-comment/>
     <string name="accept">Accept</string>
     <!-- From: file:/home/dholu/projects/candeo-android/app/src/main/res/values/strings.xml -->
@@ -355,37 +376,50 @@
     <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.android.support/design/22.2.0/res/values/values.xml -->
     <eat-comment/>
     <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
-    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/res/values/common_strings.xml -->
+    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.5.0/res/values/auth_strings.xml -->
     <eat-comment/>
-    <string name="common_android_wear_notification_needs_update_text">An application requires an update to the Android Wear app.</string>
-    <string name="common_android_wear_update_text">This app won\'t run unless you update the Android Wear app.</string>
+    <string name="auth_google_play_services_client_facebook_display_name">Facebook</string>
+    <string name="auth_google_play_services_client_google_display_name">Google</string>
+    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/7.5.0/res/values/cast_strings.xml -->
+    <eat-comment/>
+    <string name="cast_notification_connected_message">Connected to <ns1:g id="name">%1$s</ns1:g></string>
+    <string name="cast_notification_connecting_message">Connecting to <ns1:g id="name">%1$s</ns1:g></string>
+    <string name="cast_notification_disconnect">Disconnect</string>
+    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.5.0/res/values/common_strings.xml -->
+    <eat-comment/>
+    <string name="common_android_wear_notification_needs_update_text"><ns1:g id="app_name">%1$s</ns1:g> requires an update to the Android Wear app.</string>
+    <string name="common_android_wear_update_text"><ns1:g id="app_name">%1$s</ns1:g> won\'t run unless you update the Android Wear app.</string>
     <string msgid="6006316683626838685" name="common_android_wear_update_title">Update Android Wear</string>
+    <string name="common_google_play_services_api_unavailable_text"><ns1:g id="app_name">%1$s</ns1:g> requires one or more Google Play services that are not currently available. Please contact the developer for assistance.</string>
     <string msgid="2523291102206661146" name="common_google_play_services_enable_button">Enable Google Play services</string>
-    <string msgid="227660514972886228" name="common_google_play_services_enable_text">This app won\'t work unless you enable Google Play services.</string>
+    <string msgid="227660514972886228" name="common_google_play_services_enable_text"><ns1:g id="app_name">%1$s</ns1:g> won\'t work unless you enable Google Play services.</string>
     <string msgid="5122002158466380389" name="common_google_play_services_enable_title">Enable Google Play services</string>
     <string name="common_google_play_services_error_notification_requested_by_msg">Requested by <ns1:g id="app_name">%1$s</ns1:g></string>
     <string msgid="7153882981874058840" name="common_google_play_services_install_button">Get Google Play services</string>
-    <string msgid="2122112764540849864" name="common_google_play_services_install_text_phone">This app won\'t run without Google Play services, which are missing from your phone.</string>
-    <string msgid="7351599665250191022" name="common_google_play_services_install_text_tablet">This app won\'t run without Google Play services, which are missing from your tablet.</string>
+    <string msgid="2122112764540849864" name="common_google_play_services_install_text_phone"><ns1:g id="app_name">%1$s</ns1:g> won\'t run without Google Play services, which are missing from your phone.</string>
+    <string msgid="7351599665250191022" name="common_google_play_services_install_text_tablet"><ns1:g id="app_name">%1$s</ns1:g> won\'t run without Google Play services, which are missing from your tablet.</string>
     <string msgid="7215213145546190223" name="common_google_play_services_install_title">Get Google Play services</string>
     <string name="common_google_play_services_invalid_account_text">The specified account does not exist on this device. Please choose a different account.</string>
     <string name="common_google_play_services_invalid_account_title">Invalid Account</string>
     <string name="common_google_play_services_needs_enabling_title">An application requires Google Play services to be enabled.</string>
     <string name="common_google_play_services_network_error_text">A data connection is required to connect to Google Play services.</string>
     <string name="common_google_play_services_network_error_title">Network Error</string>
-    <string name="common_google_play_services_notification_needs_installation_title">An application requires installation of Google Play services.</string>
     <string name="common_google_play_services_notification_needs_update_title">An application requires an update for Google Play services.</string>
     <string name="common_google_play_services_notification_ticker">Google Play services error</string>
+    <string name="common_google_play_services_sign_in_failed_text">Error signing in the specified account. Please choose a different account.</string>
+    <string name="common_google_play_services_sign_in_failed_title">Sign in failed</string>
     <string name="common_google_play_services_unknown_issue">Unknown issue with Google Play services.</string>
-    <string name="common_google_play_services_unsupported_text">Google Play services, which some of your applications rely on, is not supported by your device. Please contact the manufacturer for assistance.</string>
+    <string name="common_google_play_services_unsupported_text"><ns1:g id="app_name">%1$s</ns1:g> relies on Google Play services, which is not supported by your device. Contact the manufacturer for assistance.</string>
     <string name="common_google_play_services_unsupported_title">Google Play services</string>
     <string msgid="6556509956452265614" name="common_google_play_services_update_button">Update</string>
-    <string msgid="9053896323427875356" name="common_google_play_services_update_text">This app won\'t run unless you update Google Play services.</string>
+    <string msgid="9053896323427875356" name="common_google_play_services_update_text"><ns1:g id="app_name">%1$s</ns1:g> won\'t run unless you update Google Play services.</string>
     <string msgid="6006316683626838685" name="common_google_play_services_update_title">Update Google Play services</string>
+    <string name="common_google_play_services_updating_text"><ns1:g id="app_name">%1$s</ns1:g> won\'t run without Google Play services, which are currently updating.</string>
+    <string name="common_google_play_services_updating_title">Google Play services are updating</string>
     <string name="common_open_on_phone">Open on phone</string>
     <string name="common_signin_button_text">Sign in</string>
     <string name="common_signin_button_text_long">Sign in with Google</string>
-    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/res/values/admob_strings.xml -->
+    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.5.0/res/values/admob_strings.xml -->
     <eat-comment/>
     <string name="create_calendar_message">Allow Ad to create a calendar event?</string>
     <string name="create_calendar_title">Create calendar event</string>
@@ -396,10 +430,22 @@
     <string name="fa_magic"></string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hello_world">Hello world!</string>
+    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/22.0.0/res/values/values.xml -->
+    <eat-comment/>
+    <string name="mr_media_route_button_content_description">Cast</string>
+    <string name="mr_media_route_chooser_searching">Searching for devices\u2026</string>
+    <string name="mr_media_route_chooser_title">Connect to device</string>
+    <string name="mr_media_route_controller_disconnect">Disconnect</string>
+    <string name="mr_media_route_controller_pause">Pause</string>
+    <string name="mr_media_route_controller_play">Play</string>
+    <string name="mr_media_route_controller_settings_description">Route settings</string>
+    <string name="mr_media_route_controller_stop">Stop casting</string>
+    <string name="mr_system_route_name">System</string>
+    <string name="mr_user_route_category_name">Devices</string>
     <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/res/values/values.xml -->
     <eat-comment/>
     <string name="status_bar_notification_info_overflow">999+</string>
-    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/res/values/admob_strings.xml -->
+    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.5.0/res/values/admob_strings.xml -->
     <eat-comment/>
     <string name="store_picture_message">"Allow Ad to store image in Picture gallery?"</string>
     <string name="store_picture_title">Save image</string>
@@ -417,7 +463,7 @@
     <string name="title_activity_shout">ShoutActivity</string>
     <string name="title_activity_user">UserActivity</string>
     <string name="title_activity_user_verify">Candeo</string>
-    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/res/values/wallet_strings.xml -->
+    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/7.5.0/res/values/wallet_strings.xml -->
     <eat-comment/>
     <string name="wallet_buy_button_place_holder" translation_description="Text on a button that allows a user to make a payment with Google Wallet [CHAR LIMIT=30]">Buy with Google</string>
     <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/res/values/values.xml -->
@@ -1645,7 +1691,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/res/values/admob_iap_style.xml -->
+    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.5.0/res/values/admob_iap_style.xml -->
     <eat-comment/>
     <style name="Theme.IAPTheme" parent="android:Theme">
     <item name="android:windowIsTranslucent">true</item>
@@ -1655,6 +1701,28 @@
     <item name="android:windowIsFloating">true</item>
     <item name="android:backgroundDimEnabled">false</item>
   </style>
+    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/22.0.0/res/values/values.xml -->
+    <eat-comment/>
+    <style name="Theme.MediaRouter" parent="">
+        <item name="mediaRouteButtonStyle">@style/Widget.MediaRouter.MediaRouteButton</item>
+
+        <item name="mediaRouteOffDrawable">@drawable/ic_media_route_off_mono_dark</item>
+        <item name="mediaRouteConnectingDrawable">@drawable/mr_ic_media_route_connecting_mono_dark</item>
+        <item name="mediaRouteOnDrawable">@drawable/ic_media_route_on_mono_dark</item>
+        <item name="mediaRouteSettingsDrawable">@drawable/mr_ic_settings_dark</item>
+        <item name="mediaRoutePlayDrawable">@drawable/mr_ic_play_dark</item>
+        <item name="mediaRoutePauseDrawable">@drawable/mr_ic_pause_dark</item>
+    </style>
+    <style name="Theme.MediaRouter.Light" parent="">
+        <item name="mediaRouteButtonStyle">@style/Widget.MediaRouter.Light.MediaRouteButton</item>
+
+        <item name="mediaRouteOffDrawable">@drawable/ic_cast_off_light</item>
+        <item name="mediaRouteConnectingDrawable">@drawable/mr_ic_media_route_connecting_mono_light</item>
+        <item name="mediaRouteOnDrawable">@drawable/ic_cast_on_light</item>
+        <item name="mediaRouteSettingsDrawable">@drawable/mr_ic_settings_light</item>
+        <item name="mediaRoutePlayDrawable">@drawable/mr_ic_play_light</item>
+        <item name="mediaRoutePauseDrawable">@drawable/mr_ic_pause_light</item>
+    </style>
     <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/res/values/values.xml -->
     <eat-comment/>
     <style name="ThemeOverlay.AppCompat" parent="Base.ThemeOverlay.AppCompat"/>
@@ -1662,7 +1730,7 @@
     <style name="ThemeOverlay.AppCompat.Dark" parent="Base.ThemeOverlay.AppCompat.Dark"/>
     <style name="ThemeOverlay.AppCompat.Dark.ActionBar" parent="Base.ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="ThemeOverlay.AppCompat.Light" parent="Base.ThemeOverlay.AppCompat.Light"/>
-    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/res/values/wallet_styles.xml -->
+    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/7.5.0/res/values/wallet_styles.xml -->
     <eat-comment/>
     <style name="WalletFragmentDefaultButtonTextAppearance">
         <item name="android:textColor">@color/wallet_primary_text_holo_light</item>
@@ -1840,5 +1908,23 @@
     <style name="Widget.Design.TextInputLayout" parent="android:Widget">
         <item name="hintTextAppearance">@style/TextAppearance.Design.Hint</item>
         <item name="errorTextAppearance">@style/TextAppearance.Design.Error</item>
+    </style>
+    <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/22.0.0/res/values/values.xml -->
+    <eat-comment/>
+    <style name="Widget.MediaRouter.Light.MediaRouteButton" parent="Widget.AppCompat.Light.ActionButton">
+        <item name="android:minWidth">56dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:focusable">true</item>
+        <item name="android:contentDescription">@string/mr_media_route_button_content_description</item>
+        <item name="externalRouteEnabledDrawable">@drawable/mr_ic_media_route_mono_light</item>
+    </style>
+    <style name="Widget.MediaRouter.MediaRouteButton" parent="Widget.AppCompat.ActionButton">
+        <item name="android:minWidth">56dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:focusable">true</item>
+        <item name="android:contentDescription">@string/mr_media_route_button_content_description</item>
+        <item name="externalRouteEnabledDrawable">@drawable/mr_ic_media_route_mono_dark</item>
     </style>
 </resources>

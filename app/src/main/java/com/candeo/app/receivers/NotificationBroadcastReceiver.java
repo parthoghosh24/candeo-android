@@ -25,15 +25,19 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
         try
         {
-            JSONObject json = new JSONObject(intent.getStringExtra("message"));
-            HashMap<String,String> map = new HashMap<>();
-            map.put("title",json.getString("title"));
-            map.put("body", json.getString("body"));
-            map.put("imageUrl", json.getString("imageUrl"));
-            map.put("bigImageUrl", json.getString("bigImageUrl"));
-            map.put("type", json.getString("type"));
-            map.put("id", json.getString("id"));
-            new LoadNotification(map,context).execute();
+            if(intent.getStringExtra("message")!=null)
+            {
+                JSONObject json = new JSONObject(intent.getStringExtra("message"));
+                HashMap<String,String> map = new HashMap<>();
+                map.put("title",json.getString("title"));
+                map.put("body", json.getString("body"));
+                map.put("imageUrl", json.getString("imageUrl"));
+                map.put("bigImageUrl", json.getString("bigImageUrl"));
+                map.put("type", json.getString("type"));
+                map.put("id", json.getString("id"));
+                new LoadNotification(map,context).execute();
+            }
+
 
 
         }

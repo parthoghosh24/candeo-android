@@ -143,6 +143,7 @@ public class ShoutFragment extends Fragment implements ShoutListener{
     @Override
     public void onSuccess() {
         shoutPager.setCurrentItem(0,true);
+        shoutListFragment.requestRefresh();
     }
 
     @Override
