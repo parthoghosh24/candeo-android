@@ -135,6 +135,10 @@ public class ShoutNetworkAdapter extends RecyclerView.Adapter<ShoutNetworkAdapte
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
 
             return bitmap;
         }

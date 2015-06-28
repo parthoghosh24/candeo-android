@@ -75,6 +75,7 @@ public class Configuration {
     public static final String FA_CHECK_CIRCLE="\uf058";
     public static final String FA_UNLOCK ="\uf13e";
     public static final String FA_LOCK="\uf023";
+    public static final String FA_PAPERPLANE="\uf1d8";
 
 
     //Media types

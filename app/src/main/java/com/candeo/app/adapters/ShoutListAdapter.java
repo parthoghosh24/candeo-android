@@ -1,6 +1,7 @@
 package com.candeo.app.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
+import com.candeo.app.shout.ShoutActivity;
 import com.candeo.app.util.CandeoUtil;
 
 import java.io.IOException;
@@ -44,10 +46,16 @@ public class ShoutListAdapter extends RecyclerView.Adapter<ShoutListAdapter.Shou
         this.selectedList = new SparseBooleanArray();
     }
 
+    public void refreshList(List<HashMap<String, Object>> shoutList)
+    {
+        this.shoutList.clear();
+        this.shoutList.addAll(shoutList);
+    }
+
     @Override
     public ShoutListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.shout_list_item,parent,false);
-        return new ShoutListHolder(itemLayoutView);
+        return new ShoutListHolder(itemLayoutView,mContext);
     }
 
     @Override
@@ -83,7 +91,8 @@ public class ShoutListAdapter extends RecyclerView.Adapter<ShoutListAdapter.Shou
         public CircleImageView userAvatar;
         public TextView name, body,typeIcon, typeText,timestamp;
         public View view;
-        public ShoutListHolder(View itemLayoutView)
+        private Context mContext;
+        public ShoutListHolder(View itemLayoutView, Context mContext)
         {
             super(itemLayoutView);
             name = (TextView)itemLayoutView.findViewById(R.id.candeo_shout_list_user_name);
@@ -93,13 +102,16 @@ public class ShoutListAdapter extends RecyclerView.Adapter<ShoutListAdapter.Shou
             timestamp=(TextView)itemLayoutView.findViewById(R.id.candeo_shout_list_timestamp);
             userAvatar = (CircleImageView)itemLayoutView.findViewById(R.id.candeo_shout_list_user_avatar);
             view = itemLayoutView;
+            this.mContext=mContext;
             view.setOnClickListener(this);
 
         }
 
         @Override
         public void onClick(View v) {
-
+              Intent intent = new Intent(mContext, ShoutActivity.class);
+              intent.putExtra("id",view.getTag().toString());
+              mContext.startActivity(intent);
         }
     }
 
@@ -119,6 +131,10 @@ public class ShoutListAdapter extends RecyclerView.Adapter<ShoutListAdapter.Shou
                 bitmap = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
             } catch (IOException ioe) {
                 ioe.printStackTrace();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
             }
 
             return bitmap;

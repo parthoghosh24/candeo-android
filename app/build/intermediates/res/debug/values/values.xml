@@ -428,6 +428,7 @@
     <eat-comment/>
     <string name="fa_bullhorn"></string>
     <string name="fa_magic"></string>
+    <string name="fa_paperplane"></string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hello_world">Hello world!</string>
     <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/22.0.0/res/values/values.xml -->
@@ -460,7 +461,7 @@
     <string name="title_activity_post">PostActivity</string>
     <string name="title_activity_record">RecordActivity</string>
     <string name="title_activity_respond">RespondActivity</string>
-    <string name="title_activity_shout">ShoutActivity</string>
+    <string name="title_activity_shout">Shout</string>
     <string name="title_activity_user">UserActivity</string>
     <string name="title_activity_user_verify">Candeo</string>
     <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/7.5.0/res/values/wallet_strings.xml -->

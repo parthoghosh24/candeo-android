@@ -815,6 +815,10 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
                 ioe.printStackTrace();
             }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
 
             return bitmap;
         }

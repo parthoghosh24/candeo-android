@@ -9,22 +9,36 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
 import com.candeo.app.adapters.ShoutPagerAdapter;
+import com.candeo.app.algorithms.Security;
+import com.candeo.app.content.PostActivity;
 import com.candeo.app.ui.FontAwesomeDrawable;
 import com.candeo.app.ui.SlidingTabLayout;
 import com.candeo.app.user.LoginActivity;
 import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.Preferences;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ShoutFragment extends Fragment implements ShoutListener{
 
@@ -40,6 +54,8 @@ public class ShoutFragment extends Fragment implements ShoutListener{
     private static final String TAG="shoutfrag";
     private ShoutListener mListener=null;
     private View notLoggedIn;
+    private static final String CAN_USER_SHOUT_RELATIVE_URL="/users/shout/%s";
+    private static final String CAN_USER_SHOUT_URL=Configuration.BASE_URL+"/api/v1"+CAN_USER_SHOUT_RELATIVE_URL;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,16 +104,10 @@ public class ShoutFragment extends Fragment implements ShoutListener{
             shout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ShoutPostFragment response = new ShoutPostFragment();
-                    response.setShoutListener(mListener);
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("participants", networkIdList.size());
-                    bundle.putString("ids",getIdsAsString(networkIdList));
-                    networkIdList.toArray();
-                    bundle.putStringArrayList("participantsList",networkIdList);
-                    response.setArguments(bundle);
-                    response.setStyle(DialogFragment.STYLE_NO_TITLE,android.R.style.Theme_Holo_Light_Dialog);
-                    response.show(getChildFragmentManager().beginTransaction(), "Shout");
+                    CandeoUtil.showProgress(getActivity(), "Please Wait...", Configuration.FA_BULLHORN);
+                    CheckUserCanShoutRequest request = new CheckUserCanShoutRequest(Preferences.getUserRowId(getActivity()));
+                    request.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 10, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                    CandeoApplication.getInstance().getAppRequestQueue().add(request);
                 }
             });
         }
@@ -154,6 +164,84 @@ public class ShoutFragment extends Fragment implements ShoutListener{
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+    }
+
+    class CheckUserCanShoutRequest extends JsonObjectRequest
+    {
+        private String id;
+        public CheckUserCanShoutRequest(String id)
+        {
+            super(Method.GET,
+                    String.format(CAN_USER_SHOUT_URL,id),
+                    new JSONObject(),
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            CandeoUtil.hideProgress();
+                            if(response!=null)
+                            {
+                                try {
+                                    JSONObject hasPosted = response.getJSONObject("response");
+                                    if(hasPosted!=null)
+                                    {
+                                        boolean posted = hasPosted.getBoolean("state");
+                                        if(!posted)
+                                        {
+                                            CandeoUtil.appAlertDialog(getActivity(),"You Should have at least have one fan or you should at least promote one user to shout. Create or Appreciate to shout.");
+                                        }
+                                        else
+                                        {
+                                            ShoutPostFragment shout = new ShoutPostFragment();
+                                            shout.setShoutListener(mListener);
+                                            Bundle bundle = new Bundle();
+                                            bundle.putInt("participants", networkIdList.size());
+                                            bundle.putString("ids",getIdsAsString(networkIdList));
+                                            networkIdList.toArray();
+                                            bundle.putStringArrayList("participantsList",networkIdList);
+                                            shout.setArguments(bundle);
+                                            shout.setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light_Dialog);
+                                            shout.show(getChildFragmentManager().beginTransaction(), "Shout");
+                                        }
+
+                                    }
+                                }
+                                catch (JSONException jse)
+                                {
+                                    jse.printStackTrace();
+                                    Toast.makeText(getActivity(),"Please try again",Toast.LENGTH_SHORT).show();;
+                                }
+
+                            }
+
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            CandeoUtil.hideProgress();
+                            Toast.makeText(getActivity(),"Please try again",Toast.LENGTH_SHORT).show();;
+                        }
+                    });
+            this.id=id;
+        }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            if (Preferences.isUserLoggedIn(getActivity()) && !TextUtils.isEmpty(Preferences.getUserEmail(getActivity()))) {
+                String secret="";
+                params.put("email", Preferences.getUserEmail(getActivity()));
+                secret=Preferences.getUserApiKey(getActivity());
+                String message = String.format(CAN_USER_SHOUT_RELATIVE_URL,id);
+                params.put("message", message);
+                if(Configuration.DEBUG) Log.e(TAG, "secret->" + secret);
+                String hash = Security.generateHmac(secret, message);
+                if(Configuration.DEBUG)Log.e(TAG,"hash->"+hash);
+                params.put("Authorization", "Token token=" + hash);
+
+            }
+            return params;
+        }
     }
 
 

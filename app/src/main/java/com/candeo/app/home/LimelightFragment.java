@@ -362,6 +362,10 @@ public class LimelightFragment extends Fragment{
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
 
             return bitmap;
         }

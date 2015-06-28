@@ -26,6 +26,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
+                    android:focusableInTouchMode="true"
+                    android:descendantFocusability="beforeDescendants"
                     android:layout_centerInParent="true">
 
 

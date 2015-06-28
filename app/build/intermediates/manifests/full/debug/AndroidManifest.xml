@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.candeo.app"
-    android:versionCode="5"
-    android:versionName="0.5" >
+    android:versionCode="6"
+    android:versionName="0.6" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -154,7 +154,11 @@
         </activity>
         <activity
             android:name="com.candeo.app.shout.ShoutActivity"
-            android:label="@string/title_activity_shout" >
+            android:configChanges="keyboard|orientation|screenSize"
+            android:label="@string/title_activity_shout"
+            android:parentActivityName="com.candeo.app.home.HomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Light.NoActionBar" >
         </activity>
         <activity
             android:name="android.support.v7.widget.TestActivity"

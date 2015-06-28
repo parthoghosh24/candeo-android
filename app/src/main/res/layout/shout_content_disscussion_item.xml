@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:candeo="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="50dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:paddingRight="10dp"
+    android:paddingLeft="5dp"
+    android:weightSum="10">
+
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/candeo_shout_discussion_dummy_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_weight="5">
+
+    </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView
+        android:id="@+id/candeo_shout_discussion_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        candeo:cardBackgroundColor="@color/candeo_light_btn_blue"
+        android:layout_weight="5"
+        candeo:cardElevation="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:orientation="vertical">
+
+            <com.candeo.app.ui.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/candeo_shout_discussion_name"
+                android:textColor="@color/candeo_accent_light"
+                android:textSize="12sp"
+                candeo:fontName="caviar_bold.ttf"
+                android:text="Name"
+                />
+            <com.candeo.app.ui.CustomTextView
+                android:id="@+id/candeo_shout_discussion_message"
+                android:layout_width="wrap_content"
+                android:maxEms="20"
+                android:layout_height="wrap_content"
+                android:textColor="@color/candeo_white"
+                android:textSize="12sp"
+                android:text="Body Body Body Body Body Body "
+                android:layout_marginTop="5dp"
+                candeo:fontName="caviar_bold.ttf"/>
+
+        </LinearLayout>
+
+
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

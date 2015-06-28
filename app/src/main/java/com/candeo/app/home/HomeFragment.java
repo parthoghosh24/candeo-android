@@ -153,7 +153,11 @@ public class HomeFragment extends Fragment {
             {
                 if(Configuration.DEBUG)Log.e(TAG,"fm "+getActivity());
                pagerAdapter = new LimelightAdapter(showcasePager,getChildFragmentManager(),showcases);
-                showcasePager.setAdapter(pagerAdapter);
+                if(showcasePager!=null && pagerAdapter!=null)
+                {
+                    showcasePager.setAdapter(pagerAdapter);
+                }
+
 //               pagerAdapter.notifyDataSetChanged();
                 CandeoUtil.toggleView(loadingContent,false);
                 CandeoUtil.toggleView(noContent,false);

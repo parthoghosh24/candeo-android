@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -54,7 +55,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class LoginActivity extends Activity implements UploadMediaListener {
+public class LoginActivity extends AppCompatActivity implements UploadMediaListener {
 
     private Spinner emailSelector;
     private EditText debugEmail;
@@ -71,6 +72,7 @@ public class LoginActivity extends Activity implements UploadMediaListener {
     private Uri imageUri;
     private Bitmap bitmap;
     private View noContent =null;
+    private TextView profileText;
     ArrayList<String> emails;
 
     private static final String API_REGISTER_RELATIVE_URL="/users/register";
@@ -92,6 +94,7 @@ public class LoginActivity extends Activity implements UploadMediaListener {
         if(Configuration.DEBUG)debugEmail.setVisibility(View.VISIBLE);
         emails= CandeoUtil.emailAddresses(this);
         terms=(Button)findViewById(R.id.candeo_user_terms);
+        profileText=(TextView)findViewById(R.id.candeo_user_profile_image_text);
         ArrayAdapter<String> emailSelectorAdapter = new ArrayAdapter<>(this, R.layout.candeo_email_spinner_item,emails.toArray(new String[emails.size()]));
         emailSelectorAdapter.setDropDownViewResource(R.layout.candeo_spinner_dropdown_item);
         emailSelector.setAdapter(emailSelectorAdapter);
@@ -129,6 +132,7 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                 {
                     isSignup=false;
                     name.setVisibility(View.GONE);
+                    profileText.setVisibility(View.GONE);
                     userProfile.setVisibility(View.GONE);
                     signup.setText("SIGN IN");
                     signin.setText("SIGN UP");
@@ -137,6 +141,7 @@ public class LoginActivity extends Activity implements UploadMediaListener {
                 {
                     isSignup=true;
                     name.setVisibility(View.VISIBLE);
+                    profileText.setVisibility(View.VISIBLE);
                     userProfile.setVisibility(View.VISIBLE);
                     signup.setText("SIGN UP");
                     signin.setText("SIGN IN");

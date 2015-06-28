@@ -4,130 +4,143 @@
     xmlns:candeo="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="10dp">
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="5dp"
-        android:weightSum="10">
+        android:layout_height="wrap_content"
+        candeo:cardBackgroundColor="@color/candeo_light_btn_blue"
+        candeo:cardElevation="4dp">
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:gravity="left"
-            android:layout_height="wrap_content"
-            android:layout_weight="2">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/candeo_shout_list_user_avatar"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                candeo:border_width="2dp"
-                candeo:border_color="@color/candeo_translucent_black"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_marginLeft="5dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="8">
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            android:layout_margin="1dp"
+            android:background="@color/candeo_white"
+            android:weightSum="10">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <com.candeo.app.ui.CustomTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/candeo_shout_list_user_name"
-                    android:textColor="@color/candeo_translucent_black"
-                    android:textSize="18sp"
-                    candeo:fontName="caviar.ttf"
-                    android:text="Partho Ghosh"
-                    android:textStyle="bold"/>
-
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/candeo_shout_list_body"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:layout_width="0dp"
+                android:gravity="left"
+                android:layout_height="wrap_content"
+                android:layout_weight="2">
 
-
-                <com.candeo.app.ui.CustomTextView
-                    android:id="@+id/candeo_shout_list_body_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/candeo_primary_dark"
-                    android:textSize="20sp"
-                    android:text="Hello World"
-                    candeo:fontName="caviar.ttf"/>
-
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/candeo_shout_list_user_avatar"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    candeo:border_width="2dp"
+                    candeo:border_color="@color/candeo_white"/>
 
             </LinearLayout>
 
-
             <LinearLayout
-                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_marginLeft="5dp"
                 android:layout_height="wrap_content"
-                android:weightSum="10"
-                android:layout_marginTop="20dp"
-                android:orientation="horizontal">
+                android:layout_weight="8">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_weight="5"
-                    android:orientation="horizontal"
-                    >
-
-                    <TextView
-                        android:id="@+id/candeo_shout_list_type"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/candeo_checked_green"
-                        android:textStyle="bold"
-                        android:text="PUBLIC"/>
+                    android:orientation="horizontal">
 
                     <com.candeo.app.ui.CustomTextView
-                        android:id="@+id/candeo_shout_list_type_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:textColor="@color/candeo_checked_green"
-                        android:textStyle="bold"
+                        android:id="@+id/candeo_shout_list_user_name"
+                        android:textColor="@color/candeo_translucent_black"
+                        android:textSize="18sp"
                         candeo:fontName="caviar.ttf"
-                        android:textSize="13sp"
-                        android:text="PUBLIC"/>
+                        android:text="Partho Ghosh"
+                        android:textStyle="bold"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/candeo_shout_list_body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+
+                    <com.candeo.app.ui.CustomTextView
+                        android:id="@+id/candeo_shout_list_body_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/candeo_primary_dark"
+                        android:textSize="20sp"
+                        android:text="Hello World"
+                        candeo:fontName="caviar.ttf"/>
+
+
                 </LinearLayout>
 
-                <com.candeo.app.ui.CustomTextView
-                    android:id="@+id/candeo_shout_list_timestamp"
-                    android:layout_width="wrap_content"
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:gravity="right"
-                    android:layout_weight="5"
-                    android:textColor="@color/candeo_primary_dark"
-                    android:textSize="13sp"
-                    candeo:fontName="caviar.ttf"
-                    android:text="44 minutes ago"/>
+                    android:weightSum="10"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:layout_weight="5"
+                        android:orientation="horizontal"
+                        >
+
+                        <TextView
+                            android:id="@+id/candeo_shout_list_type"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/candeo_checked_green"
+                            android:textStyle="bold"
+                            android:text="PUBLIC"/>
+
+                        <com.candeo.app.ui.CustomTextView
+                            android:id="@+id/candeo_shout_list_type_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:textColor="@color/candeo_checked_green"
+                            android:textStyle="bold"
+                            candeo:fontName="caviar.ttf"
+                            android:textSize="13sp"
+                            android:text="PUBLIC"/>
+                    </LinearLayout>
+
+                    <com.candeo.app.ui.CustomTextView
+                        android:id="@+id/candeo_shout_list_timestamp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:gravity="right"
+                        android:layout_weight="5"
+                        android:textColor="@color/candeo_primary_dark"
+                        android:textSize="13sp"
+                        candeo:fontName="caviar.ttf"
+                        android:text="44 minutes ago"/>
+
+                </LinearLayout>
+
+
 
             </LinearLayout>
 
 
-
         </LinearLayout>
 
+    </android.support.v7.widget.CardView>
 
-    </LinearLayout>
+
 
 </LinearLayout>

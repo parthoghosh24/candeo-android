@@ -1,6 +1,7 @@
 package com.candeo.app.shout;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -44,6 +45,7 @@ public class ShoutListFragment extends Fragment {
     private View noShoutListContent;
     private View loadingContent;
     private View root;
+    private Context mContext;
     private static final String GET_SHOUT_LIST_RELATIVE_API="/shouts/list/%s";
     private static final String GET_SHOUT_LIST_API=Configuration.BASE_URL+"/api/v1"+GET_SHOUT_LIST_RELATIVE_API;
     private static final String TAG="shout_list";
@@ -53,6 +55,7 @@ public class ShoutListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         root= inflater.inflate(R.layout.fragment_shout_list, container, false);
+        mContext=getActivity();
         initWidgets();
         return root;
     }
@@ -64,20 +67,20 @@ public class ShoutListFragment extends Fragment {
         shoutList = (RecyclerView)root.findViewById(R.id.candeo_shout_list);
         shoutList.setHasFixedSize(true);
         shoutList.setAdapter(shoutListAdapter);
-        shoutListLayoutManager= new LinearLayoutManager(getActivity());
+        shoutListLayoutManager= new LinearLayoutManager(mContext);
         shoutListLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         shoutList.setLayoutManager(shoutListLayoutManager);
-        ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
+        ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setTypeface(CandeoUtil.loadFont(mContext.getAssets(), "fonts/fa.ttf"));
         ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setText(Configuration.FA_BULLHORN);
-        ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setTextColor(getActivity().getResources().getColor(R.color.candeo_light_gray));
+        ((TextView)loadingContent.findViewById(R.id.candeo_progress_icon)).setTextColor(mContext.getResources().getColor(R.color.candeo_light_gray));
         ((TextView)loadingContent.findViewById(R.id.candeo_progress_text)).setText("Loading Shouts...");
-        ((TextView) loadingContent.findViewById(R.id.candeo_progress_text)).setTextColor(getActivity().getResources().getColor(R.color.candeo_light_gray));
+        ((TextView) loadingContent.findViewById(R.id.candeo_progress_text)).setTextColor(mContext.getResources().getColor(R.color.candeo_light_gray));
         CandeoUtil.toggleView(loadingContent, true);
-        ((TextView)noShoutListContent.findViewById(R.id.candeo_no_content_icon)).setTypeface(CandeoUtil.loadFont(getActivity().getAssets(), "fonts/fa.ttf"));
+        ((TextView)noShoutListContent.findViewById(R.id.candeo_no_content_icon)).setTypeface(CandeoUtil.loadFont(mContext.getAssets(), "fonts/fa.ttf"));
         ((TextView)noShoutListContent.findViewById(R.id.candeo_no_content_icon)).setText(Configuration.FA_BULLHORN);
-        ((TextView)noShoutListContent.findViewById(R.id.candeo_no_content_icon)).setTextColor(getActivity().getResources().getColor(R.color.candeo_light_gray));
+        ((TextView)noShoutListContent.findViewById(R.id.candeo_no_content_icon)).setTextColor(mContext.getResources().getColor(R.color.candeo_light_gray));
         ((TextView)noShoutListContent.findViewById(R.id.candeo_no_content_text)).setText("No Shouts yet.");
-        ((TextView)noShoutListContent.findViewById(R.id.candeo_no_content_text)).setTextColor(getActivity().getResources().getColor(R.color.candeo_light_gray));
+        ((TextView)noShoutListContent.findViewById(R.id.candeo_no_content_text)).setTextColor(mContext.getResources().getColor(R.color.candeo_light_gray));
         CandeoUtil.toggleView(noShoutListContent, false);
 
         requestRefresh();
@@ -86,7 +89,7 @@ public class ShoutListFragment extends Fragment {
     public void requestRefresh()
     {
         shouts = new ArrayList<>();
-        GetUserShoutList request = new GetUserShoutList(Preferences.getUserRowId(getActivity()));
+        GetUserShoutList request = new GetUserShoutList(Preferences.getUserRowId(mContext));
         request.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 10, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         CandeoApplication.getInstance().getAppRequestQueue().add(request);
 
@@ -129,7 +132,11 @@ public class ShoutListFragment extends Fragment {
 
                                         if(shoutListAdapter == null)
                                         {
-                                            shoutListAdapter = new ShoutListAdapter(getActivity(),shouts);
+                                            shoutListAdapter = new ShoutListAdapter(mContext,shouts);
+                                        }
+                                        else
+                                        {
+                                            shoutListAdapter.refreshList(shouts);
                                         }
                                         shoutListAdapter.notifyDataSetChanged();
                                         shoutList.setVisibility(View.VISIBLE);
@@ -163,10 +170,10 @@ public class ShoutListFragment extends Fragment {
         @Override
         public Map<String, String> getHeaders() throws AuthFailureError {
             Map<String, String> params = new HashMap<>();
-            if (Preferences.isUserLoggedIn(getActivity()) && !TextUtils.isEmpty(Preferences.getUserEmail(getActivity()))) {
+            if (Preferences.isUserLoggedIn(getActivity()) && !TextUtils.isEmpty(Preferences.getUserEmail(mContext))) {
                 String secret="";
-                params.put("email", Preferences.getUserEmail(getActivity()));
-                secret=Preferences.getUserApiKey(getActivity());
+                params.put("email", Preferences.getUserEmail(mContext));
+                secret=Preferences.getUserApiKey(mContext);
                 String message = String.format(GET_SHOUT_LIST_RELATIVE_API,id);
                 params.put("message", message);
                 if(Configuration.DEBUG)Log.e(TAG,"secret->"+secret);

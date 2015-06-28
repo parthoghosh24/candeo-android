@@ -137,6 +137,10 @@
         </activity>
         <activity
             android:name=".shout.ShoutActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".home.HomeActivity"
+            android:theme="@style/AppTheme.Light.NoActionBar"
+            android:configChanges="keyboard|orientation|screenSize"
             android:label="@string/title_activity_shout" >
         </activity>
     </application>

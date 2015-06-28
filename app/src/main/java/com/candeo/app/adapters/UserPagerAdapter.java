@@ -308,6 +308,10 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
 
             return bitmap;
         }

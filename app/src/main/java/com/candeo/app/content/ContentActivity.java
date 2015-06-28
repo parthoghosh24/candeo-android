@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -53,7 +54,7 @@ import java.net.URL;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class ContentActivity extends ActionBarActivity implements InspirationListener{
+public class ContentActivity extends AppCompatActivity implements InspirationListener{
 
     private static final String TAG="Candeo-Content Activity";
     private Toolbar toolbar;

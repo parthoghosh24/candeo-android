@@ -21,6 +21,7 @@ import android.provider.MediaStore;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import android.text.InputFilter;
@@ -68,7 +69,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class PostActivity extends ActionBarActivity implements UploadMediaListener {
+public class PostActivity extends AppCompatActivity implements UploadMediaListener {
 
     private static final String TAG="Candeo - Post Activity";
     private Button audio;
