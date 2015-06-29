@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -130,7 +131,15 @@ public class ShoutActivity extends AppCompatActivity {
         postMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onPostClick();
+                if(message.getText().length()>0)
+                {
+                    onPostClick();
+                }
+                else
+                {
+                    Toast.makeText(ShoutActivity.this,"Please Enter some text to message",Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
         refreshLayout=(SwipeRefreshLayout)findViewById(R.id.candeo_shout_content_refresh);

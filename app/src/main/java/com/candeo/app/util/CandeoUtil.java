@@ -31,6 +31,7 @@ import com.candeo.app.Configuration;
 import com.candeo.app.R;
 import com.candeo.app.content.ContentActivity;
 import com.candeo.app.home.HomeActivity;
+import com.candeo.app.shout.ShoutActivity;
 import com.candeo.app.user.UserActivity;
 
 import org.apache.http.util.ByteArrayBuffer;
@@ -61,6 +62,8 @@ import java.util.regex.Pattern;
  * This is the Util class for Candeo which will hold all the helper methods
  */
 public class CandeoUtil {
+
+    private static int notificationId=1;
 
     public static Typeface loadFont(AssetManager assetsLocation, String fontFile) {
         return Typeface.createFromAsset(assetsLocation, fontFile);
@@ -228,6 +231,7 @@ public class CandeoUtil {
         String bigUrl = fields.get("bigImageUrl");
         String type = fields.get("type");
         String id = fields.get("id");
+
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.logo)
@@ -257,7 +261,7 @@ public class CandeoUtil {
 
         NotificationManager mNotifyMgr =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotifyMgr.notify(1, mBuilder.build());
+        mNotifyMgr.notify(++notificationId, mBuilder.build());
 
 
     }
@@ -268,6 +272,7 @@ public class CandeoUtil {
         PendingIntent result = null;
         if(!TextUtils.isEmpty(type))
         {
+
             if("home".equalsIgnoreCase(type))
             {
                 mClazz= HomeActivity.class;
@@ -285,8 +290,16 @@ public class CandeoUtil {
             {
                 mClazz= UserActivity.class;
             }
+            if("shout".equalsIgnoreCase(type))
+            {
+                mClazz= ShoutActivity.class;
+            }
 
             Intent resultIntent = new Intent(context,mClazz);
+            if("shout".equalsIgnoreCase(type))
+            {
+                resultIntent.putExtra("id",id);
+            }
             if("content".equalsIgnoreCase(type))
             {
                 resultIntent.putExtra("id",id);
