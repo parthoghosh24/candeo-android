@@ -31,7 +31,7 @@ public class TutorialPagerAdapter extends PagerAdapter
 
     @Override
     public int getCount() {
-        return 4;
+        return 5;
     }
 
     @Override
@@ -74,10 +74,17 @@ public class TutorialPagerAdapter extends PagerAdapter
                 break;
 
             case 3:
+                icon1.setText(Configuration.FA_BULLHORN);
+                icon2.setVisibility(View.GONE);
+                content.setText("Shout out to your fanbase and co-promoters. Let the world know your status or privately chat with your network.");
+                break;
+
+            case 4:
                 icon1.setText(Configuration.FA_USER);
                 icon2.setVisibility(View.GONE);
                 content.setText("Be a star with your own fanbase or choose to promote the right talent.");
                 break;
+
         }
         return view;
     }

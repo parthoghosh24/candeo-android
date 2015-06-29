@@ -171,6 +171,7 @@ public class HomeActivity extends AppCompatActivity {
                 getSupportActionBar().show();
                 getSupportActionBar().setTitle("Performances");
                 homePager.setCurrentItem(0);
+                leaderBoardFragment.requestRefresh(HomeActivity.this);
             }
             else if (!TextUtils.isEmpty(fromVerify) && "verified".equalsIgnoreCase(fromVerify)) {
                 getSupportActionBar().show();

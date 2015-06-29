@@ -35,6 +35,7 @@ public class SplashActivity extends Activity {
     TextView indicator2;
     TextView indicator3;
     TextView indicator4;
+    TextView indicator5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class SplashActivity extends Activity {
         indicator2=(TextView)findViewById(R.id.candeo_pager_indicator_2);
         indicator3=(TextView)findViewById(R.id.candeo_pager_indicator_3);
         indicator4=(TextView)findViewById(R.id.candeo_pager_indicator_4);
+        indicator5=(TextView)findViewById(R.id.candeo_pager_indicator_5);
 
         indicator1.setTypeface(CandeoUtil.loadFont(getAssets(),"fonts/fa.ttf"));
         indicator1.setText(Configuration.FA_CIRCLE);
@@ -60,6 +62,8 @@ public class SplashActivity extends Activity {
         indicator3.setText(Configuration.FA_CIRCLE_O);
         indicator4.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
         indicator4.setText(Configuration.FA_CIRCLE_O);
+        indicator5.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
+        indicator5.setText(Configuration.FA_CIRCLE_O);
 
         tutorialPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -75,7 +79,8 @@ public class SplashActivity extends Activity {
                     indicator1.setText(Configuration.FA_CIRCLE);
                     indicator2.setText(Configuration.FA_CIRCLE_O);
                     indicator3.setText(Configuration.FA_CIRCLE_O);
-                    indicator3.setText(Configuration.FA_CIRCLE_O);
+                    indicator4.setText(Configuration.FA_CIRCLE_O);
+                    indicator5.setText(Configuration.FA_CIRCLE_O);
                 }
                 if(position == 1)
                 {
@@ -83,7 +88,8 @@ public class SplashActivity extends Activity {
                     indicator1.setText(Configuration.FA_CIRCLE_O);
                     indicator2.setText(Configuration.FA_CIRCLE);
                     indicator3.setText(Configuration.FA_CIRCLE_O);
-                    indicator3.setText(Configuration.FA_CIRCLE_O);
+                    indicator4.setText(Configuration.FA_CIRCLE_O);
+                    indicator5.setText(Configuration.FA_CIRCLE_O);
                 }
                 if(position == 2)
                 {
@@ -92,6 +98,7 @@ public class SplashActivity extends Activity {
                     indicator2.setText(Configuration.FA_CIRCLE_O);
                     indicator3.setText(Configuration.FA_CIRCLE);
                     indicator4.setText(Configuration.FA_CIRCLE_O);
+                    indicator5.setText(Configuration.FA_CIRCLE_O);
                 }
                 if(position == 3)
                 {
@@ -100,6 +107,17 @@ public class SplashActivity extends Activity {
                     indicator2.setText(Configuration.FA_CIRCLE_O);
                     indicator3.setText(Configuration.FA_CIRCLE_O);
                     indicator4.setText(Configuration.FA_CIRCLE);
+                    indicator5.setText(Configuration.FA_CIRCLE_O);
+
+                }
+                if(position == 4)
+                {
+                    Amplitude.getInstance().logEvent("Fifth tutorial page selected");
+                    indicator1.setText(Configuration.FA_CIRCLE_O);
+                    indicator2.setText(Configuration.FA_CIRCLE_O);
+                    indicator3.setText(Configuration.FA_CIRCLE_O);
+                    indicator4.setText(Configuration.FA_CIRCLE_O);
+                    indicator5.setText(Configuration.FA_CIRCLE);
 
                 }
             }
