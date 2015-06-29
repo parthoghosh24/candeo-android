@@ -618,6 +618,10 @@ public class ContentActivity extends AppCompatActivity implements InspirationLis
             {
                     ioe.printStackTrace();
             }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
 
             return bitmap;
         }
