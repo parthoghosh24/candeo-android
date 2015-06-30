@@ -21,6 +21,7 @@ public class Preferences {
     private static final String CANDEO_PREF_USER_ROW_ID="CANDEO_PREF_USER_ROW_ID";
     private static final String CANDEO_PREF_USER_API_KEY="CANDEO_PREF_USER_API_KEY";
     private static final String CANDEO_PREF_USER_GCM_ID="CANDEO_PREF_USER_GCM_ID";
+    private static final String CANDEO_PREF_IS_TERMS_ACCEPTED="CANDEO_PREF_IS_TERMS_ACCEPTED";
 
 
     private static SharedPreferences getSharedPref(Context ctx)
@@ -32,6 +33,17 @@ public class Preferences {
         return getSharedPref(context).getBoolean(CANDEO_PREF_FIRST_RUN, true);
     }
 
+    public static boolean isTermsAccepted(Context context)
+    {
+        return getSharedPref(context).getBoolean(CANDEO_PREF_IS_TERMS_ACCEPTED,false);
+    }
+
+    public static void setTermsAccepted(Context context, boolean state)
+    {
+        Editor editor = getSharedPref(context).edit();
+        editor.putBoolean(CANDEO_PREF_IS_TERMS_ACCEPTED,state);
+        editor.commit();
+    }
     public static void setFirstRun(Context context, boolean state)
     {
         Editor editor = getSharedPref(context).edit();

@@ -65,14 +65,20 @@ public class ShoutListAdapter extends RecyclerView.Adapter<ShoutListAdapter.Shou
         holder.view.setTag(shoutList.get(position).get("id"));
         holder.timestamp.setText(DateUtils.getRelativeTimeSpanString(Long.parseLong(shoutList.get(position).get("timestamp").toString()), System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS));
         holder.typeIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(), "fonts/fa.ttf"));
-        holder.typeIcon.setText(Configuration.FA_UNLOCK);
-        holder.typeText.setText("PUBLIC");
         if(!((boolean) shoutList.get(position).get("is_public")))
         {
             holder.typeIcon.setText(Configuration.FA_LOCK);
             holder.typeIcon.setTextColor(mContext.getResources().getColor(R.color.candeo_private_red));
             holder.typeText.setText("PRIVATE");
             holder.typeText.setTextColor(mContext.getResources().getColor(R.color.candeo_private_red));
+
+        }
+        else
+        {
+            holder.typeIcon.setText(Configuration.FA_UNLOCK);
+            holder.typeIcon.setTextColor(mContext.getResources().getColor(R.color.candeo_checked_green));
+            holder.typeText.setText("PUBLIC");
+            holder.typeText.setTextColor(mContext.getResources().getColor(R.color.candeo_checked_green));
 
         }
         new LoadImageTask(holder.userAvatar).execute(shoutList.get(position).get("avatar_path").toString());

@@ -86,14 +86,7 @@
                     android:textSize="12sp"
                     android:layout_alignParentLeft="true"/>
 
-                <Button
-                    android:id="@+id/candeo_user_terms"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="TERMS"
-                    android:textSize="12sp"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:layout_alignParentRight="true"/>
+
             </RelativeLayout>
 
         </RelativeLayout>

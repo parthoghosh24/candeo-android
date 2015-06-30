@@ -4,6 +4,7 @@ package com.candeo.app.home;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -29,6 +30,8 @@ import com.candeo.app.algorithms.Security;
 import com.candeo.app.leaderboard.LeaderBoardFragment;
 import com.candeo.app.marketplace.MarketplaceFragment;
 import com.candeo.app.shout.ShoutFragment;
+import com.candeo.app.ui.CandeoTermsInterface;
+import com.candeo.app.ui.CandeoTermsView;
 import com.candeo.app.user.LoginActivity;
 import com.candeo.app.user.UserFragment;
 import com.candeo.app.util.CandeoUtil;
@@ -44,7 +47,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements CandeoTermsInterface {
 
 
     private Button showcase,feed,user,shout,marketPlace;
@@ -171,7 +174,6 @@ public class HomeActivity extends AppCompatActivity {
                 getSupportActionBar().show();
                 getSupportActionBar().setTitle("Performances");
                 homePager.setCurrentItem(0);
-                leaderBoardFragment.requestRefresh(HomeActivity.this);
             }
             else if (!TextUtils.isEmpty(fromVerify) && "verified".equalsIgnoreCase(fromVerify)) {
                 getSupportActionBar().show();
@@ -229,9 +231,38 @@ public class HomeActivity extends AppCompatActivity {
 
                 }
             });
+
+            // Ideally to show after user loggedin
+
+            if(Preferences.isUserLoggedIn(HomeActivity.this) && !Preferences.isTermsAccepted(HomeActivity.this))
+            {
+                initTerms();
+            }
+
         }
 
 
+    }
+
+    private void initTerms()
+    {
+
+        CandeoTermsView termsView = new CandeoTermsView();
+        termsView.setmCandeoTermsInterface(this);
+        termsView.setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light_Dialog);
+        termsView.show(getSupportFragmentManager().beginTransaction(), "terms");
+    }
+
+    @Override
+    public void onTermsSuccess() {
+        //Set variable
+        Preferences.setTermsAccepted(HomeActivity.this,true);
+    }
+
+    @Override
+    public void onTermsFailure() {
+        //Close app
+        HomeActivity.this.finish();
     }
 
     @Override
@@ -240,7 +271,7 @@ public class HomeActivity extends AppCompatActivity {
         switch (homePager.getCurrentItem())
         {
             case 0: //Performances
-                //
+
                 break;
             case 2: //Limelight
                 homeFragment.requestRefresh(this);

@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -41,6 +42,8 @@ import com.candeo.app.R;
 import com.candeo.app.algorithms.Security;
 import com.candeo.app.network.UploadMediaListener;
 import com.candeo.app.network.UploadMediaTask;
+import com.candeo.app.ui.CandeoTermsInterface;
+import com.candeo.app.ui.CandeoTermsView;
 import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.Preferences;
 
@@ -55,14 +58,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class LoginActivity extends AppCompatActivity implements UploadMediaListener {
+public class LoginActivity extends AppCompatActivity implements UploadMediaListener, CandeoTermsInterface {
 
     private Spinner emailSelector;
     private EditText debugEmail;
     private EditText name;
     private Button signup;
     private Button signin;
-    private Button terms;
     private ImageView userProfile;
     private boolean hasImage;
     private boolean isSignup;
@@ -74,6 +76,7 @@ public class LoginActivity extends AppCompatActivity implements UploadMediaListe
     private View noContent =null;
     private TextView profileText;
     ArrayList<String> emails;
+    String email="";
 
     private static final String API_REGISTER_RELATIVE_URL="/users/register";
     private static final String API_REGISTER_URL = Configuration.BASE_URL +"/api/v1"+API_REGISTER_RELATIVE_URL;
@@ -93,7 +96,6 @@ public class LoginActivity extends AppCompatActivity implements UploadMediaListe
         debugEmail= (EditText)findViewById(R.id.candeo_login_email_debug);
         if(Configuration.DEBUG)debugEmail.setVisibility(View.VISIBLE);
         emails= CandeoUtil.emailAddresses(this);
-        terms=(Button)findViewById(R.id.candeo_user_terms);
         profileText=(TextView)findViewById(R.id.candeo_user_profile_image_text);
         ArrayAdapter<String> emailSelectorAdapter = new ArrayAdapter<>(this, R.layout.candeo_email_spinner_item,emails.toArray(new String[emails.size()]));
         emailSelectorAdapter.setDropDownViewResource(R.layout.candeo_spinner_dropdown_item);
@@ -103,7 +105,7 @@ public class LoginActivity extends AppCompatActivity implements UploadMediaListe
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = !TextUtils.isEmpty(debugEmail.getText()) ? debugEmail.getText().toString() : emailSelector.getSelectedItem().toString();
+                email = !TextUtils.isEmpty(debugEmail.getText()) ? debugEmail.getText().toString() : emailSelector.getSelectedItem().toString();
                 if(Configuration.DEBUG)Log.e(TAG,"And the email is "+email);
                 signup.setEnabled(false);
                if(isSignup)
@@ -149,12 +151,7 @@ public class LoginActivity extends AppCompatActivity implements UploadMediaListe
             }
         });
 
-        terms.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Amplitude.getInstance().logEvent("Terms button clicked");
-            }
-        });
+
         userProfile=(ImageView)findViewById(R.id.candeo_user_profile_image);
         userProfile.setImageURI(Uri.parse(Preferences.getUserAvatarPath(getApplicationContext())));
         userProfile.setOnClickListener(new View.OnClickListener() {
@@ -173,26 +170,32 @@ public class LoginActivity extends AppCompatActivity implements UploadMediaListe
 
     }
 
+    private void initTerms()
+    {
+
+        CandeoTermsView termsView = new CandeoTermsView();
+        termsView.setmCandeoTermsInterface(this);
+        termsView.setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light_Dialog);
+        termsView.show(getSupportFragmentManager().beginTransaction(), "terms");
+    }
+
     private void initImageSelection()
     {
         System.out.println("Clicking image......");
         final CharSequence[] choices ={"Click Something", "Fetch From Gallery", "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-        builder.setItems(choices,new DialogInterface.OnClickListener() {
+        builder.setItems(choices, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                if(choices[which].equals("Click Something"))
-                {
+                if (choices[which].equals("Click Something")) {
                     ContentValues values = new ContentValues();
-                    values.put(MediaStore.Images.Media.TITLE, UUID.randomUUID().toString()+".jpg");
-                    imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,values);
+                    values.put(MediaStore.Images.Media.TITLE, UUID.randomUUID().toString() + ".jpg");
+                    imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                     startActivityForResult(intent, REQUEST_IMAGE_CAMERA);
-                }
-                else if(choices[which].equals("Fetch From Gallery"))
-                {
+                } else if (choices[which].equals("Fetch From Gallery")) {
                     Intent intent = new Intent(
                             Intent.ACTION_PICK,
                             android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -201,15 +204,26 @@ public class LoginActivity extends AppCompatActivity implements UploadMediaListe
                             Intent.createChooser(intent, "Select File"),
                             PICK_IMAGE_FILE);
 
-                }
-                else if(choices[which].equals("Cancel"))
-                {
+                } else if (choices[which].equals("Cancel")) {
                     dialog.dismiss();
                 }
 
             }
         });
         builder.show();
+    }
+
+
+    @Override
+    public void onTermsSuccess() {
+        //initiate signup
+        Preferences.setTermsAccepted(LoginActivity.this,true);
+        initRegistration(name.getText().toString(), email);
+    }
+
+    @Override
+    public void onTermsFailure() {
+        signup.setEnabled(true);
     }
 
     @Override
@@ -309,16 +323,8 @@ public class LoginActivity extends AppCompatActivity implements UploadMediaListe
     {
         if(hasImage && !TextUtils.isEmpty(name) && !TextUtils.isEmpty(email))
         {
-            System.out.println("name is "+name+" email is "+email);
-            Map<String, String> params = new HashMap<>();
+            initTerms();
 
-            params.put("name",name);
-            params.put("email",email);
-            params.put("media_id",mediaId);
-            if(Configuration.DEBUG)Log.e(TAG,"Getting Request Queue "+CandeoApplication.getInstance());
-            RegisterUserRequest registerUserRequest= new RegisterUserRequest(params);
-            registerUserRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            CandeoApplication.getInstance().getAppRequestQueue().add(registerUserRequest);
         }
         else
         {
@@ -326,6 +332,20 @@ public class LoginActivity extends AppCompatActivity implements UploadMediaListe
             signup.setEnabled(true);
         }
 
+    }
+
+    private void initRegistration(final String name, final String email)
+    {
+        System.out.println("name is "+name+" email is "+email);
+        Map<String, String> params = new HashMap<>();
+
+        params.put("name",name);
+        params.put("email",email);
+        params.put("media_id",mediaId);
+        if(Configuration.DEBUG)Log.e(TAG,"Getting Request Queue "+CandeoApplication.getInstance());
+        RegisterUserRequest registerUserRequest= new RegisterUserRequest(params);
+        registerUserRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        CandeoApplication.getInstance().getAppRequestQueue().add(registerUserRequest);
     }
 
     private void loginUser(final String email)

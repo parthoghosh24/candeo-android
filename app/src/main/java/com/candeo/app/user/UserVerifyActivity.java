@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -32,7 +33,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserVerifyActivity extends ActionBarActivity {
+public class UserVerifyActivity extends AppCompatActivity {
 
 
     private static final String API_USER_VERIFY_RELATIVE_URL="/users/verify";
@@ -51,6 +52,7 @@ public class UserVerifyActivity extends ActionBarActivity {
         if(Configuration.DEBUG)Log.e(TAG,"code received is "+code);
         Map<String ,Integer> payload = new HashMap<>();
         payload.put("token",code);
+        Preferences.setTermsAccepted(UserVerifyActivity.this, true);
         UserVerifyRequest verifyRequest = new UserVerifyRequest(payload);
         verifyRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*10, -1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         CandeoApplication.getInstance().getAppRequestQueue().add(verifyRequest);
