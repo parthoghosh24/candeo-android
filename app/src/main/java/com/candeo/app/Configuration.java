@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public class Configuration {
 
-//    public static final boolean DEBUG=false;
+    public static final boolean DEBUG=false;
 //    public static final boolean DEBUG=true;
     //Base url
 //    public static final String BASE_URL ="http://192.168.0.104:3000";
