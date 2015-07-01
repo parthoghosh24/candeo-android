@@ -17,6 +17,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -339,6 +340,8 @@ public class ContentActivity extends AppCompatActivity implements InspirationLis
                             launchBook.setVisibility(View.GONE);
                             contentDescription.setVisibility(View.VISIBLE);
                             contentDescription.setText(jsonObject.optString("description"));
+                            contentDescription.setLinkTextColor(ContentActivity.this.getResources().getColor(R.color.candeo_primary_dark));
+                            Linkify.addLinks(contentDescription, Linkify.ALL);
                             new LoadImageTask(bgUrl,bgImageView).execute();
                             playAudio(mediaUrl);
                             break;
@@ -346,6 +349,8 @@ public class ContentActivity extends AppCompatActivity implements InspirationLis
                             candeoContentHolder.setVisibility(View.VISIBLE);
                             contentDescription.setVisibility(View.VISIBLE);
                             contentDescription.setText(jsonObject.optString("description"));
+                            contentDescription.setLinkTextColor(ContentActivity.this.getResources().getColor(R.color.candeo_primary_dark));
+                            Linkify.addLinks(contentDescription, Linkify.ALL);
                             videoView.setVisibility(View.VISIBLE);
                             play.setVisibility(View.VISIBLE);
                             play.setText("\uf04c");
@@ -359,6 +364,8 @@ public class ContentActivity extends AppCompatActivity implements InspirationLis
                             //Image
                             contentDescription.setVisibility(View.VISIBLE);
                             contentDescription.setText(jsonObject.optString("description"));
+                            contentDescription.setLinkTextColor(ContentActivity.this.getResources().getColor(R.color.candeo_primary_dark));
+                            Linkify.addLinks(contentDescription, Linkify.ALL);
                             candeoContentHolder.setVisibility(View.GONE);
                             candeoWriterHolder.setVisibility(View.GONE);
                             candeoMediaControl.setVisibility(View.GONE);

@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.text.util.Linkify;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,6 +63,7 @@ public class ShoutListAdapter extends RecyclerView.Adapter<ShoutListAdapter.Shou
     public void onBindViewHolder(final ShoutListHolder holder, final int position) {
         holder.name.setText(shoutList.get(position).get("name").toString());
         holder.body.setText(shoutList.get(position).get("body").toString());
+        Linkify.addLinks(holder.body,Linkify.ALL);
         holder.view.setTag(shoutList.get(position).get("id"));
         holder.timestamp.setText(DateUtils.getRelativeTimeSpanString(Long.parseLong(shoutList.get(position).get("timestamp").toString()), System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS));
         holder.typeIcon.setTypeface(CandeoUtil.loadFont(mContext.getAssets(), "fonts/fa.ttf"));

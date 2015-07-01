@@ -3,6 +3,7 @@ package com.candeo.app.adapters;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,6 +70,7 @@ public class ShoutDiscussionsAdapter extends RecyclerView.Adapter<ShoutDiscussio
     public void onBindViewHolder(ShoutDiscussionsAdapter.ShoutContentHolder holder, int position) {
 
         holder.discussionText.setText(discussions.get(position).get("discussion"));
+        Linkify.addLinks(holder.discussionText, Linkify.ALL);
         holder.discussionUserName.setText(discussions.get(position).get("name"));
         if(Preferences.getUserRowId(mContext).equalsIgnoreCase(discussions.get(position).get("user_id")))
         {
@@ -76,6 +78,7 @@ public class ShoutDiscussionsAdapter extends RecyclerView.Adapter<ShoutDiscussio
             holder.discussionCard.setBackgroundColor(mContext.getResources().getColor(R.color.candeo_light_btn_blue));
             holder.discussionText.setTextColor(mContext.getResources().getColor(R.color.candeo_white));
             holder.discussionUserName.setTextColor(mContext.getResources().getColor(R.color.candeo_accent_light));
+            holder.discussionText.setLinkTextColor(mContext.getResources().getColor(R.color.candeo_white));
         }
         else
         {
@@ -83,6 +86,7 @@ public class ShoutDiscussionsAdapter extends RecyclerView.Adapter<ShoutDiscussio
             holder.discussionCard.setBackgroundColor(mContext.getResources().getColor(R.color.candeo_white));
             holder.discussionText.setTextColor(mContext.getResources().getColor(R.color.candeo_light_btn_blue));
             holder.discussionUserName.setTextColor(mContext.getResources().getColor(R.color.candeo_light_btn_blue));
+            holder.discussionText.setLinkTextColor(mContext.getResources().getColor(R.color.candeo_light_btn_blue));
         }
 
 

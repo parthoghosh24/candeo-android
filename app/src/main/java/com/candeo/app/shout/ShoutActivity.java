@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -263,6 +264,7 @@ public class ShoutActivity extends AppCompatActivity {
                                 response=response.getJSONObject("shout");
                                 name.setText(response.getString("name"));
                                 body.setText(response.getString("body"));
+                                Linkify.addLinks(body, Linkify.ALL);
                                 timestamp.setText(DateUtils.getRelativeTimeSpanString(Long.parseLong(response.getString("created_at_timestamp")), System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS));
                                 new LoadImageTask(userAvatar).execute(response.getString("avatar_path"));
                                 if(!response.getBoolean("is_public"))
