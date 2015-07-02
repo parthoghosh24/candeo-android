@@ -75,7 +75,7 @@ public class ShoutDiscussionsAdapter extends RecyclerView.Adapter<ShoutDiscussio
         if(Preferences.getUserRowId(mContext).equalsIgnoreCase(discussions.get(position).get("user_id")))
         {
             holder.dummyCard.setVisibility(View.GONE);
-            holder.discussionCard.setBackgroundColor(mContext.getResources().getColor(R.color.candeo_light_btn_blue));
+            holder.discussionCard.setCardBackgroundColor(mContext.getResources().getColor(R.color.candeo_light_btn_blue));
             holder.discussionText.setTextColor(mContext.getResources().getColor(R.color.candeo_white));
             holder.discussionUserName.setTextColor(mContext.getResources().getColor(R.color.candeo_accent_light));
             holder.discussionText.setLinkTextColor(mContext.getResources().getColor(R.color.candeo_white));
@@ -83,7 +83,7 @@ public class ShoutDiscussionsAdapter extends RecyclerView.Adapter<ShoutDiscussio
         else
         {
             holder.dummyCard.setVisibility(View.VISIBLE);
-            holder.discussionCard.setBackgroundColor(mContext.getResources().getColor(R.color.candeo_white));
+            holder.discussionCard.setCardBackgroundColor(mContext.getResources().getColor(R.color.candeo_white));
             holder.discussionText.setTextColor(mContext.getResources().getColor(R.color.candeo_light_btn_blue));
             holder.discussionUserName.setTextColor(mContext.getResources().getColor(R.color.candeo_light_btn_blue));
             holder.discussionText.setLinkTextColor(mContext.getResources().getColor(R.color.candeo_light_btn_blue));

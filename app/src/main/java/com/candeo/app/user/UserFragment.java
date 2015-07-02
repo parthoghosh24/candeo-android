@@ -197,7 +197,7 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
                     discoveryFragment = new DiscoveryFragment();
                     discoveryFragment.setArguments(bundle);
                     boolean isSameUser = getActivity()!=null && Preferences.getUserRowId(getActivity()).equalsIgnoreCase(userId);
-                    contentAdapter = isSameUser? new UserContentAdapter(getChildFragmentManager(), createdFragment,socialFragment,discoveryFragment) : new GeneralUserPagerAdapter(getActivity().getSupportFragmentManager(), createdFragment,socialFragment);
+                    contentAdapter = isSameUser? new UserContentAdapter(getChildFragmentManager(), createdFragment,socialFragment,discoveryFragment) : new GeneralUserPagerAdapter(getChildFragmentManager(), createdFragment,socialFragment);
                     userContentPager.setAdapter(contentAdapter);
                     slidingTabs.setViewPager(userContentPager);
                     slidingTabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {

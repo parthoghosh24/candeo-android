@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -89,9 +90,23 @@ public class ShoutListFragment extends Fragment {
     public void requestRefresh()
     {
         shouts = new ArrayList<>();
-        GetUserShoutList request = new GetUserShoutList(Preferences.getUserRowId(mContext));
-        request.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 10, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        CandeoApplication.getInstance().getAppRequestQueue().add(request);
+        try
+        {
+            GetUserShoutList request = new GetUserShoutList(Preferences.getUserRowId(mContext));
+            request.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 10, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            CandeoApplication.getInstance().getAppRequestQueue().add(request);
+
+        }
+        catch (Exception e)
+        {
+            if(Configuration.DEBUG)Log.e(TAG,"error "+e.getLocalizedMessage());
+            if(mContext!=null)
+            {
+                Toast.makeText(mContext,"Please try again!",Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
 
     }
 

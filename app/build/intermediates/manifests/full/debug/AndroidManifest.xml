@@ -160,9 +160,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Light.NoActionBar" >
         </activity>
-        <activity
-            android:name="android.support.v7.widget.TestActivity"
-            android:label="RecyclerViewTestActivity" /> <!-- Include the AdActivity and InAppPurchaseActivity configChanges and themes. -->
+        <!-- Include the AdActivity and InAppPurchaseActivity configChanges and themes. -->
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"

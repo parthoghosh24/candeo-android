@@ -63,6 +63,7 @@ public class ShoutPostFragment extends DialogFragment{
     {
         body = (EditText)dialog.findViewById(R.id.candeo_shout_post_body);
         shout = (Button)dialog.findViewById(R.id.candeo_shout_post_ok);
+        shout.setEnabled(true);
         cancel = (Button)dialog.findViewById(R.id.candeo_shout_post_cancel);
         typeIcon =(TextView)dialog.findViewById(R.id.candeo_shout_post_type);
         typeText=(TextView)dialog.findViewById(R.id.candeo_shout_post_type_text);
@@ -88,6 +89,7 @@ public class ShoutPostFragment extends DialogFragment{
             public void onClick(View v) {
                 if(body.getText().toString().length()>0)
                 {
+                    shout.setEnabled(false);
                     HashMap<String, String> payload = new HashMap<>();
                     payload.put("id",Preferences.getUserRowId(mContext));
                     payload.put("ids",ids);

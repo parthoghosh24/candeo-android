@@ -85,8 +85,7 @@ application
 ADDED from AndroidManifest.xml:23:5
 MERGED from com.android.support:appcompat-v7:22.2.0:22:5
 MERGED from com.android.support:support-v4:22.2.0:22:5
-MERGED from com.android.support:cardview-v7:21.0.0:16:5
-MERGED from com.android.support:recyclerview-v7:21.0.0:17:5
+MERGED from com.android.support:cardview-v7:22.2.0:22:5
 MERGED from com.android.support:support-v4:22.2.0:22:5
 MERGED from de.hdodenhof:circleimageview:1.2.1:9:5
 MERGED from com.google.android.gms:play-services:7.5.0:19:5
@@ -371,8 +370,8 @@ uses-sdk
 INJECTED from AndroidManifest.xml:0:0 reason: use-sdk injection requested
 MERGED from com.android.support:appcompat-v7:22.2.0:20:5
 MERGED from com.android.support:support-v4:22.2.0:20:5
-MERGED from com.android.support:cardview-v7:21.0.0:15:5
-MERGED from com.android.support:recyclerview-v7:21.0.0:15:5
+MERGED from com.android.support:cardview-v7:22.2.0:20:5
+MERGED from com.android.support:recyclerview-v7:22.2.0:20:5
 MERGED from com.android.support:support-v4:22.2.0:20:5
 MERGED from de.hdodenhof:circleimageview:1.2.1:5:5
 MERGED from com.google.android.gms:play-services:7.5.0:18:5
@@ -469,12 +468,6 @@ MERGED from com.android.support:support-v4:22.2.0:20:5
 	android:minSdkVersion
 		INJECTED from AndroidManifest.xml:0:0
 		INJECTED from AndroidManifest.xml:0:0
-activity#android.support.v7.widget.TestActivity
-ADDED from com.android.support:recyclerview-v7:21.0.0:18:9
-	android:label
-		ADDED from com.android.support:recyclerview-v7:21.0.0:18:19
-	android:name
-		ADDED from com.android.support:recyclerview-v7:21.0.0:18:60
 activity#com.google.android.gms.ads.AdActivity
 ADDED from com.google.android.gms:play-services-ads:7.5.0:26:9
 	android:configChanges
