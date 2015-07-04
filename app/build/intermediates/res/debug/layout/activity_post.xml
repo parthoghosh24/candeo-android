@@ -153,6 +153,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Title in 50 chars"
+                        android:inputType="textCapSentences|textMultiLine"
                         android:maxLength="50"
                         android:background="@android:color/transparent"
                         android:visibility="gone"
@@ -163,9 +164,9 @@
                         android:layout_marginTop="20dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:singleLine="false"
                         android:lines="10"
                         android:gravity="top|left"
+                        android:inputType="textCapSentences|textMultiLine"
                         android:maxLength="500"
                         android:background="@android:color/transparent"
                         android:hint="Provide a description (500 chars - Optional)"/>

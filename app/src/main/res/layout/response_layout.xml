@@ -40,6 +40,8 @@
         android:layout_marginBottom="40dp"
         android:textColor="@color/candeo_primary_dark"
         android:textSize="13sp"
+        android:inputType="textCapSentences|textMultiLine"
+        android:lines="2"
         android:textColorHint="@color/candeo_primary"
         android:background="@android:color/transparent"
         android:hint="More Words (Optional - 100 chars Max)"

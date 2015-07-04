@@ -32,6 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:inputType="textCapSentences"
                 android:textColor="@color/candeo_primary_dark"
                 android:textColorHint="@color/candeo_primary"
                 android:hint="Enter Full Name"/>
@@ -43,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/candeo_primary_dark"
                 android:textColorHint="@color/candeo_primary"
+                android:inputType="textCapSentences|textMultiLine"
                 android:hint="Enter bio (100 chars)"
                 android:singleLine="false"
                 android:maxLines="2"

@@ -1,5 +1,6 @@
 /home/dholu/projects/candeo-android/app/build/intermediates/classes/debug
 /home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/support-annotations-22.2.0-b10593121a158209f8cc815ac8e21e79a907a2d9.jar
+/home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-d38ab78e69bfa1509c00f84f166a0350348cc03c.jar
 /home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-12044c3db6b50700737a39c65c52c58242f25ee1.jar
 /home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-9407898bad203c149ea8dc2b4d8083694be50ad0.jar
 /home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-cd36000c12a832506f24892402ee6dcd8e56669c.jar
@@ -7,7 +8,9 @@
 /home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/internal_impl-22.0.0-2c6ec061dd3dd1dc543b748d1eaf1a2b8a8501cb.jar
 /home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-476daff487f75b1a21008870ecbcd12dd346a90c.jar
 /home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-ab0ad4188953da1edb1ea1fc601a1ad7739d07db.jar
+/home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-89c1f8cfa9c671acbd893b5bb046af6c3c2a0cb4.jar
 /home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-ebad6c579fffaf428dcc5544128745570651f86a.jar
+/home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-5b7e243afb0913aca3c7bb18bd604a1395dbc12e.jar
 /home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/android-sdk-1.6.2-530a767a4037e2b6d4dfdbfb169e10fbb0a28b23.jar
 /home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-b411208a4fba78ca2a2f8814704a75797971b7b3.jar
 /home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-bf4b827796bcecae6885e96cad006014def63fcf.jar
@@ -16,6 +19,7 @@
 /home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/library-1.0.16-bc990d1b79f7f773d1c9912ea80bbd09cdf36df3.jar
 /home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-259b64e08990a0ddd08bb2303da3228dd317dad6.jar
 /home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-13ab194e731c841de50d0075110cae82e155a9bf.jar
+/home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-f1ee064c0e6fd68f48096ae2c9ac1c8aca39f2b6.jar
 /home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-fb540897cf6eef08afd9a704e22a152b0180cb28.jar
 /home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-c36101061fb67784a4a08da5d1c76f93b01decd8.jar
 /home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-84edf40281dbcee0a38409925453212f1723ea57.jar
@@ -24,6 +28,7 @@
 /home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-d00678e3771ca78f452f7e7410371e7778ad44b3.jar
 /home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.0-cdf71ccb306423c814506eb6ce181e0ffce8d6a2.jar
 /home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-7fece850f8ad55a59b5dfad91938e8a8bf994cb8.jar
+/home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-450e9b7f126d564849445c6c0ce818b3c61f75a3.jar
 /home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-05ce3f781fac4781384788345346099140beb2fa.jar
 /home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/classes-c3f0cd38bcda17a7f2c99f3c4ca99f50d4277b6c.jar
 /home/dholu/projects/candeo-android/app/build/intermediates/pre-dexed/debug/okhttp-2.2.0-4898451dd57d43d9143b11ab7c08156855338d0c.jar

@@ -316,6 +316,7 @@
                 android:layout_height="wrap_content"
                 android:lines="1"
                 android:maxLines="30"
+                android:inputType="textCapSentences|textMultiLine"
                 android:hint="Write your message"
                 android:layout_weight="9.5"/>
 

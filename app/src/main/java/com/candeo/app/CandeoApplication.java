@@ -10,6 +10,8 @@ import com.android.volley.toolbox.Volley;
 import com.candeo.app.network.Hurlstack;
 import com.candeo.app.util.CandeoUtil;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import java.io.File;
 
 /**
@@ -24,6 +26,7 @@ public class CandeoApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         CandeoUtil.overrideFont(getApplicationContext(), "SERIF", "fonts/caviar.ttf");
         displayMetrics = new DisplayMetrics();
         File candeoDirectory = new File(Environment.getExternalStorageDirectory()+"/candeo");
