@@ -90,7 +90,7 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
     private UserProfileUpdateListener userProfileUpdateListener=null;
     private final static String GET_USER_RELATIVE_API = "/users/%s";
     private final static String GET_USER_API = Configuration.BASE_URL + "/api/v1" + GET_USER_RELATIVE_API;
-
+    private Button share;
     private final static String TAG="Candeo - User Fragment";
 
     @Override
@@ -170,7 +170,8 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
             if(response.length()>0)
             {
                 try {
-                    JSONObject user =response.getJSONObject("user");
+                    final JSONObject user =response.getJSONObject("user");
+                    final String userWebName=user.getString("username");
                     userId = user.getString("id");
                     if(Configuration.DEBUG)Log.e(TAG,"USER ID IS "+userId);
                     name=user.getString("name");
@@ -181,6 +182,17 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
                     bio=user.getString("about");
                     avatarUrl=user.getString("avatar_path");
                     userName.setText(name);
+                    share.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Amplitude.getInstance().logEvent("Share button clicked");
+                            Intent sendIntent = new Intent();
+                            sendIntent.setAction(Intent.ACTION_SEND);
+                            sendIntent.putExtra(Intent.EXTRA_TEXT, "http://www.candeoapp.com/u/"+userWebName);
+                            sendIntent.setType("text/plain");
+                            startActivity(sendIntent);
+                        }
+                    });
                     userBio.setText(TextUtils.isEmpty(bio) ? Configuration.CANDEO_DEFAULT_BIO : bio);
                     appreciateCount.setText("" + user.getInt("total_appreciations"));
                     inspireCount.setText("" + user.getInt("total_inspires"));
@@ -257,6 +269,9 @@ public class UserFragment extends Fragment implements UserProfileUpdateListener 
         ((TextView)loadingContent.findViewById(R.id.candeo_progress_text)).setText("Loading User...");
         toggleLoading(true);
         userAvatar = (CircleImageView)root.findViewById(R.id.candeo_user_avatar);
+        share=(Button)root.findViewById(R.id.candeo_user_share);
+        share.setTypeface(CandeoUtil.loadFont(getActivity().getAssets(),"fonts/fa.ttf"));
+        share.setText(Configuration.FA_SHARE_ALT);
         userAvatar.setImageURI(Uri.parse("android.resource://" + getActivity().getPackageName() + "/"+ R.raw.default_avatar));
         userName = (TextView)root.findViewById(R.id.candeo_user_name_text);
         userBio=(TextView)root.findViewById(R.id.candeo_user_bio);

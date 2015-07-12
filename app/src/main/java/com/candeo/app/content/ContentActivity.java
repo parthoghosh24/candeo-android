@@ -178,17 +178,7 @@ public class ContentActivity extends AppCompatActivity implements InspirationLis
         shareButton = (TextView)findViewById(R.id.candeo_content_share_button);
         shareButton.setTypeface(CandeoUtil.loadFont(getAssets(),"fonts/fa.ttf"));
         shareButton.setText(Configuration.FA_SHARE_ALT);
-        shareButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Amplitude.getInstance().logEvent("Share button clicked");
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "http://www.candeoapp.com/content/"+id);
-                sendIntent.setType("text/plain");
-                startActivity(sendIntent);
-            }
-        });
+
         createdAt=(TextView)findViewById(R.id.candeo_content_created_at);
         appreciateCount=(TextView)findViewById(R.id.candeo_content_appreciate_count);
         skipCount=(TextView)findViewById(R.id.candeo_content_skip_count);
@@ -395,6 +385,18 @@ public class ContentActivity extends AppCompatActivity implements InspirationLis
                     }
 
                 new LoadImageTask(jsonObject.optString("user_avatar_url"),userAvatar).execute();
+                final String short_id= jsonObject.optString("short_id");
+                shareButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Amplitude.getInstance().logEvent("Share button clicked");
+                        Intent sendIntent = new Intent();
+                        sendIntent.setAction(Intent.ACTION_SEND);
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, "http://www.candeoapp.com/c/" + short_id);
+                        sendIntent.setType("text/plain");
+                        startActivity(sendIntent);
+                                }
+                });
                 userName.setText(jsonObject.optString("user_name"));
                 userAvatar.setTag(jsonObject.optString("user_id"));
                 title.setText(jsonObject.optString("title"));

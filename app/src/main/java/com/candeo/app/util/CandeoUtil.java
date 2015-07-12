@@ -108,13 +108,8 @@ public class CandeoUtil {
 
     public static String getCodeFromUrl(String url) {
         if (!TextUtils.isEmpty(url)) {
-            Pattern pattern = Pattern.compile("-?\\d+");
-            Matcher matcher = pattern.matcher(url);
-            if (matcher.find()) {
-                return matcher.group(0);
-            } else {
-                return null;
-            }
+            return url.substring(url.lastIndexOf("/") + 1);
+
         }
         return null;
     }

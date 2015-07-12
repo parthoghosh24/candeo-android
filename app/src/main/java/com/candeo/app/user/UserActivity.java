@@ -17,6 +17,7 @@ import com.candeo.app.CandeoApplication;
 import com.candeo.app.Configuration;
 import com.candeo.app.R;
 import com.candeo.app.algorithms.Security;
+import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.Preferences;
 
 import org.json.JSONException;
@@ -41,7 +42,17 @@ public class UserActivity extends ActionBarActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         userFragment = new UserFragment();
-        String id = getIntent().getStringExtra("id");
+        String url = getIntent().getDataString();
+        String id;
+        if(!TextUtils.isEmpty(url))
+        {
+            id = CandeoUtil.getCodeFromUrl(url);
+        }
+        else
+        {
+            id = getIntent().getStringExtra("id");
+        }
+
         Bundle bundle = new Bundle();
         bundle.putString("id",id);
         userFragment.setArguments(bundle);

@@ -478,7 +478,7 @@
     <string name="title_activity_record">RecordActivity</string>
     <string name="title_activity_respond">RespondActivity</string>
     <string name="title_activity_shout">Shout</string>
-    <string name="title_activity_user">UserActivity</string>
+    <string name="title_activity_user">Please Wait …</string>
     <string name="title_activity_user_verify">Candeo</string>
     <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/7.5.0/res/values/wallet_strings.xml -->
     <eat-comment/>

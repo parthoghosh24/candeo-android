@@ -89,7 +89,6 @@
                                             android:textColor="@color/candeo_translucent_black"
                                             android:textSize="18sp"
                                             app:fontName="caviar.ttf"
-                                            android:text="Partho Ghosh"
                                             android:textStyle="bold"/>
 
                                     </LinearLayout>
@@ -108,7 +107,7 @@
                                             android:layout_height="wrap_content"
                                             android:textColor="@color/candeo_primary_dark"
                                             android:textSize="20sp"
-                                            android:text="a"
+                                            android:text="Please wait..."
                                             app:fontName="caviar.ttf"/>
 
 
@@ -136,7 +135,7 @@
                                                 android:layout_height="wrap_content"
                                                 android:textColor="@color/candeo_checked_green"
                                                 android:textStyle="bold"
-                                                android:text="PUBLIC"/>
+                                                />
 
                                             <com.candeo.app.ui.CustomTextView
                                                 android:id="@+id/candeo_shout_content_type_text"
@@ -147,7 +146,7 @@
                                                 android:textStyle="bold"
                                                 app:fontName="caviar.ttf"
                                                 android:textSize="13sp"
-                                                android:text="PUBLIC"/>
+                                                />
                                         </LinearLayout>
 
                                         <com.candeo.app.ui.CustomTextView
@@ -160,7 +159,7 @@
                                             android:textColor="@color/candeo_primary_dark"
                                             android:textSize="13sp"
                                             app:fontName="caviar.ttf"
-                                            android:text="44 minutes ago"/>
+                                            />
 
                                     </LinearLayout>
 
