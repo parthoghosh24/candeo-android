@@ -12,7 +12,7 @@
 
     <include layout="@layout/loading_content"
         android:id="@+id/candeo_data_loading"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
       <LinearLayout
           android:layout_width="match_parent"
