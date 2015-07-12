@@ -296,6 +296,10 @@ public class LimelightFragment extends Fragment{
                                 {
                                     mediaIconView.setText(Configuration.FA_TEXT);
                                 }
+                                if(Configuration.VIDEO== mediaType)
+                                {
+                                    mediaIconView.setText(Configuration.FA_VIDEO);
+                                }
                                 avatar.setTag(limelight.getString("user_id"));
                                 toggleLoading(false);
                                 toggleNoContent(false);

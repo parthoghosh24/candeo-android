@@ -54,6 +54,8 @@ public class RecordActivity extends Activity {
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        recorder.setAudioEncodingBitRate(96000);
+        recorder.setAudioSamplingRate(44100);
         outputFile = Environment.getExternalStorageDirectory().getAbsolutePath()+"/candeo/audios/candeorecord.aac";
         recorder.setOutputFile(outputFile);
         recorder.setAudioChannels(2);
@@ -63,7 +65,7 @@ public class RecordActivity extends Activity {
         stop =(Button)findViewById(R.id.candeo_stop_record);
         record =(Button)findViewById(R.id.candeo_record);
         record.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
-        record.setText("\uf111");
+        record.setText(Configuration.FA_CIRCLE);
         record.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

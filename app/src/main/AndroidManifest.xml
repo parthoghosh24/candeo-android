@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.front" />
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -137,15 +138,24 @@
         </activity>
         <activity
             android:name=".shout.ShoutActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".home.HomeActivity"
-            android:theme="@style/AppTheme.Light.NoActionBar"
             android:configChanges="keyboard|orientation|screenSize"
-            android:label="@string/title_activity_shout" >
+            android:label="@string/title_activity_shout"
+            android:parentActivityName=".home.HomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Light.NoActionBar" >
         </activity>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="93a7af1013b1624237767170c5dda708bd5bc914" />
+
+        <activity
+            android:name=".ui.CustomVideoCameraActivity"
+            android:label="@string/title_activity_custom_video_camera"
+            android:configChanges="keyboard|orientation|screenSize"
+            android:screenOrientation="portrait"
+            >
+        </activity>
     </application>
 
 </manifest>

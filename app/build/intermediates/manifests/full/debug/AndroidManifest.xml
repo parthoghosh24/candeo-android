@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.front" />
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -164,6 +165,13 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="93a7af1013b1624237767170c5dda708bd5bc914" />
+
+        <activity
+            android:name="com.candeo.app.ui.CustomVideoCameraActivity"
+            android:configChanges="keyboard|orientation|screenSize"
+            android:label="@string/title_activity_custom_video_camera"
+            android:screenOrientation="portrait" >
+        </activity>
         <!-- Include the AdActivity and InAppPurchaseActivity configChanges and themes. -->
         <activity
             android:name="com.google.android.gms.ads.AdActivity"

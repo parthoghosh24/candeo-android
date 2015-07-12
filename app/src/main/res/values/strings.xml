@@ -19,6 +19,11 @@
     <string name="fa_magic">&#xf0d0;</string>
     <string name="fa_bullhorn">&#xf0a1;</string>
     <string name="fa_paperplane">&#xf1d8;</string>
+    <string name="fa_toggle">&#xf021;</string>
+    <string name="fa_play">&#xf04b;</string>
+    <string name="fa_record">&#xf111;</string>
+    <string name="record">REC</string>
     <string name="title_activity_shout">Shout</string>
+    <string name="title_activity_custom_video_camera">Candeo Camera</string>
 
 </resources>

@@ -19,6 +19,7 @@ import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.text.util.Linkify;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -347,13 +348,13 @@ public class ContentActivity extends AppCompatActivity implements InspirationLis
                             break;
                         case 2: //video
                             candeoContentHolder.setVisibility(View.VISIBLE);
+                            candeoMediaControl.setVisibility(View.VISIBLE);
                             contentDescription.setVisibility(View.VISIBLE);
                             contentDescription.setText(jsonObject.optString("description"));
                             contentDescription.setLinkTextColor(ContentActivity.this.getResources().getColor(R.color.candeo_primary_dark));
                             Linkify.addLinks(contentDescription, Linkify.ALL);
+                            new LoadImageTask(bgUrl,bgImageView).execute();
                             videoView.setVisibility(View.VISIBLE);
-                            play.setVisibility(View.VISIBLE);
-                            play.setText("\uf04c");
                             imageView.setVisibility(View.GONE);
                             launchBook.setVisibility(View.GONE);
                             System.out.println("MEDIA URL is : " + mediaUrl);
@@ -485,37 +486,39 @@ public class ContentActivity extends AppCompatActivity implements InspirationLis
     {
         videoView.setVideoPath(url);
         videoView.setVisibility(View.VISIBLE);
-        play.setVisibility(View.VISIBLE);
+        candeoMediaControl.setEnabled(false);
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 mediaPlayer=mp;
                 mediaPlayer.start();
+                mediaPlayer.setLooping(true);
+                candeoMediaControl.setEnabled(true);
             }
         });
-        play.setOnClickListener(new View.OnClickListener() {
+        candeoMediaControl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Amplitude.getInstance().logEvent("Play button clicked");
-                if(!mediaPlayer.isPlaying())
-                {
+                Amplitude.getInstance().logEvent("Video clicked");
+                if (!mediaPlayer.isPlaying()) {
                     videoView.start();
-                    play.setText("\uf04c");
-                }
-                else
-                {
+                    Animation out = AnimationUtils.makeOutAnimation(getApplicationContext(), true);
+                    candeoMediaControl.startAnimation(out);
+                    candeoMediaControl.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    play.setVisibility(View.GONE);
+                } else {
                     videoView.pause();
-                    play.setText("\uf04b");
+                    Animation in = AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in);
+                    candeoMediaControl.startAnimation(in);
+                    candeoMediaControl.setBackgroundColor(getResources().getColor(R.color.candeo_translucent_black));
+                    play.setVisibility(View.VISIBLE);
                 }
 
-                if(videoView!=null)
-                {
+                if (videoView != null) {
                     videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mp) {
-                            mediaPlayer.pause();
-                            mediaPlayer.seekTo(0);
-                            play.setText("\uf04b");
+                            mediaPlayer.start();
                         }
                     });
                 }
@@ -694,6 +697,12 @@ public class ContentActivity extends AppCompatActivity implements InspirationLis
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setDataSource(mediaUrl);
             mediaPlayer.prepareAsync();
+            Animation in = AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in);
+            candeoMediaControl.startAnimation(in);
+            candeoMediaControl.setBackgroundColor(getResources().getColor(R.color.candeo_translucent_black));
+            play.setText("Please wait...");
+            play.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+            play.setVisibility(View.VISIBLE);
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
@@ -702,7 +711,11 @@ public class ContentActivity extends AppCompatActivity implements InspirationLis
                         mediaPlayer.stop();
                         mediaPlayer.release();
                     }
-                    mediaPlayer.start();
+//                    mediaPlayer.start();
+
+                    play.setText(Configuration.FA_PLAY_ROUND);
+                    play.setTextSize(TypedValue.COMPLEX_UNIT_SP, 95);
+                    play.setVisibility(View.VISIBLE);
                 }
             });
 

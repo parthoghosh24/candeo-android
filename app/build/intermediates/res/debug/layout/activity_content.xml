@@ -45,7 +45,8 @@
                     <VideoView
                         android:id="@+id/candeo_video_viewer"
                         android:layout_width="match_parent"
-                        android:layout_height="300dp"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
                         android:layout_gravity="center"
                         android:visibility="gone"/>
                     <RelativeLayout

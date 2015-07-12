@@ -438,6 +438,9 @@
     <string name="fa_bullhorn"></string>
     <string name="fa_magic"></string>
     <string name="fa_paperplane"></string>
+    <string name="fa_play"></string>
+    <string name="fa_record"></string>
+    <string name="fa_toggle"></string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hello_world">Hello world!</string>
     <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/22.0.0/res/values/values.xml -->
@@ -452,6 +455,9 @@
     <string name="mr_media_route_controller_stop">Stop casting</string>
     <string name="mr_system_route_name">System</string>
     <string name="mr_user_route_category_name">Devices</string>
+    <!-- From: file:/home/dholu/projects/candeo-android/app/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="record">REC</string>
     <!-- From: file:/home/dholu/projects/candeo-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/res/values/values.xml -->
     <eat-comment/>
     <string name="status_bar_notification_info_overflow">999+</string>
@@ -464,6 +470,7 @@
     <string name="title_activity_appreciate">AppreciateActivity</string>
     <string name="title_activity_book_render">BookRenderActivity</string>
     <string name="title_activity_content">Candeo</string>
+    <string name="title_activity_custom_video_camera">Candeo Camera</string>
     <string name="title_activity_get_inspired">GetInspiredActivity</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_activity_login">LoginActivity</string>

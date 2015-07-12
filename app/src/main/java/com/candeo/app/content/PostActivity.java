@@ -56,6 +56,7 @@ import com.candeo.app.algorithms.Security;
 import com.candeo.app.network.CandeoHttpClient;
 import com.candeo.app.network.UploadMediaListener;
 import com.candeo.app.network.UploadMediaTask;
+import com.candeo.app.ui.CustomVideoCameraActivity;
 import com.candeo.app.util.CandeoUtil;
 import com.candeo.app.util.Preferences;
 
@@ -172,88 +173,12 @@ public class PostActivity extends AppCompatActivity implements UploadMediaListen
         audio=(Button)findViewById(R.id.candeo_audio);
         audio.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
         audio.setText(Configuration.FA_AUDIO);
-        audio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                Amplitude.getInstance().logEvent("Audio play clicked in Post activity");
-                if(player!=null)
-                {
-                    player.stop();
-                    player.release();
-                    player=null;
-                    audioPreview.setVisibility(View.GONE);
-                    audioPreview.setText("\uf04b");
-                }
-                final CharSequence[] choices ={"Record Something", "Fetch From Device", "Cancel"};
-                AlertDialog.Builder builder = new AlertDialog.Builder(PostActivity.this);
-                builder.setItems(choices,new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
 
-                        if(choices[which].equals("Record Something"))
-                        {
-                            Intent intent =new Intent(PostActivity.this, RecordActivity.class);
-                            startActivityForResult(intent,REQUEST_AUDIO_RECORD);
-                        }
-                        else if(choices[which].equals("Fetch From Device"))
-                        {
-                              Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
-                              startActivityForResult(Intent.createChooser(intent, "Gallery"), PICK_AUDIO_FILE);
-                        }
-                        else if(choices[which].equals("Cancel"))
-                        {
-                            dialog.dismiss();
-                        }
-
-                    }
-                });
-                builder.show();
-            }
-        });
 
         image=(Button)findViewById(R.id.candeo_image);
         image.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
         image.setText(Configuration.FA_IMAGE);
-        image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("Clicking image......");
-                final CharSequence[] choices ={"Click Something", "Fetch From Gallery", "Cancel"};
-                AlertDialog.Builder builder = new AlertDialog.Builder(PostActivity.this);
-                builder.setItems(choices,new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
 
-                        if(choices[which].equals("Click Something"))
-                        {
-                            ContentValues values = new ContentValues();
-                            values.put(MediaStore.Images.Media.TITLE, UUID.randomUUID().toString()+".jpg");
-                            imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,values);
-                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                            startActivityForResult(intent, REQUEST_IMAGE_CAMERA);
-                        }
-                        else if(choices[which].equals("Fetch From Gallery"))
-                        {
-                            Intent intent = new Intent(
-                                    Intent.ACTION_PICK,
-                                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                            intent.setType("image/*");
-                            startActivityForResult(
-                                    Intent.createChooser(intent, "Select File"),
-                                    PICK_IMAGE_FILE);
-
-                        }
-                        else if(choices[which].equals("Cancel"))
-                        {
-                            dialog.dismiss();
-                        }
-
-                    }
-                });
-                builder.show();
-            }
-        });
 
         video=(Button)findViewById(R.id.candeo_video);
         video.setTypeface(CandeoUtil.loadFont(getAssets(), "fonts/fa.ttf"));
@@ -404,19 +329,8 @@ public class PostActivity extends AppCompatActivity implements UploadMediaListen
             setTitle("Showcase your talent");
 
         }
-        else
-        {
-            contentType=Configuration.INSPIRATION;
-            copyrightText.setVisibility(View.GONE);
-            showcaseTitle.setVisibility(View.GONE);
-            mediaChooser.setVisibility(View.GONE);
-            description.setVisibility(View.VISIBLE);
-            mediaButtonsForInspire.setVisibility(View.VISIBLE);
-            mediaChooserText.setVisibility(View.GONE);
-            setTitle("Inspire the world");
-        }
 
-        mediaChooser.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mediaChooser.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -428,6 +342,7 @@ public class PostActivity extends AppCompatActivity implements UploadMediaListen
                 switch (position)
                 {
                     case 0 : // Audio
+                    case 3 : // Video
                     case 1 : // Image
                         description.setHint("Provide a description (500 chars - Optional)");
                         setDescriptionMaxLength(500);
@@ -583,10 +498,10 @@ public class PostActivity extends AppCompatActivity implements UploadMediaListen
                     }
                     break;
                 case REQUEST_VIDEO_CAMERA:
-                    uri = data.getData();
                     try {
                         file = new File(android.os.Environment
                                 .getExternalStorageDirectory(), "candeo/videos/candeovideo.mp4");
+                        uri = Uri.fromFile(file);
                         mimeType=CandeoUtil.getMimeType(uri, PostActivity.this);
                         fileName = file.getName();
                         dataArray = CandeoUtil.fileToByteArray(file);
@@ -961,7 +876,7 @@ public class PostActivity extends AppCompatActivity implements UploadMediaListen
 
         @Override
         public int getCount() {
-            return 3;
+            return 4;
         }
 
         @Override
@@ -1076,6 +991,35 @@ public class PostActivity extends AppCompatActivity implements UploadMediaListen
                     Amplitude.getInstance().logEvent("Text Menu swiped in Post Activity");
                     content.setText("Do you love to write? Showcase your great short story, poem or writing genius here.");
                     break;
+
+                case 3://Video
+                    icon.setText(Configuration.FA_VIDEO);
+                    Amplitude.getInstance().logEvent("Video Menu swiped in Post Activity");
+                    content.setText("Show the world what you are capable of ...in 30 seconds. Sing, dance, act and grab your 30 seconds of fame.");
+                    view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Amplitude.getInstance().logEvent("Video Menu clicked in Post Activity");
+                            final CharSequence[] choices = {"Candeo Shortz (30 seconds of fame)", "Cancel"};
+                            AlertDialog.Builder builder = new AlertDialog.Builder(PostActivity.this);
+                            builder.setItems(choices, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    if (choices[which].equals("Candeo Shortz (30 seconds of fame)")) {
+                                          Intent intent = new Intent(PostActivity.this, CustomVideoCameraActivity.class);
+                                          startActivityForResult(intent, REQUEST_VIDEO_CAMERA);
+                                    } else if (choices[which].equals("Cancel")) {
+                                        dialog.dismiss();
+                                    }
+
+                                }
+                            });
+                            builder.show();
+
+                        }
+                    });
 
             }
             return view;

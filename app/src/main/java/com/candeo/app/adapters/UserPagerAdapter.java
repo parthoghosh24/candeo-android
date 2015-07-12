@@ -146,6 +146,10 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
             {
                 holder.mediaIcon.setText(Configuration.FA_TEXT);
             }
+            if(Configuration.VIDEO== mediaType)
+            {
+                holder.mediaIcon.setText(Configuration.FA_VIDEO);
+            }
             holder.view.setTag(list.get(position).get("id"));
             holder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -197,6 +201,10 @@ public class UserPagerAdapter extends RecyclerView.Adapter<UserPagerAdapter.Vari
             if(Configuration.TEXT == mediaType)
             {
                 holder.mediaIcon.setText(Configuration.FA_TEXT);
+            }
+            if(Configuration.VIDEO== mediaType)
+            {
+                holder.mediaIcon.setText(Configuration.FA_VIDEO);
             }
             holder.view.setTag(list.get(position).get("id"));
             holder.view.setOnClickListener(new View.OnClickListener() {
