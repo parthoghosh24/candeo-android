@@ -361,6 +361,7 @@ public class LimelightFragment extends Fragment{
             try {
                 URL imageUrl= new URL(params[0]);
                 BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds=true;
                 options.inPreferredConfig = Bitmap.Config.RGB_565;
                 bitmap = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream(),null,options);
             } catch (IOException ioe) {
