@@ -385,6 +385,8 @@ public class ContentActivity extends AppCompatActivity implements InspirationLis
                     }
 
                 new LoadImageTask(jsonObject.optString("user_avatar_url"),userAvatar).execute();
+                id=jsonObject.optString("shareable_id");
+                if(Configuration.DEBUG)Log.e(TAG,"ID AGAIN IS "+id);
                 final String short_id= jsonObject.optString("short_id");
                 shareButton.setOnClickListener(new View.OnClickListener() {
                     @Override
