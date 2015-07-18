@@ -817,7 +817,31 @@ public class PostActivity extends AppCompatActivity implements UploadMediaListen
 
             }
             Bitmap bitmapRotated = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
-            return bitmapRotated;
+            Bitmap finalBitmap=bitmapRotated;
+            int width = bitmapRotated.getWidth();
+            int height= bitmapRotated.getHeight();
+            double scaleFactor=(width*1.0)/(height*1.0);
+
+            if(width>=height) //landscape
+            {
+
+                if(width>1920)
+                {
+
+                    finalBitmap=CandeoUtil.createScaledBitmap(bitmapRotated,(int)((1920*1.0)/scaleFactor),1920);
+                }
+
+            }
+            else //potrait
+            {
+                if(width>1080)
+                {
+                    finalBitmap=CandeoUtil.createScaledBitmap(bitmapRotated,(int)((1080*1.0)/scaleFactor),1080);
+
+                }
+
+            }
+            return finalBitmap;
 
         }
         catch (OutOfMemoryError ome)

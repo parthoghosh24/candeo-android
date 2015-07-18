@@ -41,6 +41,11 @@ public class UploadMediaTask extends AsyncTask<String, Void, String> {
         {
             CandeoUtil.showProgress(mContext,"Processing! Please wait...", Configuration.FA_IMAGE);
         }
+        else if(mediaType == Configuration.VIDEO)
+        {
+            CandeoUtil.showProgress(mContext,"Processing! Please wait...", Configuration.FA_VIDEO);
+        }
+
 
     }
 
